@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import CoreHeader from '~/components/CoreHeader.vue'
+	import CoreHeader from "~/components/core/CoreHeader.vue"
 
 	export default {
 		components: {

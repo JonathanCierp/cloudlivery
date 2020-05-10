@@ -5,5 +5,7 @@
 @import 'tailwindcss/utilities';
 
 body {
-	background-color: #f5f6fa;
+	font-family: Muli, sans-serif !important;
+	background-color: #efeff5;
+	color: #183152;
 }
