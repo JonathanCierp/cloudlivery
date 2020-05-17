@@ -1,0 +1,34 @@
+{
+	"name": "cloudlivery",
+	"version": 2,
+	"builds": [
+		{
+			"src": "frontend/nuxt.config.js",
+			"use": "@nuxtjs/now-builder",
+			"config": {}
+		},
+		{
+			"src": "backend/dist/server.js",
+			"use": "@now/node",
+			"config": {
+				"includeFiles": [
+					"backend/dist/**"
+				]
+			}
+		}
+	],
+	"routes": [
+		{
+			"src": "/api",
+			"dest": "backend/dist/server.js"
+		},
+		{
+			"src": "/api/(.*)",
+			"dest": "backend/dist/server.js"
+		}
+	],
+	"env": {
+		"BASE_URL": "https://cloudlivery.jonathancierp.fr",
+		"BASE_URL_API": "/api"
+	}
+}
