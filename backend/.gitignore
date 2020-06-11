@@ -4,3 +4,4 @@ src/generated
 node_modules
 schema.graphql
 dist
+prisma/migrations
