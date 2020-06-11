@@ -6,15 +6,6 @@
 			"src": "frontend/nuxt.config.js",
 			"use": "@nuxtjs/now-builder",
 			"config": {}
-		},
-		{
-			"src": "backend/dist/server.js",
-			"use": "@now/node",
-			"config": {
-				"includeFiles": [
-					"backend/dist/**"
-				]
-			}
 		}
 	],
 	"routes": [
