@@ -14,7 +14,7 @@
 			<div class="flex items-center justify-center header__container__right">
 				<nuxt-link class="inline-block px-4 hover:opacity-75" to="/">
 					<img class="inline px-1" src="@/assets/img/icons/user.svg" alt="Logo du site">
-					<span class="align-middle">Mon compte</span>
+					<span class="align-middle">Mon comptee</span>
 				</nuxt-link>
 				<nuxt-link class="inline-block px-4 hover:opacity-75" to="/">
 					<img class="inline" src="@/assets/img/icons/cart.svg" alt="Logo du site">
