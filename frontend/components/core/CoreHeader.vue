@@ -8,7 +8,7 @@
 				</nuxt-link>
 			</div>
 			<div class="flex-1 mx-10 relative header__container__middle">
-				<img class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center" src="@/assets/img/icons/search.svg" alt="Logo du site">
+				<img class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center" src="@/assets/img/icons/search.svg" alt="Image de recherche">
 				<input class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Oeuf, poisson etc...">
 			</div>
 			<div class="flex items-center justify-center header__container__right">
