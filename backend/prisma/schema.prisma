@@ -15,4 +15,6 @@ model User {
   password String
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
+
+  @@map(name: "users")
 }

@@ -8,7 +8,9 @@
 		"generate:prisma": "prisma generate",
 		"generate:nexus": "ts-node --transpile-only src/schema",
 		"postinstall": "npm -s run generate",
-		"dev": "ts-node-dev --no-notify --respawn --transpileOnly src/server"
+		"dev": "ts-node-dev --no-notify --respawn --transpileOnly src/server",
+		"migrate:up": "prisma migrate up --experimental",
+		"migrate:save": "prisma migrate save --experimental"
 	},
 	"dependencies": {
 		"@prisma/client": "2.0.0-beta.2",
@@ -24,7 +26,7 @@
 		"nodemailer": "6.4.6"
 	},
 	"devDependencies": {
-		"@prisma/cli": "2.0.0-beta.2",
+		"@prisma/cli": "^2.0.0",
 		"@types/bcryptjs": "2.4.2",
 		"@types/jsonwebtoken": "8.3.9",
 		"@types/node": "12.12.35",
