@@ -8,8 +8,9 @@
 				</nuxt-link>
 			</div>
 			<form class="signin__card__body flex flex-col items-center justify-center mt-5">
-				<form-input icon-left="icon-arobase" placeholder="Email" />
-				<form-input icon-left="icon-lock" type="password" placeholder="Mot de passe" />
+				<!--<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" />-->
+				<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
+				<form-input icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
 				<!--<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-arobase class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
 					<input class="input&#45;&#45;error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
@@ -71,8 +72,6 @@
 	import IconArobase from "@/components/icons/IconArobase"
 	import IconLock from "@/components/icons/IconLock"
 	import IconGoogleColor from "@/components/icons/IconGoogleColor"
-	import IconClose from "@/components/icons/IconClose"
-	import IconTick from "@/components/icons/IconTick"
 	import IconLoading from "@/components/icons/IconLoading"
 	import FormInput from "@/components/form/FormInput"
 
@@ -84,8 +83,6 @@
 			IconArobase,
 			IconLock,
 			IconGoogleColor,
-			IconClose,
-			IconTick,
 			FormInput
 		},
 		data() {
@@ -126,12 +123,6 @@
 	.signin .signin__card .signin__card__body .signin__card__body__input svg {
 		color: #718096;
 		margin: 14px 16px;
-	}
-	.signin .signin__card .signin__card__body .signin__card__body__input svg#icon-close {
-		color: #E74C3C;
-	}
-	.signin .signin__card .signin__card__body .signin__card__body__input svg#icon-tick {
-		color: #2ECC71;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__or span:first-child, .signin .signin__card .signin__card__body .signin__card__body__or span:last-child {
 		display: inline-block;
