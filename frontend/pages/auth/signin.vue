@@ -7,40 +7,40 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<form class="signin__card__body flex flex-col items-center justify-center mt-5">
+			<form ref="form" @submit.prevent="onLogin" class="signin__card__body flex flex-col items-center justify-center mt-5">
 				<!--<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" />-->
-				<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
-				<form-input icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
+				<form-input ref="email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
+				<form-input ref="password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
 				<!--<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-arobase class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input class="input&#45;&#45;error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
+					<input class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
 					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>
 				</div>
 				<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input type="password" class="input&#45;&#45;success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
+					<input type="password" class="input--success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
 					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
 				</div>
 				<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input type="password" class="input&#45;&#45;success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
+					<input type="password" class="input--success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
 					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-loading /></span>
 				</div>-->
 				<div class="signin__card__body__forget flex items-center relative justify-end my-1">
-					<nuxt-link class="text-sm underline hover:opacity-75" to="/">
+					<nuxt-link class="text-sm underline hover:opacity-75" to="/auth/password/reset">
 						Mot de passe oublié ?
 					</nuxt-link>
 				</div>
 				<div class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
 					<label class="text-sm hover:opacity-75">
-						<input class="mr-2 leading-tight" type="checkbox">
+						<input v-model="rememberMe" class="mr-2 leading-tight" type="checkbox">
 						<span class="align-middle">
 							Se souvenir de moi
 						</span>
 					</label>
 				</div>
 				<div class="signin__card__actions flex w-full justify-center my-3">
-					<button class="signin__card__actions__signin rounded-full w-full hover:opacity-75">
+					<button type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75">
 						<span class="align-middle font-bold">Me connecter</span>
 					</button>
 				</div>
@@ -58,7 +58,7 @@
 					<span></span>
 				</div>
 				<div class="signin__card__socials flex w-full justify-center my-3">
-					<button class="signin__card__socials__google rounded w-full hover:opacity-75">
+					<button @click="onGoogleLogin" type="button" class="signin__card__socials__google rounded w-full hover:opacity-75">
 						<icon-google-color class="inline-block mr-3" />
 						<span class="align-middle font-bold">Se connecter avec google</span>
 					</button>
@@ -87,11 +87,34 @@
 		},
 		data() {
 			return {
-
+				rememberMe: false
 			}
 		},
 		methods: {
-
+			onLogin() {
+				console.log(1)
+			},
+			onGoogleLogin() {
+				console.log(2)
+				/*this.$gAuth
+					.signIn()
+					.then(GoogleUser => {
+						//on success do something
+						console.log("GoogleUser", GoogleUser);
+						console.log("getId", GoogleUser.getId());
+						console.log("getBasicProfile", GoogleUser.getBasicProfile());
+						console.log("getAuthResponse", GoogleUser.getAuthResponse());
+						console.log(
+							"getAuthResponse",
+							this.$gAuth.GoogleAuth.currentUser.get().getAuthResponse()
+						);
+						this.isSignIn = this.$gAuth.isAuthorized;
+					})
+					.catch(error => {
+						//on fail do something
+						console.error(error);
+					});*/
+			}
 		}
 	}
 </script>
@@ -128,7 +151,7 @@
 		display: inline-block;
 		height: 2px;
 		background-color: black;
-		width: 140px;
+		width: 160px;
 		vertical-align: middle;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__no-account span:first-child, .signin .signin__card .signin__card__body .signin__card__body__no-account span:last-child {
