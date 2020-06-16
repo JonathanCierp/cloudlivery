@@ -70,6 +70,36 @@ export const Mutation = mutationType({
 				}
 			}
 		})
+		t.field("seedUser", {
+			type: "Seed",
+			args: {
+				i: intArg({ default: 1 })
+			},
+			resolve: async (_parent, { i }, ctx) => {
+				let users: object[] = []
+
+				for (let offset = 0; offset < i; i++) {
+					const randomString = Math.random().toString(36).substring(7)
+					const lastname = randomString
+					const firstname = randomString
+					const email = `${randomString}@prisma.io`
+					const password = await hash(randomString, 10)
+
+					users = [...users, await ctx.prisma.user.create({
+						data: {
+							lastname,
+							firstname,
+							email,
+							password
+						}
+					})]
+				}
+
+				return {
+					users
+				}
+			}
+		})
 		/*t.field("createDraft", {
 			type: "Post",
 			args: {
