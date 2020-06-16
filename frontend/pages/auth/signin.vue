@@ -7,23 +7,24 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<div class="signin__card__body flex flex-col items-center justify-center mt-5">
-				<div class="signin__card__body__input flex items-center relative justify-center my-4">
+			<form class="signin__card__body flex flex-col items-center justify-center mt-5">
+				<form-input icon-left="icon-arobase" placeholder="Email" />
+				<form-input icon-left="icon-lock" type="password" placeholder="Mot de passe" />
+				<!--<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-arobase class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
-					<span><icon-close class="pointer-events-none" /></span>
+					<input class="input&#45;&#45;error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
+					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>
 				</div>
 				<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input :type="inputPasswordVisibility" class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
-					<span @click="toggleInputPasswordVisibilityOn">
-						<icon-eye v-show="inputPasswordVisibility === 'password'" class="cursor-pointer absolute inset-y-0 right-0 flex items-center" />
-					</span>
-					<span @click="toggleInputPasswordVisibilityOff">
-						<icon-eye-off v-show="inputPasswordVisibility === 'text'" class="cursor-pointer absolute inset-y-0 right-0 flex items-center" />
-					</span>
-					<span><icon-tick class="pointer-events-none" /></span>
+					<input type="password" class="input&#45;&#45;success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
+					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
 				</div>
+				<div class="signin__card__body__input flex items-center relative justify-center my-4">
+					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
+					<input type="password" class="input&#45;&#45;success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
+					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-loading /></span>
+				</div>-->
 				<div class="signin__card__body__forget flex items-center relative justify-end my-1">
 					<nuxt-link class="text-sm underline hover:opacity-75" to="/">
 						Mot de passe oublié ?
@@ -61,7 +62,7 @@
 						<span class="align-middle font-bold">Se connecter avec google</span>
 					</button>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </template>
@@ -69,36 +70,31 @@
 <script>
 	import IconArobase from "@/components/icons/IconArobase"
 	import IconLock from "@/components/icons/IconLock"
-	import IconEye from "@/components/icons/IconEye"
-	import IconEyeOff from "@/components/icons/IconEyeOff"
 	import IconGoogleColor from "@/components/icons/IconGoogleColor"
 	import IconClose from "@/components/icons/IconClose"
 	import IconTick from "@/components/icons/IconTick"
+	import IconLoading from "@/components/icons/IconLoading"
+	import FormInput from "@/components/form/FormInput"
 
 	export default {
 		layout: "blank",
 		name: "signin",
 		components: {
+			IconLoading,
 			IconArobase,
 			IconLock,
-			IconEye,
-			IconEyeOff,
 			IconGoogleColor,
 			IconClose,
-			IconTick
+			IconTick,
+			FormInput
 		},
 		data() {
 			return {
-				inputPasswordVisibility: "password"
+
 			}
 		},
 		methods: {
-			toggleInputPasswordVisibilityOn() {
-				this.inputPasswordVisibility = "text"
-			},
-			toggleInputPasswordVisibilityOff() {
-				this.inputPasswordVisibility = "password"
-			}
+
 		}
 	}
 </script>
@@ -110,16 +106,22 @@
 	}
 	.signin .signin__card {
 		width: 100%;
-		max-width: 450px;
+		height: 100%;
 	}
 	.signin .signin__card .signin__card__body div {
 		width: 100%;
-		max-width: 310px;
+		max-width: 450px;
 	}
-	.signin .signin__card .signin__card__body input {
-		padding-left: 3.5rem;
-		padding-right: 3.5rem;
-		margin-left: 44px;
+	@media only screen and (min-width: 640px) {
+		.signin .signin__card {
+			width: 100%;
+			height: auto;
+			max-width: 450px;
+		}
+		.signin .signin__card .signin__card__body div {
+			width: 100%;
+			max-width: 350px;
+		}
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__input svg {
 		color: #718096;
@@ -127,11 +129,9 @@
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__input svg#icon-close {
 		color: #E74C3C;
-		margin: 10px 10px;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__input svg#icon-tick {
 		color: #2ECC71;
-		margin: 10px 10px;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__or span:first-child, .signin .signin__card .signin__card__body .signin__card__body__or span:last-child {
 		display: inline-block;
