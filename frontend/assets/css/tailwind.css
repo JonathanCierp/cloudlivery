@@ -4,7 +4,7 @@
 /* purgecss end ignore */
 @import 'tailwindcss/utilities';
 
-html, body, div#__nuxt, div#__layout, div#__layout > div{
+html, body, body > div, body > div > div, body > div > div > div{
 	height: 100%;
 }
 
