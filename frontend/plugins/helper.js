@@ -4,13 +4,16 @@ const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
 Vue.prototype.$helper = {
 	toCamelCase(text) {
-		return text.replace(/-\w/g, this.clearAndUpper);
+		return text.replace(/-\w/g, this.clearAndUpper)
 	},
 	toPascalCase(text) {
-		return text.replace(/(^\w|-\w)/g, this.clearAndUpper);
+		return text.replace(/(^\w|-\w)/g, this.clearAndUpper)
+	},
+	getRndInteger(min, max) {
+		return Math.floor(Math.random() * (max - min) ) + min
 	},
 	clearAndUpper(text) {
-		return text.replace(/-/, "").toUpperCase();
+		return text.replace(/-/, "").toUpperCase()
 	},
 	rules: {
 		required(v) {

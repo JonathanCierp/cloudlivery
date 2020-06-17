@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 module.exports = {
   mode: "universal",
   /*
@@ -25,6 +27,9 @@ module.exports = {
   css: [
   	"@/assets/css/reset.css"
   ],
+	router: {
+		middleware: ["auth"]
+	},
   /*
   ** Plugins to load before mounting the App
   */
@@ -48,6 +53,8 @@ module.exports = {
     "@nuxtjs/pwa",
     // Doc: https://github.com/nuxt-community/dotenv-module
     "@nuxtjs/dotenv",
+		// Doc : https://github.com/nuxt-community/apollo-module
+		"@nuxtjs/apollo"
   ],
   /*
   ** Axios module configuration
@@ -55,6 +62,17 @@ module.exports = {
   */
   axios: {
   },
+	/*
+	** Apollo module configuration
+	** See https://github.com/nuxt-community/apollo-module
+	*/
+	apollo: {
+		clientConfigs: {
+			default: {
+				httpEndpoint: process.env.APOLLO_HTTP_ENDPOINT
+			}
+		}
+	},
   /*
   ** Build configuration
   */

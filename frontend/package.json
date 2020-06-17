@@ -15,10 +15,13 @@
     "@feathersjs/configuration": "^2.0.6",
     "@feathersjs/express": "^1.3.1",
     "@feathersjs/feathers": "^3.3.1",
+    "@nuxtjs/apollo": "^4.0.1-rc.1",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-0",
     "cross-env": "^5.2.0",
+    "graphql-tag": "^2.10.3",
+    "jsonwebtoken": "^8.5.1",
     "nuxt": "^2.0.0",
     "vue-google-oauth2": "^1.5.4"
   },

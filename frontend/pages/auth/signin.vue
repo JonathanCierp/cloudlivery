@@ -2,42 +2,18 @@
 	<div class="signin shadow flex items-center justify-center h-full">
 		<div class="signin__card bg-white py-10 px-10 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
 			<div class="signin__card__header flex items-center justify-center mb-6">
-				<nuxt-link class="inline-block" to="/">
-					<img class="inline px-1" src="@/assets/img/icons/logo.svg" alt="Logo du site">
-					<span class="text-logo font-bold align-middle">Cloudlivery</span>
-				</nuxt-link>
+				<span class="text-logo font-bold align-middle">Se connecter</span>
 			</div>
 			<custom-form ref="form" @submit.prevent="onLogin" class="signin__card__body flex flex-col items-center justify-center mt-5">
-				<!--<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" />-->
-				<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
-				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
-				<!--<div class="signin__card__body__input flex items-center relative justify-center my-4">
-					<icon-arobase class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
-					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>
-				</div>
-				<div class="signin__card__body__input flex items-center relative justify-center my-4">
-					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input type="password" class="input--success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
-					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
-				</div>
-				<div class="signin__card__body__input flex items-center relative justify-center my-4">
-					<icon-lock class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-					<input type="password" class="input--success transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Mot de passe">
-					<span class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-loading /></span>
-				</div>-->
+				<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy autocomplete="off" />
+				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy autocomplete="off" />
 				<div class="signin__card__body__forget flex items-center relative justify-end my-1">
 					<nuxt-link class="text-sm underline hover:opacity-75" to="/auth/password/reset">
 						Mot de passe oublié ?
 					</nuxt-link>
 				</div>
 				<div class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
-					<label class="text-sm hover:opacity-75">
-						<input v-model="form.rememberMe" class="mr-2 leading-tight" type="checkbox">
-						<span class="align-middle">
-							Se souvenir de moi
-						</span>
-					</label>
+					<custom-form-checkbox v-model="rememberMe" label="Se souvenir de moi" />
 				</div>
 				<div class="signin__card__actions flex w-full justify-center my-3">
 					<custom-button ref="loginButton" type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75 flex items-center justify-center">
@@ -69,40 +45,59 @@
 </template>
 
 <script>
-	import Vue from "vue"
-
 	import IconArobase from "@/components/icons/IconArobase"
 	import IconLock from "@/components/icons/IconLock"
 	import IconGoogleColor from "@/components/icons/IconGoogleColor"
 	import CustomForm from "@/components/custom/form/CustomForm"
+	import CustomFormCheckbox from "@/components/custom/form/CustomFormCheckbox"
 	import CustomFormInput from "@/components/custom/form/CustomFormInput"
 	import CustomButton from "@/components/custom/button/CustomButton"
 
+	import GqlLogin from "@/utils/apollo/mutation/login"
+
 	export default {
-		layout: "blank",
-		name: "signin",
+		name: "auth-signin",
+		middleware: ["isAuthenticated"],
 		components: {
 			IconArobase,
 			IconLock,
 			IconGoogleColor,
 			CustomForm,
+			CustomFormCheckbox,
 			CustomFormInput,
 			CustomButton
 		},
 		data() {
 			return {
 				form: {
-					email: "",
-					password: "",
-					rememberMe: false
-				}
+					email: "a@a.fr",
+					password: "a@a.fr"
+				},
+				rememberMe: false
 			}
 		},
 		methods: {
-			onLogin() {
+			async onLogin() {
 				if(this.$refs.form.validate()) {
 					this.$refs.loginButton.setState("loading")
 
+					try {
+						const res = await this.$apollo.mutate({
+							mutation: GqlLogin,
+							variables: this.form
+						})
+						await this.$apolloHelpers.onLogin(res.data.login.token)
+						this.$store.commit("SET_AUTH", res.data.login.user)
+						this.$refs.loginButton.setState("initial")
+						this.$router.push("/")
+					}catch (e) {
+						console.log(e.graphQLErrors[0].message)
+						this.$refs.loginButton.setState("initial")
+					}
+
+					/*setTimeout(() => {
+						this.$refs.loginButton.setState("initial")
+					}, this.$helper.getRndInteger(1000, 5000))*/
 				}
 			},
 			onGoogleLogin() {
@@ -131,15 +126,12 @@
 </script>
 
 <style scoped>
-	.text-logo {
-		font-size: 2rem;
-	}
 	.signin .signin__card {
 		width: 100%;
 		height: 100%;
 	}
-	.signin .signin__card .signin__card__header img{
-		width: 65px;
+	.signin .signin__card .signin__card__header span{
+		font-size: 2rem;
 	}
 	.signin .signin__card .signin__card__body div {
 		width: 100%;
@@ -185,9 +177,8 @@
 	}
 
 	@media only screen and (min-width: 640px) {
-		.text-logo {
-			padding-top: 10px;
-			font-size: 1.7rem;
+		.signin .signin__card .signin__card__header span{
+			font-size: 2rem;
 		}
 		.signin .signin__card {
 			width: 100%;
