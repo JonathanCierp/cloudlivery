@@ -1,6 +1,10 @@
 <template>
 	<div class="signin shadow flex items-center justify-center h-full">
 		<div class="signin__card bg-white py-10 px-10 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
+			<nuxt-link class="inline-block mb-8" to="/">
+				<img class="inline px-1 w-10" src="@/assets/img/icons/logo.svg" alt="Logo du site">
+				<span class="text-logo font-bold align-middle">Cloudlivery</span>
+			</nuxt-link>
 			<div class="signin__card__header flex items-center justify-center mb-6">
 				<span class="text-logo font-bold align-middle">Se connecter</span>
 			</div>
@@ -56,6 +60,7 @@
 	import GqlLogin from "@/utils/apollo/mutation/login"
 
 	export default {
+		layout: "blank",
 		name: "auth-signin",
 		middleware: ["isAuthenticated"],
 		components: {
