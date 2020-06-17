@@ -15,7 +15,12 @@
 	import IconLoading from "@/components/icons/IconLoading"
 
 	export default {
+		name: "custom-form-input",
 		props: {
+			value: {
+				type: String,
+				default: ""
+			},
 			iconLeft: {
 				type: String,
 				default: null
@@ -55,13 +60,16 @@
 		methods: {
 			oninput(e) {
 				this.validate(e.target.value)
+				this.$emit("input", e.target.value)
 			},
-			onBlur(e) {
+			onBlur() {
 				if(this.lazy) {
-					this.validate(e.target.value)
+					this.validate()
 				}
 			},
-			validate(v) {
+			validate(value) {
+				const v = value || this.value
+
 				if(typeof this.rules === "string") {
 					const rule = this.rules.split("-")
 					const result = this.$helper.rules[`${rule[0]}`](v, rule[1])
@@ -79,6 +87,8 @@
 						}
 					}
 				}
+
+				return this.state !== "error"
 			}
 		},
 		computed: {

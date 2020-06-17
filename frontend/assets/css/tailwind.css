@@ -4,7 +4,11 @@
 /* purgecss end ignore */
 @import 'tailwindcss/utilities';
 
-body {
+html, body, div#__nuxt, div#__layout, div#__layout > div{
+	height: 100%;
+}
+
+body{
 	font-family: Muli, sans-serif !important;
 	background-color: #efeff5;
 	color: #183152;

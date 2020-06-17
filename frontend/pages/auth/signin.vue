@@ -1,16 +1,16 @@
 <template>
-	<div class="signin shadow flex items-center justify-center h-screen">
-		<div class="signin__card bg-white py-8">
+	<div class="signin shadow flex items-center justify-center h-full">
+		<div class="signin__card bg-white py-10 px-10 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
 			<div class="signin__card__header flex items-center justify-center mb-6">
 				<nuxt-link class="inline-block" to="/">
 					<img class="inline px-1" src="@/assets/img/icons/logo.svg" alt="Logo du site">
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<form ref="form" @submit.prevent="onLogin" class="signin__card__body flex flex-col items-center justify-center mt-5">
+			<custom-form ref="form" @submit.prevent="onLogin" class="signin__card__body flex flex-col items-center justify-center mt-5">
 				<!--<form-input icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" />-->
-				<form-input ref="email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
-				<form-input ref="password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
+				<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
+				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
 				<!--<div class="signin__card__body__input flex items-center relative justify-center my-4">
 					<icon-arobase class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
 					<input class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Email">
@@ -33,16 +33,16 @@
 				</div>
 				<div class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
 					<label class="text-sm hover:opacity-75">
-						<input v-model="rememberMe" class="mr-2 leading-tight" type="checkbox">
+						<input v-model="form.rememberMe" class="mr-2 leading-tight" type="checkbox">
 						<span class="align-middle">
 							Se souvenir de moi
 						</span>
 					</label>
 				</div>
 				<div class="signin__card__actions flex w-full justify-center my-3">
-					<button type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75">
-						<span class="align-middle font-bold">Me connecter</span>
-					</button>
+					<custom-button ref="loginButton" type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75 flex items-center justify-center">
+						<span class="font-bold">Me connecter</span>
+					</custom-button>
 				</div>
 				<div class="signin__card__actions w-full my-3">
 					<span class="text-sm">Vous n'avez pas de compte ?</span>
@@ -63,36 +63,47 @@
 						<span class="align-middle font-bold">Se connecter avec google</span>
 					</button>
 				</div>
-			</form>
+			</custom-form>
 		</div>
 	</div>
 </template>
 
 <script>
+	import Vue from "vue"
+
 	import IconArobase from "@/components/icons/IconArobase"
 	import IconLock from "@/components/icons/IconLock"
 	import IconGoogleColor from "@/components/icons/IconGoogleColor"
-	import IconLoading from "@/components/icons/IconLoading"
-	import FormInput from "@/components/form/FormInput"
+	import CustomForm from "@/components/custom/form/CustomForm"
+	import CustomFormInput from "@/components/custom/form/CustomFormInput"
+	import CustomButton from "@/components/custom/button/CustomButton"
 
 	export default {
 		layout: "blank",
 		name: "signin",
 		components: {
-			IconLoading,
 			IconArobase,
 			IconLock,
 			IconGoogleColor,
-			FormInput
+			CustomForm,
+			CustomFormInput,
+			CustomButton
 		},
 		data() {
 			return {
-				rememberMe: false
+				form: {
+					email: "",
+					password: "",
+					rememberMe: false
+				}
 			}
 		},
 		methods: {
 			onLogin() {
-				console.log(1)
+				if(this.$refs.form.validate()) {
+					this.$refs.loginButton.setState("loading")
+
+				}
 			},
 			onGoogleLogin() {
 				console.log(2)
@@ -121,27 +132,18 @@
 
 <style scoped>
 	.text-logo {
-		padding-top: 10px;
-		font-size: 1.5rem;
+		font-size: 2rem;
 	}
 	.signin .signin__card {
 		width: 100%;
 		height: 100%;
 	}
+	.signin .signin__card .signin__card__header img{
+		width: 65px;
+	}
 	.signin .signin__card .signin__card__body div {
 		width: 100%;
 		max-width: 450px;
-	}
-	@media only screen and (min-width: 640px) {
-		.signin .signin__card {
-			width: 100%;
-			height: auto;
-			max-width: 450px;
-		}
-		.signin .signin__card .signin__card__body div {
-			width: 100%;
-			max-width: 350px;
-		}
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__input svg {
 		color: #718096;
@@ -151,7 +153,7 @@
 		display: inline-block;
 		height: 2px;
 		background-color: black;
-		width: 160px;
+		width: calc((100% - 36px) / 2);
 		vertical-align: middle;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__no-account span:first-child, .signin .signin__card .signin__card__body .signin__card__body__no-account span:last-child {
@@ -180,5 +182,31 @@
 	}
 	.signin .signin__card .signin__card__socials button.signin__card__socials__google span {
 		font-size: 1.1rem;
+	}
+
+	@media only screen and (min-width: 640px) {
+		.text-logo {
+			padding-top: 10px;
+			font-size: 1.7rem;
+		}
+		.signin .signin__card {
+			width: 100%;
+			height: auto;
+			max-width: 450px;
+		}
+		.signin .signin__card .signin__card__header img{
+			width: auto;
+		}
+		.signin .signin__card .signin__card__body div {
+			width: 100%;
+			max-width: 350px;
+		}
+		.signin .signin__card .signin__card__body .signin__card__body__no-account span:first-child, .signin .signin__card .signin__card__body .signin__card__body__no-account span:last-child {
+			display: inline-block;
+			height: 2px;
+			background-color: black;
+			width: 20px;
+			vertical-align: middle;
+		}
 	}
 </style>
