@@ -107,7 +107,7 @@
 			},
 			onGoogleLogin() {
 				console.log(2)
-				/*this.$gAuth
+				this.$gAuth
 					.signIn()
 					.then(GoogleUser => {
 						//on success do something
@@ -124,7 +124,7 @@
 					.catch(error => {
 						//on fail do something
 						console.error(error);
-					});*/
+					});
 			}
 		}
 	}

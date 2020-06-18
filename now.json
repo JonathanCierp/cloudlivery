@@ -20,6 +20,8 @@
 	],
 	"env": {
 		"BASE_URL": "https://cloudlivery.jonathancierp.fr",
-		"BASE_URL_API": "/api"
+		"BASE_URL_API": "/api",
+		"GOOGLE_AUTH_CLIENT_ID": "1020139540064-pb145vdda8dbtk487b6vlclqeu5q8cjv.apps.googleusercontent.com",
+		"APOLLO_HTTP_ENDPOINT": "http://localhost:4000"
 	}
 }

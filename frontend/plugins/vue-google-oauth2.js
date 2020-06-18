@@ -1,4 +1,3 @@
-/*
 import Vue from "vue"
 import GAuth from "vue-google-oauth2"
 
@@ -8,4 +7,4 @@ const gauthOption = {
 	prompt: "select_account"
 }
 
-Vue.use(GAuth, gauthOption)*/
+Vue.use(GAuth, gauthOption)
