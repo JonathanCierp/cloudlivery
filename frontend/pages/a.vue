@@ -1,7 +1,7 @@
 <template>
   <div>
-		<nuxt-link to="/a">
-			a
+		<nuxt-link to="/">
+			index
 		</nuxt-link>
 	</div>
 </template>

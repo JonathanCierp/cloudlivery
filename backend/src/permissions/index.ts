@@ -1,11 +1,26 @@
-import { rule, shield } from "graphql-shield"
-import { getUserId } from "../utils"
+import {rule, shield} from "graphql-shield"
+import {getUserId} from "../utils"
+import {Redis, client} from "../redis"
+
+const redis = new Redis(client)
 
 const rules = {
-	isAuthenticatedUser: rule()((parent, args, context) => {
-		const userId = getUserId(context)
 
-		return Boolean(userId)
+	isAuthenticatedUser: rule()(async (parent, args, context) => {
+		const userId = getUserId(context)
+		let jwt = context.request.get("Authorization").split(" ")[1]
+		
+		const res = await redis.compare(`login_${userId}`, jwt)
+
+		if(res === "not equals") {
+			return new Error("Erreur, vous n'êtes pas connecté'.")
+		}
+
+		if(!Boolean(userId) || res === "not exist") {
+			return new Error("Erreur, vous n'avez pas accès à cette ressource.")
+		}
+		
+		return Boolean(userId) && res
 	}),
 	/*isPostOwner: rule()(async (parent, { id }, context) => {
 		const userId = getUserId(context)

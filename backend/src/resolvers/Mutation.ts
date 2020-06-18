@@ -2,6 +2,9 @@ import { compare, hash } from "bcryptjs"
 import { sign } from "jsonwebtoken"
 import { mutationType, stringArg, intArg } from "nexus"
 import { APP_SECRET, getUserId } from "../utils"
+import { Redis, client } from "../redis"
+
+const redis = new Redis(client)
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -36,7 +39,7 @@ export const Mutation = mutationType({
 				return {
 					// @ts-ignore
 					token: sign({ userId: user.id }, APP_SECRET, {
-						expiresIn: "1h"
+						expiresIn: process.env.REDIS_TTL_JWT
 					}),
 					user
 				}
@@ -61,23 +64,39 @@ export const Mutation = mutationType({
 				if (!passwordValid) {
 					throw new Error("Mot de passe incorrect.")
 				}
+				const token = sign({ userId: user.id }, APP_SECRET, {
+					expiresIn: process.env.REDIS_TTL_JWT
+				})
+
+				redis.set(`login_${user.id}`, token)
+
 				return {
-					// @ts-ignore
-					token: sign({ userId: user.id }, APP_SECRET, {
-						expiresIn: "1h"
-					}),
+					token,
 					user
 				}
 			}
 		})
+		t.field("logout", {
+			type: "Logout",
+			resolve: async (_parent, {}, ctx) => {
+				const userId = getUserId(ctx)
+				const res = await redis.delete(`login_${userId}`)
+
+				return {
+					statut: res ? 200 : 500
+				}
+			}
+		});
 		t.field("seedUser", {
 			type: "Seed",
 			args: {
 				i: intArg({ default: 1 })
 			},
+			// @ts-ignore
 			resolve: async (_parent, { i }, ctx) => {
 				let users: object[] = []
 
+				// @ts-ignore
 				for (let offset = 0; offset < i; i++) {
 					const randomString = Math.random().toString(36).substring(7)
 					const lastname = randomString

@@ -10,14 +10,17 @@ export default async function ({ app, store, env }) {
 
 		try {
 			const res = await apollo.query({
-				query: GqlMe
+				query: GqlMe,
+				fetchPolicy: "no-cache"
 			})
 
 			store.commit("SET_AUTH", res.data.me)
 		}catch (e) {
+			app.$cookies.remove("apollo-token")
 			store.commit("SET_AUTH", {})
 		}
 	} catch (e) {
+		app.$cookies.remove("apollo-token")
 		store.commit("SET_AUTH", {})
 	}
 }

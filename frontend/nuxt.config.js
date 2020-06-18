@@ -54,7 +54,9 @@ module.exports = {
     // Doc: https://github.com/nuxt-community/dotenv-module
     "@nuxtjs/dotenv",
 		// Doc : https://github.com/nuxt-community/apollo-module
-		"@nuxtjs/apollo"
+		"@nuxtjs/apollo",
+		// Doc : https://www.npmjs.com/package/cookie-universal-nuxt
+		"cookie-universal-nuxt"
   ],
   /*
   ** Axios module configuration
@@ -69,7 +71,8 @@ module.exports = {
 	apollo: {
 		clientConfigs: {
 			default: {
-				httpEndpoint: process.env.APOLLO_HTTP_ENDPOINT
+				httpEndpoint: process.env.APOLLO_HTTP_ENDPOINT,
+				wsEndpoint: process.env.APOLLO_WS_ENDPOINT
 			}
 		}
 	},

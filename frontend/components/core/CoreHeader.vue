@@ -33,6 +33,8 @@
 	import IconUser from "@/components/icons/IconUser"
 	import IconSearch from "@/components/icons/IconSearch"
 
+	import GqlLogout from "@/utils/apollo/mutation/logout"
+
 	export default {
 		name: "CoreHeader",
 		components: {
@@ -52,7 +54,17 @@
 		},
 		methods: {
 			async onLogout () {
-				await this.$apolloHelpers.onLogout()
+				try{
+					const res = await this.$apollo.mutate({
+						mutation: GqlLogout
+					})
+					this.$store.commit("SET_AUTH", {})
+					await this.$apolloHelpers.onLogout()
+				}catch (e) {
+					console.log(e)
+				}
+				
+				/*await this.$apolloHelpers.onLogout()*/
 			}
 		}
 	}
