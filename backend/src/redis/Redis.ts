@@ -86,8 +86,8 @@ class Redis {
 		});
 	}
 
-	set(key: string, value: string): void {
-		this._client.set(key, value, "EX", process.env.REDIS_TTL)
+	set(key: string, value: string, ttl = process.env.REDIS_TTL): void {
+		this._client.set(key, value, "EX", ttl)
 	}
 
 	async delete(key: string): Promise<string> {

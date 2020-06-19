@@ -92,3 +92,9 @@ npm run start
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Class OK : 
+* src/auth/Auth.ts ---> OK
+* src/auth/CustomError.ts ---> OK (Move to error folder)
+* src/auth/types.ts ---> OK (Merge all types in one file)
+* src/auth/WebAuth.ts ---> OK

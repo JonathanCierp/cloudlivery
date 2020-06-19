@@ -1,10 +1,10 @@
-import { compare, hash } from "bcryptjs"
+import { hash } from "bcryptjs"
 import { sign } from "jsonwebtoken"
 import { mutationType, stringArg, intArg } from "nexus"
-import { APP_SECRET, getUserId } from "../utils"
-import { Redis, client } from "../redis"
+import { APP_SECRET } from "../utils"
+import WebAuth from "../auth/WebAuth";
 
-const redis = new Redis(client)
+const webAuth = new WebAuth()
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -45,45 +45,39 @@ export const Mutation = mutationType({
 				}
 			}
 		})
-		t.field("login", {
+		t.field("signin", {
 			type: "AuthPayload",
 			args: {
 				email: stringArg({ nullable: false }),
 				password: stringArg({ nullable: false })
 			},
 			resolve: async (_parent, { email, password }, ctx) => {
-				const user = await ctx.prisma.user.findOne({
-					where: {
-						email
-					}
-				})
-				if (!user) {
-					throw new Error("Aucun utilisateur pour cette adresse mail.")
-				}
-				const passwordValid = await compare(password, user.password)
-				if (!passwordValid) {
-					throw new Error("Mot de passe incorrect.")
-				}
-				const token = sign({ userId: user.id }, APP_SECRET, {
-					expiresIn: process.env.REDIS_TTL_JWT
-				})
-
-				redis.set(`login_${user.id}`, token)
+				// Set params info
+				webAuth.setEmail(email)
+				webAuth.setPassword(password)
+				// Set database user to the class
+				await webAuth.setPrismaUser(ctx)
+				// Compare given password with database password
+				await webAuth.comparePassword()
+				// Set jwt token to the class
+				webAuth.signToken()
 
 				return {
-					token,
-					user
+					token: webAuth.getToken(),
+					user: webAuth.getUser()
 				}
 			}
 		})
-		t.field("logout", {
-			type: "Logout",
+		t.field("signout", {
+			type: "Signout",
 			resolve: async (_parent, {}, ctx) => {
-				const userId = getUserId(ctx)
-				const res = await redis.delete(`login_${userId}`)
+				// Set params info
+				webAuth.setId(webAuth.extractIdFromJwt(ctx))
+				// Delete jwt token from the class
+				await webAuth.deleteToken()
 
 				return {
-					statut: res ? 200 : 500
+					message: "Déconnecté avec succès"
 				}
 			}
 		});

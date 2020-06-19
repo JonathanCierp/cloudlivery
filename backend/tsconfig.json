@@ -3,7 +3,8 @@
 		"outDir": "dist",
 		"rootDir": "src",
 		"lib": ["esnext"],
-		"strict": true
+		"strict": true,
+		"allowSyntheticDefaultImports": true
 	},
 	"include": ["src/**/*"]
 }

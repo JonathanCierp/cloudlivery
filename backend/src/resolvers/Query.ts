@@ -6,8 +6,12 @@ export const Query = queryType({
 		t.field("me", {
 			type: "User",
 			nullable: true,
-			resolve: (parent, args, ctx) => {
+			args: {
+				provider: stringArg({ nullable: false })
+			},
+			resolve: (parent, { provider }, ctx) => {
 				const userId = getUserId(ctx)
+				console.log(provider)
 				return ctx.prisma.user.findOne({
 					where: {
 						id: Number(userId),
