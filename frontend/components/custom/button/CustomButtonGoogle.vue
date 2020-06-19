@@ -1,17 +1,26 @@
 <template>
-	<button :disabled="state === 'loading'">
-		<slot v-if="state === 'initial'" />
+	<button :disabled="state === 'loading'" class="rounded w-full hover:opacity-75" @click="onClick">
+		<icon-google-color v-if="state === 'initial'" class="inline-block mr-3" />
+		<span v-if="state === 'initial'" class="align-middle font-bold">{{ label }}</span>
 		<icon-loading v-if="state === 'loading'" />
 	</button>
 </template>
 
 <script>
+	import IconGoogleColor from "@/components/icons/IconGoogleColor"
 	import IconLoading from "@/components/icons/IconLoading"
 
 	export default {
-		name: "custom-buttom",
+		name: "custom-buttom-google",
 		components: {
-			IconLoading
+			IconLoading,
+			IconGoogleColor
+		},
+		props: {
+			label: {
+				type: String,
+				default: "Se connecter avec google"
+			}
 		},
 		data() {
 			return {
@@ -21,6 +30,9 @@
 		methods: {
 			setState(state) {
 				this.state = state
+			},
+			onClick(e) {
+				this.$emit("click", e)
 			}
 		}
 	}
@@ -33,6 +45,7 @@
 	button[disabled] {
 		cursor: not-allowed !important;
 		background-color: #e2e8f0 !important;
+		background-image: none !important;
 		border: 3px solid #e2e8f0 !important;
 	}
 </style>

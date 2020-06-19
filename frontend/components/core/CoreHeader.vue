@@ -20,7 +20,7 @@
 					<icon-user class="inline" />
 					<span class="align-middle">Mon compte</span>
 				</nuxt-link>
-				<nuxt-link @click.native="onLogout" class="inline-block px-4 hover:opacity-75" to="#">
+				<nuxt-link @click.native="onSignout" class="inline-block px-4 hover:opacity-75" to="#">
 					<icon-cart class="inline" />
 				</nuxt-link>
 			</div>
@@ -33,7 +33,7 @@
 	import IconUser from "@/components/icons/IconUser"
 	import IconSearch from "@/components/icons/IconSearch"
 
-	import GqlLogout from "@/utils/apollo/mutation/logout"
+	import GqlSignout from "@/utils/apollo/mutation/signout"
 
 	export default {
 		name: "CoreHeader",
@@ -53,10 +53,10 @@
 			}
 		},
 		methods: {
-			async onLogout () {
+			async onSignout () {
 				try{
 					const res = await this.$apollo.mutate({
-						mutation: GqlLogout
+						mutation: GqlSignout
 					})
 					this.$store.commit("SET_AUTH", {})
 					await this.$apolloHelpers.onLogout()
@@ -64,7 +64,7 @@
 					console.log(e)
 				}
 				
-				/*await this.$apolloHelpers.onLogout()*/
+				/*await this.$apolloHelpers.onSignout()*/
 			}
 		}
 	}
