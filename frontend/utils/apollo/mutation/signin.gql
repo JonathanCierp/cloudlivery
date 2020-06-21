@@ -3,6 +3,11 @@ mutation signin($email: String!, $password: String!){
     token
     user {
       id
+      firstname
+      lastname
+      email
+      updatedAt
+      createdAt
     }
   }
 }

@@ -55,7 +55,7 @@
 		methods: {
 			async onSignout () {
 				try{
-					const res = await this.$apollo.mutate({
+					await this.$apollo.mutate({
 						mutation: GqlSignout
 					})
 					this.$store.commit("SET_AUTH", {})

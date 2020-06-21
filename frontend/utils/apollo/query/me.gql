@@ -1,8 +1,10 @@
 query me($provider: String!) {
   me(provider: $provider) {
-    id
-    email
-    firstname
-    lastname
+      id
+      firstname
+      lastname
+      email
+      updatedAt
+      createdAt
   }
 }
