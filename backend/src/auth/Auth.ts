@@ -1,13 +1,13 @@
 // Classes
-import { Redis, client } from "../redis/Redis"
+import {client, Redis} from "../redis/Redis"
 import CustomError from "./CustomError"
 // Utils
-import { APP_SECRET } from "../utils"
+import {APP_SECRET} from "../utils"
 import {sign, verify} from "jsonwebtoken"
-import { compare, hash } from "bcryptjs"
+import {compare} from "bcryptjs"
 // Types
-import { GetGen } from "nexus/dist/typegenTypeHelpers"
-import { User, Token, TokenPayload } from "./types"
+import {GetGen} from "nexus/dist/typegenTypeHelpers"
+import {Token, TokenPayload, User} from "../types/auth"
 
 // Start redis
 const redis = new Redis(client)
@@ -226,13 +226,13 @@ export default class Auth {
 	 * @param oldToken
 	 */
 	public refreshToken(oldToken: string): void {
-		const payload: TokenPayload = verify(oldToken, APP_SECRET, { audience: "access_token", issuer: "cloudlivery" }) as TokenPayload;
+		const payload: TokenPayload = verify(oldToken, APP_SECRET, { audience: "access_token", issuer: "cloudlivery" }) as TokenPayload
 
 		// ?
 		/*if(false) {*/
-			delete payload.iat;
-			delete payload.exp;
-			delete payload.jti;
+			delete payload.iat
+			delete payload.exp
+			delete payload.jti
 
 			this.setToken(sign(payload, APP_SECRET, { jwtid: "2", expiresIn: process.env.REDIS_TTL_JWT }))
 		/*}*/
@@ -265,6 +265,27 @@ export default class Auth {
 		}
 
 		return -1
+	}
+
+	/**
+	 * Extract user token from jwt received by http header
+	 * @return string
+	 * @param ctx
+	 */
+	public extractTokenFromJwt(ctx: GetGen<"context">): string {
+		const Authorization = ctx.request.get("Authorization")
+
+		if (Authorization) {
+			return Authorization.replace("Bearer ", "")
+		}else {
+			CustomError.error("Erreur lors de la déconnexion.")
+		}
+
+		return ""
+	}
+
+	public async existInRedis(): Promise<boolean> {
+		return await redis.compare(`signin_${this.getId()}`, this.getToken())
 	}
 	//endregion
 }

@@ -1,6 +1,6 @@
 import { verify } from "jsonwebtoken"
 import { Context } from "./context"
-import { RedisConstant } from "./redis/types"
+import { RedisConstant } from "./types/redis"
 
 export const APP_SECRET: string = process.env.APP_SECRET || ""
 

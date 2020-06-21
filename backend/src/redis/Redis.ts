@@ -1,110 +1,115 @@
-//import Redis from "./types"
-import { RedisClient } from "redis";
+// Packages
+import { RedisClient } from "redis"
+// Constants
 import { redisConstants } from "../utils"
 
 const redisClient = require('redis')
 const client = redisClient.createClient(redisConstants.REDIS_PORT, redisConstants.REDIS_HOST)
 
-/*
-client.on('connect', () => {
-	console.log("------------ REDIS CONNECTED SUCCESS ------------")
-
-	client.get("3600-11628-jwt ", (err: any, reply: string) => {
-		redis.jwt = reply
-
-		console.log("zad : " + redis.jwt)
-	})
-
-	redis.isConnected = true
-})
-const redis: Redis = {
-	isConnected: false,
-	jwt: "",
-	init: () => {
-		client.on('connect', () => {
-			console.log("------------ REDIS CONNECTED SUCCESS ------------")
-
-			client.get("3600-11628-jwt ", (err: any, reply: string) => {
-				redis.jwt = reply
-
-				console.log("zad : " + redis.jwt)
-			})
-
-			redis.isConnected = true
-		})
-		client.on('error', () => {
-			console.log("------------ REDIS CONNECTED ERROR ------------")
-
-			redis.isConnected = false
-		})
-	},
-	set: (key: string, value: string) => {
-		client.set(key, value, "EX", process.env.REDIS_TTL)
-	},
-	compare: async (key: string, jwt: string): Promise<boolean> => {
-		var bool = false
-
-		await client.get(key, (err: any, reply: string) => {
-			bool = jwt === reply
-			redis.jwt = reply
-
-			console.log("zad : " + redis.jwt)
-		})
-
-		console.log("bool : " + bool)
-
-		return true
-	}
-}
-*/
-
 class Redis {
-	_client: any;
 
+	//region Protected parameters
+	/**
+	 * Client redis
+	 * @type any
+	 * @default null
+	 */
+	_client: any
+	//endregion
+
+	//region Getters Setters
+	/**
+	 * Set client
+	 * @return void
+	 * @param client
+	 */
+	public setClient(client: any): void {
+		this._client = client
+	}
+	/**
+	 * Get client
+	 * @return any
+	 */
+	public getClient(): any {
+		return this._client
+	}
+	//endregion
+
+	/**
+	 * Constructor of the class
+	 * @param client
+	 */
 	constructor(client: RedisClient) {
-		this._client = client;
+		this.setClient(client)
 
 		this.init()
 	}
 
-	init() {
-		this._client.on('connect', () => {
+	/**
+	 * Constructor of the class
+	 * @return void
+	 */
+	init(): void {
+		this.getClient().on('connect', () => {
 			console.log("------------ REDIS CONNECTED SUCCESS ------------")
 
 		})
-		this._client.on('error', () => {
+		this.getClient().on('error', () => {
 			console.log("------------ REDIS CONNECTED ERROR ------------")
 
 		})
 	}
 
+	/**
+	 * Get token from redis
+	 * @return Promise<string>
+	 * @param key
+	 */
 	async get(key: string): Promise<string> {
 		return await new Promise((resolve, reject) => {
-			this._client.get(key, (err: any, reply: string) => {
-				resolve(reply);
-			});
-		});
+			this.getClient().get(key, (err: any, reply: string) => {
+				resolve(reply)
+			})
+		})
 	}
 
+	/**
+	 * Set token in the redis
+	 * @return void
+	 * @param key
+	 * @param value
+	 * @param ttl
+	 */
 	set(key: string, value: string, ttl = process.env.REDIS_TTL): void {
-		this._client.set(key, value, "EX", ttl)
+		this.getClient().set(key, value, "EX", ttl)
 	}
 
+	/**
+	 * Delete token in redis
+	 * @return Promise<string>
+	 * @param key
+	 */
 	async delete(key: string): Promise<string> {
 		return await new Promise((resolve, reject) => {
-			this._client.del(key, (err: any, reply: number) => {
+			this.getClient().del(key, (err: any, reply: number) => {
 				reply === 1 ? resolve("Déconnecté avec succès.") : reject("Erreur lors de la déconnexion")
-			});
-		});
+			})
+		})
 	}
 
+	/**
+	 * Compare given token with token in redis
+	 * @return Promise<any>
+	 * @param key
+	 * @param jwt
+	 */
 	compare(key: string, jwt: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			this._client.get(key, (err: any, reply: string) => {
 				if(err) {
-					reject("not exist")
+					reject(false)
 				}
-				jwt === reply ? resolve(true) : reject("not equals")
+				jwt === reply ? resolve(true) : reject(false)
 			})
 		})
 		.then(response => {
@@ -115,8 +120,12 @@ class Redis {
 		})
 	}
 
-	close() {
-		this._client.quit()
+	/**
+	 * Close redis connection
+	 * @return void
+	 */
+	close(): void {
+		this.getClient().quit()
 	}
 }
 
