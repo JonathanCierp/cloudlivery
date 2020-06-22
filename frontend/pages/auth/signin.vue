@@ -3,10 +3,10 @@
 		<div class="signin__card bg-white py-10 px-10 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
 			<nuxt-link class="inline-block mb-8" to="/">
 				<img class="inline px-1 w-10" src="@/assets/img/icons/logo.svg" alt="Logo du site">
-				<span class="text-logo font-bold align-middle">Cloudlivery</span>
+				<span class="font-bold align-middle">Cloudlivery</span>
 			</nuxt-link>
 			<div class="signin__card__header flex items-center justify-center mb-6">
-				<span class="text-logo font-bold align-middle">Se connecter</span>
+				<span class="font-bold align-middle">Se connecter</span>
 			</div>
 			<custom-form ref="form" @submit.prevent="onSignin" class="signin__card__body flex flex-col items-center justify-center mt-5">
 				<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy autocomplete="off" />
@@ -153,10 +153,6 @@
 	.signin .signin__card .signin__card__body div {
 		width: 100%;
 		max-width: 450px;
-	}
-	.signin .signin__card .signin__card__body .signin__card__body__input svg {
-		color: #718096;
-		margin: 14px 16px;
 	}
 	.signin .signin__card .signin__card__body .signin__card__body__or span:first-child, .signin .signin__card .signin__card__body .signin__card__body__or span:last-child {
 		display: inline-block;
