@@ -1,8 +1,9 @@
-mutation signin($email: String!, $password: String!){
-  signin(email: $email, password: $password) {
+mutation signin($email: String!, $password: String!, $rememberMe: Boolean){
+  signin(email: $email, password: $password, rememberMe: $rememberMe) {
     token
     user {
       id
+      google_id
       firstname
       lastname
       email

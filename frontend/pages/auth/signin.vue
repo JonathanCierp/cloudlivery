@@ -17,7 +17,7 @@
 					</nuxt-link>
 				</div>
 				<div class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
-					<custom-form-checkbox v-model="rememberMe" label="Se souvenir de moi" />
+					<custom-form-checkbox v-model="form.rememberMe" label="Se souvenir de moi" />
 				</div>
 				<div class="signin__card__actions flex w-full justify-center my-3">
 					<custom-button ref="loginButton" type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75 flex items-center justify-center">
@@ -38,7 +38,7 @@
 					<span></span>
 				</div>
 				<div class="signin__card__socials flex w-full justify-center my-3">
-					<custom-button-google ref="googleButton" @click="onGoogleLogin" class="signin__card__socials__google flex items-center justify-center" type="button" />
+					<custom-button-google ref="googleButton" @click="onGoogleSignin" class="signin__card__socials__google flex items-center justify-center" type="button" />
 				</div>
 			</custom-form>
 		</div>
@@ -56,6 +56,7 @@
 	import CustomButtonGoogle from "@/components/custom/button/CustomButtonGoogle"
 
 	import GqlSignin from "@/utils/apollo/mutation/signin"
+	import GqlGoogleSignin from "@/utils/apollo/mutation/googleSignin"
 
 	export default {
 		layout: "blank",
@@ -74,10 +75,10 @@
 		data() {
 			return {
 				form: {
-					email: "a@a.fr",
-					password: "a@a.fr",
+					email: null,
+					password: null,
+					rememberMe: false,
 				},
-				rememberMe: false,
 				isSignIn: null
 			}
 		},
@@ -86,10 +87,6 @@
 				if(this.$refs.form.validate()) {
 					this.$refs.loginButton.setState("loading")
 					this.$refs.googleButton.setState("loading")
-					// Get info
-					// https://oauth2.googleapis.com/tokeninfo?id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxNmRlMWIyYWIwYzE2YWMwYWNmNjYyZWYwMWY3NTY3ZTU0NDI1MmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMTAyMDEzOTU0MDA2NC1wYjE0NXZkZGE4ZGJ0azQ4N2I2dmxjbHFldTVxOGNqdi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjEwMjAxMzk1NDAwNjQtcGIxNDV2ZGRhOGRidGs0ODdiNnZsY2xxZXU1cThjanYuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTE3NjkxODM1ODYxNjQyMDk2NjMiLCJlbWFpbCI6ImNpZXJwLmpvbmF0aGFuQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoicTJKWk1Hb2Q1V1o4RVJoTnhKWV9XdyIsIm5hbWUiOiJKb25hdGhhbiBDaWVycCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vLWF2ZDlfazRFeWd3L0FBQUFBQUFBQUFJL0FBQUFBQUFBQUFBL0FNWnV1Y21kY1VwN3BsdnNVZ0pOMTNJc3llenNYMHB6MWcvczk2LWMvcGhvdG8uanBnIiwiZ2l2ZW5fbmFtZSI6IkpvbmF0aGFuIiwiZmFtaWx5X25hbWUiOiJDaWVycCIsImxvY2FsZSI6ImZyIiwiaWF0IjoxNTkyNTQ5NTI1LCJleHAiOjE1OTI1NTMxMjUsImp0aSI6IjUyODc5YTQ5ZmUzYTM3MjVhNzg1OTY0YWUzOTdmYWEyNGZmYmI1MWEifQ.qDHJSg-1zRKTLVrRQQVQnBeu8OwYASQIFyekGSdPR7OV7MibgmjUjkJL-Qu4KUXcD0_spExoKq54WrDaxKzYSOZ5oZUUhM51Qbep8WY8FtdOoShZ1fKPFDVqqy6otbSmk1ZzjIy7KJGE8xgGXhJ7uviLy0Bn6UnRap36v0BUkwuJ24i6yPrM7W1-aZbNSv-3SvZ9He_7G-KP0eqNx4b3YDFKtpJEquZDpnP2xrqAlIad35nvjjQE9AHz6Fx8NxnISDrZNNLQRkJkssBt9Cp3f79vTcqoJVevOVMSJPkes3ULMvOHb8uocgyh03RCZ4ZXrsme9Vd9yKzhvGmm1C26DQ
-					// Api doc
-					// https://developers.google.com/identity/sign-in/web/backend-auth
 					try {
 						const res = await this.$apollo.mutate({
 							mutation: GqlSignin,
@@ -107,30 +104,35 @@
 					}
 				}
 			},
-			async onGoogleLogin() {
+			async onGoogleSignin() {
 				this.$refs.googleButton.setState("loading")
 				this.$refs.loginButton.setState("loading")
 				this.$gAuth
 					.signIn()
-					.then(GoogleUser => {
-						//on success do something
-						console.log("GoogleUser", GoogleUser);
-						console.log("getId", GoogleUser.getId());
-						console.log("getBasicProfile", GoogleUser.getBasicProfile());
-						console.log("getAuthResponse", GoogleUser.getAuthResponse());
-						//console.log("getAuthResponse", this.$gAuth.GoogleAuth.currentUser.get().getAuthResponse());
-						if(this.$gAuth.isAuthorized) {
-							/*const res = await this.$apollo.mutate({
-								mutation: GqlLogin,
-								variables: this.form
-							})*/
+					.then(async GoogleUser => {
+						let googleUser = {
+							google_id: GoogleUser.getBasicProfile().getId(),
+							email: GoogleUser.getBasicProfile().getEmail(),
+							firstname: GoogleUser.getBasicProfile().getGivenName(),
+							lastname: GoogleUser.getBasicProfile().getFamilyName(),
+							rememberMe: this.form.rememberMe
 						}
-						this.isSignIn = this.$gAuth.isAuthorized;
+
+						if(this.$gAuth.isAuthorized) {
+							const res = await this.$apollo.mutate({
+								mutation: GqlGoogleSignin,
+								variables: googleUser
+							})
+
+							await this.$apolloHelpers.onLogin(res.data.googleSignin.token)
+							this.$store.commit("SET_AUTH", res.data.googleSignin.user)
+							this.$router.push("/")
+						}
 						this.$refs.googleButton.setState("initial")
 						this.$refs.loginButton.setState("initial")
 					})
 					.catch(error => {
-						//on fail do something
+						console.log(error)
 						console.error("Connexion google interrompu");
 						this.$refs.googleButton.setState("initial")
 						this.$refs.loginButton.setState("initial")

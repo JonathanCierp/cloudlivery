@@ -1,0 +1,14 @@
+mutation googleSignin($google_id: String!, $lastname: String!, $firstname: String!, $email: String!, $rememberMe: Boolean){
+  googleSignin(google_id: $google_id, lastname: $lastname, firstname: $firstname, email: $email, rememberMe: $rememberMe) {
+    token
+    user {
+      id
+      google_id
+      firstname
+      lastname
+      email
+      updatedAt
+      createdAt
+    }
+  }
+}
