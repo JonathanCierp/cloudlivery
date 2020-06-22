@@ -14,54 +14,61 @@ const redis = new Redis(client)
 
 export default class Auth {
 	//region Protected parameters
-		/**
-		 * User id
-		 * @type number
-		 * @default -1
-		 */
-		protected _id: number = -1
-		/**
-		 * User email
-		 * @type string
-		 * @default empty string
-		 */
-		protected _email: string = ""
-		/**
-		 * User id
-		 * @type string
-		 * @default empty string
-		 */
-		protected _password: string = ""
-		/**
-		 * User id
-		 * @type User
-		 * @default null
-		 */
+	/**
+	 * User id
+	 * @type number
+	 * @default -1
+	 */
+	protected _id: number = -1
+	/**
+	 * User email
+	 * @type string
+	 * @default empty string
+	 */
+	protected _email: string = ""
+	/**
+	 * User id
+	 * @type string
+	 * @default empty string
+	 */
+	protected _password: string = ""
+	/**
+	 * User id
+	 * @type User
+	 * @default null
+	 */
 		//@ts-ignore
-		protected _user: User
-		/**
-		 * User id
-		 * @type string
-		 * @default empty string
-		 */
-		protected _token: string = ""
-		/**
-		 * TODO Check users connected >7d then ask password or if google auth ask again google connection
-		 * Know if user perma connected
-		 * true: 7d connected
-		 * false: 3h
-		 * @type boolean
-		 * @default false
-		 */
-		protected _rememberMe: boolean = false
+	protected _user: User
+	/**
+	 * User id
+	 * @type string
+	 * @default empty string
+	 */
+	protected _token: string = ""
+	/**
+	 * TODO Check users connected >7d then ask password or if google auth ask again google connection
+	 * Know if user perma connected
+	 * true: 7d connected
+	 * false: 3h
+	 * @type boolean
+	 * @default false
+	 */
+	protected _rememberMe: boolean = false
 
-		/**
-		 * Jwt ttl
-		 * @type string
-		 * @default process.env.REDIS_TTL
-		 */
+	/**
+	 * App context
+	 * @type GetGen<"context"> | undefined
+	 * @default null
+	 */
+	protected ctx: GetGen<"context"> | null = null
+
+	/**
+	 * Jwt ttl
+	 * @type string
+	 * @default process.env.REDIS_TTL
+	 */
 		// @ts-ignore
-		protected _jwtTtl: string | undefined = process.env.REDIS_TTL
+	protected _jwtTtl: string | undefined = process.env.REDIS_TTL
 	//endregion
 
 	//region Getters Setters
@@ -184,6 +191,7 @@ export default class Auth {
 	public getJwtTtl(): string | undefined {
 		return this._jwtTtl
 	}
+
 	//endregion
 
 	//region Public Functions
@@ -193,16 +201,16 @@ export default class Auth {
 	 * @param ctx
 	 */
 	public async setPrismaUser(ctx: GetGen<"context">): Promise<void> {
-		try{
+		try {
 			const res = await this.getPrismaUserByEmail(ctx)
 
-			if(!res) {
+			if (!res) {
 				CustomError.error("Aucun utilisateur pour cette adresse mail.")
 			}
 
 			//@ts-ignore
 			this.setUser(res)
-		}catch (e) {
+		} catch (e) {
 			CustomError.error("Aucun utilisateur pour cette adresse mail.")
 		}
 	}
@@ -212,13 +220,13 @@ export default class Auth {
 	 * @return Promise<void>
 	 */
 	public async comparePassword(): Promise<void> {
-		try{
+		try {
 			const res = await compare(this.getPassword(), <string>this.getUser().password)
 
-			if(!res) {
+			if (!res) {
 				CustomError.error("Mot de passe incorrect.")
 			}
-		}catch (e) {
+		} catch (e) {
 			CustomError.error("Mot de passe incorrect.")
 		}
 	}
@@ -235,17 +243,17 @@ export default class Auth {
 			subject: "user"
 		}
 
-		if(!this.getRememberMe()) {
-			Object.assign(options,{
+		if (!this.getRememberMe()) {
+			Object.assign(options, {
 				expiresIn: `${process.env.REDIS_TTL}s`
 			})
 		}
 
-		this.setToken(sign( { userId: this.getUser().id }, APP_SECRET, options))
+		this.setToken(sign({userId: this.getUser().id}, APP_SECRET, options))
 
-		if(this.getRememberMe()) {
+		if (this.getRememberMe()) {
 			redis.set(`signin_${this.getUser().id}`, this.getToken())
-		}else {
+		} else {
 			redis.set(`signin_${this.getUser().id}`, this.getToken(), String(process.env.REDIS_TTL))
 		}
 	}
@@ -256,15 +264,18 @@ export default class Auth {
 	 * @param oldToken
 	 */
 	public refreshToken(oldToken: string): void {
-		const payload: TokenPayload = verify(oldToken, APP_SECRET, { audience: "access_token", issuer: "cloudlivery" }) as TokenPayload
+		const payload: TokenPayload = verify(oldToken, APP_SECRET, {
+			audience: "access_token",
+			issuer: "cloudlivery"
+		}) as TokenPayload
 
 		// ?
 		/*if(false) {*/
-			delete payload.iat
-			delete payload.exp
-			delete payload.jti
+		delete payload.iat
+		delete payload.exp
+		delete payload.jti
 
-			this.setToken(sign(payload, APP_SECRET, { jwtid: "2", expiresIn: this.getJwtTtl() }))
+		this.setToken(sign(payload, APP_SECRET, {jwtid: "2", expiresIn: this.getJwtTtl()}))
 		/*}*/
 	}
 
@@ -290,7 +301,7 @@ export default class Auth {
 			const verifiedToken: Token = verify(token, APP_SECRET) as Token
 
 			return verifiedToken.userId
-		}else {
+		} else {
 			CustomError.error("Erreur lors de la déconnexion.")
 		}
 
@@ -307,7 +318,7 @@ export default class Auth {
 
 		if (Authorization) {
 			return Authorization.replace("Bearer ", "")
-		}else {
+		} else {
 			CustomError.error("Erreur lors de la déconnexion.")
 		}
 
@@ -323,7 +334,7 @@ export default class Auth {
 			return await ctx.prisma.user.create({
 				data: this.getUser()
 			})
-		}catch (e) {
+		} catch (e) {
 			CustomError.error("Erreur lors de la création de l'utilisateur google.")
 		}
 
@@ -337,5 +348,6 @@ export default class Auth {
 			}
 		})
 	}
+
 	//endregion
 }
