@@ -1,9 +1,10 @@
 export interface User {
 	id: number
+	google_id: string | null
 	lastname: string | null
 	firstname: string | null
 	email: string
-	password: string
+	password: string | null
 	updatedAt: Date
 	createdAt: Date
 }
@@ -20,4 +21,12 @@ export interface TokenPayload {
 	iss: string,
 	sub: string,
 	jti: string
+}
+
+export interface GoogleUserAuth {
+	google_id: string
+	lastname: string
+	firstname: string
+	email: string
+	rememberMe: boolean
 }

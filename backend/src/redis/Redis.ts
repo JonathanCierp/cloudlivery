@@ -80,8 +80,12 @@ class Redis {
 	 * @param value
 	 * @param ttl
 	 */
-	set(key: string, value: string, ttl = process.env.REDIS_TTL): void {
-		this.getClient().set(key, value, "EX", ttl)
+	set(key: string, value: string, ttl: string | null = null): void {
+		if(ttl) {
+			this.getClient().set(key, value, "EX", ttl)
+		}else {
+			this.getClient().set(key, value)
+		}
 	}
 
 	/**

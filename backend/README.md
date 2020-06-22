@@ -94,9 +94,10 @@ npm run start
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Class OK : 
-* src/auth/Auth.ts ---> OK
+* src/auth/Auth.ts ---> OK (delete all ctx params and create private var _ctx) (a finir de commenter nouvelles fonctions)
 * src/auth/CustomError.ts ---> OK (Move to error folder)
 * src/auth/WebAuth.ts ---> OK
+* src/auth/GoogleAuth.ts ---> OK (a finir de commenter nouvelles fonctions)
 * src/permissions/index.ts ---> OK
 * src/redis/Redis.ts ---> OK
 * src/resolvers/index.ts ---> OK

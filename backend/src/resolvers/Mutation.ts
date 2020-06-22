@@ -1,10 +1,13 @@
 import { hash } from "bcryptjs"
 import { sign } from "jsonwebtoken"
-import { mutationType, stringArg, intArg } from "nexus"
+import {mutationType, stringArg, intArg, arg, booleanArg} from "nexus"
 import { APP_SECRET } from "../utils"
 import WebAuth from "../auth/WebAuth";
+import GoogleAuth from "../auth/GoogleAuth";
+import { User, GoogleUserAuth } from "../types/auth";
 
 const webAuth = new WebAuth()
+const googleAuth = new GoogleAuth()
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -49,12 +52,15 @@ export const Mutation = mutationType({
 			type: "AuthPayload",
 			args: {
 				email: stringArg({ nullable: false }),
-				password: stringArg({ nullable: false })
+				password: stringArg({ nullable: false }),
+				rememberMe: booleanArg({ default: false })
 			},
-			resolve: async (_parent, { email, password }, ctx) => {
+			resolve: async (_parent, { email, password, rememberMe }, ctx) => {
+
 				// Set params info
 				webAuth.setEmail(email)
 				webAuth.setPassword(password)
+				webAuth.setRememberMe(rememberMe)
 				// Set database user to the class
 				await webAuth.setPrismaUser(ctx)
 				// Compare given password with database password
@@ -65,6 +71,38 @@ export const Mutation = mutationType({
 				return {
 					token: webAuth.getToken(),
 					user: webAuth.getUser()
+				}
+			}
+		})
+		t.field("googleSignin", {
+			type: "AuthPayload",
+			args: {
+				google_id: stringArg(),
+				lastname: stringArg(),
+				firstname: stringArg(),
+				email: stringArg({ nullable: false }),
+				rememberMe: booleanArg({ default: false })
+			},
+			//@ts-ignore
+			resolve: async (_parent, user: GoogleUserAuth, ctx) => {
+				// Set params info
+				googleAuth.setGoogleUser(user)
+				googleAuth.setEmail(googleAuth.getGoogleUser().email)
+				googleAuth.setRememberMe(user.rememberMe)
+
+				if(!await googleAuth.getPrismaUserByEmail(ctx)) {
+					// Create user
+					await googleAuth.createUser(ctx)
+				}
+
+				googleAuth.setUser(await googleAuth.getPrismaUserByEmail(ctx))
+
+				// Set jwt token to the class
+				googleAuth.signToken()
+				
+				return {
+					token: googleAuth.getToken(),
+					user: googleAuth.getUser()
 				}
 			}
 		})

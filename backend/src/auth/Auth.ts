@@ -54,6 +54,14 @@ export default class Auth {
 		 * @default false
 		 */
 		protected _rememberMe: boolean = false
+
+		/**
+		 * Jwt ttl
+		 * @type string
+		 * @default process.env.REDIS_TTL
+		 */
+		// @ts-ignore
+		protected _jwtTtl: string | undefined = process.env.REDIS_TTL
 	//endregion
 
 	//region Getters Setters
@@ -96,7 +104,7 @@ export default class Auth {
 	 * @return void
 	 * @param user
 	 */
-	public setUser(user: User | null): void {
+	public setUser(user: User): void {
 		//@ts-ignore
 		this._user = user
 	}
@@ -159,6 +167,23 @@ export default class Auth {
 	public getRememberMe(): boolean {
 		return this._rememberMe
 	}
+
+	/**
+	 * Set jwt ttl
+	 * @return void
+	 * @param jwtTtl
+	 */
+	public setJwtTtl(jwtTtl: string | undefined): void {
+		this._jwtTtl = jwtTtl
+	}
+
+	/**
+	 * Get jwt ttl
+	 * @return number
+	 */
+	public getJwtTtl(): string | undefined {
+		return this._jwtTtl
+	}
 	//endregion
 
 	//region Public Functions
@@ -168,19 +193,14 @@ export default class Auth {
 	 * @param ctx
 	 */
 	public async setPrismaUser(ctx: GetGen<"context">): Promise<void> {
-		const email = this.getEmail()
-
 		try{
-			const res = await ctx.prisma.user.findOne({
-				where: {
-					email
-				}
-			})
+			const res = await this.getPrismaUserByEmail(ctx)
 
 			if(!res) {
 				CustomError.error("Aucun utilisateur pour cette adresse mail.")
 			}
 
+			//@ts-ignore
 			this.setUser(res)
 		}catch (e) {
 			CustomError.error("Aucun utilisateur pour cette adresse mail.")
@@ -193,7 +213,7 @@ export default class Auth {
 	 */
 	public async comparePassword(): Promise<void> {
 		try{
-			const res = await compare(this.getPassword(), this.getUser().password)
+			const res = await compare(this.getPassword(), <string>this.getUser().password)
 
 			if(!res) {
 				CustomError.error("Mot de passe incorrect.")
@@ -208,16 +228,26 @@ export default class Auth {
 	 * @return void
 	 */
 	public signToken(): void {
-		this.setToken(sign( { userId: this.getUser().id }, APP_SECRET, {
+		const options = {
 			audience: "access_token",
 			issuer: "cloudlivery",
 			jwtid: "1",
-			subject: "user",
-			expiresIn: this.getRememberMe() ? process.env.REDIS_BIG_TTL_JWT : process.env.REDIS_TTL_JWT
-		}))
+			subject: "user"
+		}
 
-		const ttl = this.getRememberMe() ? process.env.REDIS_BIG_TTL : process.env.REDIS_TTL
-		redis.set(`signin_${this.getUser().id}`, this.getToken(), ttl)
+		if(!this.getRememberMe()) {
+			Object.assign(options,{
+				expiresIn: `${process.env.REDIS_TTL}s`
+			})
+		}
+
+		this.setToken(sign( { userId: this.getUser().id }, APP_SECRET, options))
+
+		if(this.getRememberMe()) {
+			redis.set(`signin_${this.getUser().id}`, this.getToken())
+		}else {
+			redis.set(`signin_${this.getUser().id}`, this.getToken(), String(process.env.REDIS_TTL))
+		}
 	}
 
 	/**
@@ -234,7 +264,7 @@ export default class Auth {
 			delete payload.exp
 			delete payload.jti
 
-			this.setToken(sign(payload, APP_SECRET, { jwtid: "2", expiresIn: process.env.REDIS_TTL_JWT }))
+			this.setToken(sign(payload, APP_SECRET, { jwtid: "2", expiresIn: this.getJwtTtl() }))
 		/*}*/
 	}
 
@@ -286,6 +316,26 @@ export default class Auth {
 
 	public async existInRedis(): Promise<boolean> {
 		return await redis.compare(`signin_${this.getId()}`, this.getToken())
+	}
+
+	public async createUser(ctx: GetGen<"context">): Promise<any> {
+		try {
+			return await ctx.prisma.user.create({
+				data: this.getUser()
+			})
+		}catch (e) {
+			CustomError.error("Erreur lors de la création de l'utilisateur google.")
+		}
+
+		return ""
+	}
+
+	public getPrismaUserByEmail(ctx: GetGen<"context">): Promise<any> {
+		return ctx.prisma.user.findOne({
+			where: {
+				email: this.getEmail()
+			}
+		})
 	}
 	//endregion
 }
