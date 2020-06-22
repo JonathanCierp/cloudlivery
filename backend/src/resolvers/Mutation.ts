@@ -48,6 +48,38 @@ export const Mutation = mutationType({
 				}
 			}
 		})
+		t.field("seedUser", {
+			type: "Seed",
+			args: {
+				i: intArg({ default: 1 })
+			},
+			// @ts-ignore
+			resolve: async (_parent, { i }, ctx) => {
+				let users: object[] = []
+
+				// @ts-ignore
+				for (let offset = 0; offset < i; i++) {
+					const randomString = Math.random().toString(36).substring(7)
+					const lastname = randomString
+					const firstname = randomString
+					const email = `${randomString}@prisma.io`
+					const password = await hash(randomString, 10)
+
+					users = [...users, await ctx.prisma.user.create({
+						data: {
+							lastname,
+							firstname,
+							email,
+							password
+						}
+					})]
+				}
+
+				return {
+					users
+				}
+			}
+		})
 		t.field("signin", {
 			type: "AuthPayload",
 			args: {
@@ -56,7 +88,6 @@ export const Mutation = mutationType({
 				rememberMe: booleanArg({ default: false })
 			},
 			resolve: async (_parent, { email, password, rememberMe }, ctx) => {
-
 				// Set params info
 				webAuth.setEmail(email)
 				webAuth.setPassword(password)
@@ -118,36 +149,20 @@ export const Mutation = mutationType({
 					message: "Déconnecté avec succès"
 				}
 			}
-		});
-		t.field("seedUser", {
-			type: "Seed",
+		})
+		t.field("resetPassword", {
+			type: "Default",
 			args: {
-				i: intArg({ default: 1 })
+				email: stringArg({ nullable: false })
 			},
 			// @ts-ignore
-			resolve: async (_parent, { i }, ctx) => {
-				let users: object[] = []
-
-				// @ts-ignore
-				for (let offset = 0; offset < i; i++) {
-					const randomString = Math.random().toString(36).substring(7)
-					const lastname = randomString
-					const firstname = randomString
-					const email = `${randomString}@prisma.io`
-					const password = await hash(randomString, 10)
-
-					users = [...users, await ctx.prisma.user.create({
-						data: {
-							lastname,
-							firstname,
-							email,
-							password
-						}
-					})]
-				}
-
+			resolve: async (_parent, { email }, ctx) => {
+				// Set params info
+				webAuth.setEmail(email)
+				await webAuth.getPrismaUserByEmail(ctx)
+				
 				return {
-					users
+					message: ""
 				}
 			}
 		})

@@ -14,7 +14,7 @@ class Redis {
 	 * @type any
 	 * @default null
 	 */
-	_client: any
+	private _client: any
 	//endregion
 
 	//region Getters Setters
