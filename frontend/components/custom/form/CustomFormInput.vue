@@ -1,11 +1,21 @@
 <template>
-	<div class="custom-form-input flex items-center relative justify-center my-4" :class="classes">
-		<component v-if="iconLeft" class="pointer-events-none absolute inset-y-0 left-0 flex items-center" :is="iconLeftComponent" />
-		<input :type="type" @input="oninput" @blur="onBlur" class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 text-gray-700 leading-tight focus:shadow-outline" :placeholder="placeholder">
-		<span class="custom-form-input-text--error absolute left-0 font-semibold">{{ errorMessage }}</span>
-		<span v-if="state === 'valid'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
-		<span v-if="state === 'error'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>
-		<span v-if="state === 'loading'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-loading /></span>
+	<div class="custom-form-input">
+		<div v-if="type === 'password'" class="flex items-center justify-end">
+			<span @click="togglePasswordVisibility('text')">
+				<icon-eye v-if="typeEdited === 'password'" />
+			</span>
+			<span @click="togglePasswordVisibility('password')">
+				<icon-eye-off v-if="typeEdited === 'text'" />
+			</span>
+		</div>
+		<div class="custom-form-input flex items-center relative justify-center my-4" :class="`${classes} ${type === 'password' ? 'mt-1' : ''}`">
+			<component v-if="iconLeft" class="pointer-events-none absolute inset-y-0 left-0 flex items-center" :is="iconLeftComponent" />
+			<input :type="typeEdited" @input="oninput" @blur="onBlur" class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 text-gray-700 leading-tight focus:shadow-outline" :placeholder="placeholder">
+			<span class="custom-form-input-text--error absolute left-0 font-semibold">{{ errorMessage }}</span>
+			<span v-if="state === 'valid'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
+			<span v-if="state === 'error'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>
+			<span v-if="state === 'loading'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-loading /></span>
+		</div>
 	</div>
 </template>
 
@@ -13,6 +23,8 @@
 	import IconClose from "@/components/icons/IconClose"
 	import IconTick from "@/components/icons/IconTick"
 	import IconLoading from "@/components/icons/IconLoading"
+	import IconEye from "@/components/icons/IconEye"
+	import IconEyeOff from "@/components/icons/IconEyeOff"
 
 	export default {
 		name: "custom-custom-form-input",
@@ -45,13 +57,16 @@
 		components:{
 			IconClose,
 			IconTick,
-			IconLoading
+			IconLoading,
+			IconEye,
+			IconEyeOff
 		},
 		data() {
 			return {
 				iconLeftComponent: null,
 				state: "initial",
-				errorMessage: ""
+				errorMessage: "",
+				typeEdited: this.type
 			}
 		},
 		created() {
@@ -93,6 +108,9 @@
 				}
 
 				return true
+			},
+			togglePasswordVisibility(type) {
+				this.typeEdited = type
 			}
 		},
 		computed: {
@@ -145,5 +163,11 @@
 	.custom-form-input svg {
 		color: #718096;
 		margin: 14px 16px;
+	}
+	.custom-form-input svg#icon-eye, .custom-form-input svg#icon-eye-off {
+		color: #10a3cc;
+		margin: 0;
+		width: 22px;
+		cursor: pointer;
 	}
 </style>

@@ -1,10 +1,12 @@
 <template>
-	<div class="custom-form-checkbox" :class="classes">
+	<div class="custom-form-checkbox relative" :class="classes">
 		<label class="text-sm hover:opacity-75">
-			<input @input="oninput" class="mr-2 leading-tight" type="checkbox">
-			<span class="align-middle select-none" :class="`${!label ? 'no-label' : ''}`">
-				{{ label }}
-			</span>
+			<input @change="onChange" class="mr-2 leading-tight" type="checkbox">
+				<slot name="label">
+					<span class="align-middle select-none" :class="`${!label ? 'no-label' : ''}`">
+					{{ label }}
+					</span>
+				</slot>
 		</label>
 		<span class="custom-form-checkbox-text--error absolute left-0 font-semibold">{{ errorMessage }}</span>
 	</div>
@@ -38,11 +40,11 @@
 			}
 		},
 		methods: {
-			oninput(e) {
+			onChange(e) {
 				if(this.lazy) {
 					this.validate(e.target.checked)
 				}
-				this.$emit("input", e.target.checked)
+				this.$emit("change", e.target.checked)
 			},
 			validate(value) {
 				if(this.rules) {

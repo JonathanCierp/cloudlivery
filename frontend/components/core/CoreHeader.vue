@@ -60,6 +60,7 @@
 					})
 					this.$store.commit("SET_AUTH", {})
 					await this.$apolloHelpers.onLogout()
+					this.$router.push("/")
 				}catch (e) {
 					console.log(e)
 				}
