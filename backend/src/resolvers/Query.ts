@@ -1,3 +1,6 @@
+// Classes
+import WebAuth from "../auth/WebAuth"
+// Others
 import { intArg, queryType, stringArg } from "nexus"
 import { getUserId } from "../utils"
 
@@ -10,13 +13,33 @@ export const Query = queryType({
 				provider: stringArg({ nullable: false })
 			},
 			resolve: (parent, { provider }, ctx) => {
+				const webAuth = new WebAuth()
+				// Set params info
+				webAuth.setCtx(ctx)
+				webAuth.extractIdFromJwt()
 				const userId = getUserId(ctx)
-				console.log(provider)
 				return ctx.prisma.user.findOne({
 					where: {
 						id: Number(userId),
 					}
 				})
+			}
+		})
+		t.field("tokenIsOk", {
+			type: "ResetPassword",
+			nullable: true,
+			args: {
+				token: stringArg({ nullable: false })
+			},
+			resolve: async (parent, { token }, ctx) => {
+				const webAuth = new WebAuth()
+				// Set params info
+				webAuth.setToken(token)
+				webAuth.setId(webAuth.extractIdFromJwt())
+
+				return {
+					valid: webAuth.verifyToken() && await webAuth.existInRedis("reset_password_")
+				}
 			}
 		})
 		/*t.list.field("feed", {

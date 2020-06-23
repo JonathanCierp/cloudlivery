@@ -43,12 +43,13 @@ export default class GoogleAuth extends Auth {
 	//endregion
 
 	//region Public Functions
-	public async createUser(ctx: GetGen<"context">): Promise<any> {
+	public async createUser(): Promise<any> {
 		try {
-			return await ctx.prisma.user.create({
+			return await this.getCtx().prisma.user.create({
 				data: this.getGoogleUser()
 			})
 		}catch (e) {
+			console.log(e)
 			CustomError.error("Erreur lors de la création de l'utilisateur google.")
 		}
 

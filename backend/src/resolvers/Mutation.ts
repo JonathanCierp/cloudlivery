@@ -1,13 +1,15 @@
+// Classes
+import WebAuth from "../auth/WebAuth"
+import GoogleAuth from "../auth/GoogleAuth"
+import Mail from "../mail/Mail"
+// Utils
+import { APP_SECRET } from "../utils"
+// Packages
 import { hash } from "bcryptjs"
 import { sign } from "jsonwebtoken"
-import {mutationType, stringArg, intArg, arg, booleanArg} from "nexus"
-import { APP_SECRET } from "../utils"
-import WebAuth from "../auth/WebAuth";
-import GoogleAuth from "../auth/GoogleAuth";
-import { User, GoogleUserAuth } from "../types/auth";
-
-const webAuth = new WebAuth()
-const googleAuth = new GoogleAuth()
+import { mutationType, stringArg, intArg, arg, booleanArg } from "nexus"
+// Types
+import { User, GoogleUserAuth } from "../types/auth"
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -88,12 +90,18 @@ export const Mutation = mutationType({
 				rememberMe: booleanArg({ default: false })
 			},
 			resolve: async (_parent, { email, password, rememberMe }, ctx) => {
+				const webAuth = new WebAuth()
 				// Set params info
 				webAuth.setEmail(email)
 				webAuth.setPassword(password)
+				//@ts-ignore
 				webAuth.setRememberMe(rememberMe)
+				webAuth.setCtx(ctx)
+				webAuth.setData({
+					email
+				})
 				// Set database user to the class
-				await webAuth.setPrismaUser(ctx)
+				await webAuth.setPrismaUser()
 				// Compare given password with database password
 				await webAuth.comparePassword()
 				// Set jwt token to the class
@@ -116,17 +124,23 @@ export const Mutation = mutationType({
 			},
 			//@ts-ignore
 			resolve: async (_parent, user: GoogleUserAuth, ctx) => {
+				const googleAuth = new GoogleAuth()
 				// Set params info
+				googleAuth.setRememberMe(user.rememberMe)
+				delete user.rememberMe
 				googleAuth.setGoogleUser(user)
 				googleAuth.setEmail(googleAuth.getGoogleUser().email)
-				googleAuth.setRememberMe(user.rememberMe)
+				googleAuth.setCtx(ctx)
+				googleAuth.setData({
+					email: googleAuth.getEmail()
+				})
 
-				if(!await googleAuth.getPrismaUserByEmail(ctx)) {
+				if(!await googleAuth.getPrismaUser()) {
 					// Create user
-					await googleAuth.createUser(ctx)
+					await googleAuth.createUser()
 				}
 
-				googleAuth.setUser(await googleAuth.getPrismaUserByEmail(ctx))
+				googleAuth.setUser(await googleAuth.getPrismaUser())
 
 				// Set jwt token to the class
 				googleAuth.signToken()
@@ -140,8 +154,10 @@ export const Mutation = mutationType({
 		t.field("signout", {
 			type: "Signout",
 			resolve: async (_parent, {}, ctx) => {
+				const webAuth = new WebAuth()
 				// Set params info
-				webAuth.setId(webAuth.extractIdFromJwt(ctx))
+				webAuth.setCtx(ctx)
+				webAuth.setId(webAuth.extractIdFromJwt())
 				// Delete jwt token from the class
 				await webAuth.deleteToken()
 
@@ -157,12 +173,51 @@ export const Mutation = mutationType({
 			},
 			// @ts-ignore
 			resolve: async (_parent, { email }, ctx) => {
+				const webAuth = new WebAuth()
 				// Set params info
 				webAuth.setEmail(email)
-				await webAuth.getPrismaUserByEmail(ctx)
+				webAuth.setCtx(ctx)
+				webAuth.setData({
+					email
+				})
+				webAuth.setUser(await webAuth.getPrismaUser())
+
+				if(webAuth.getUser()) {
+					console.log(webAuth.generateResetPasswordUrl("reset_password_"))
+					/*const mail = new Mail()
+					mail.createTransport()
+					mail.send("signup.ejs")*/
+				}
 				
 				return {
-					message: ""
+					message: "Si votre email est connue, afin de réinitialiser votre mot de passe, un e-mail va vous être envoyé. Cela peut prendre quelques minutes."
+				}
+			}
+		})
+		t.field("resetPasswordSave", {
+			type: "Default",
+			args: {
+				token: stringArg({ nullable: false }),
+				password: stringArg({ nullable: false })
+			},
+			// @ts-ignore
+			resolve: async (_parent, { token, password }, ctx) => {
+				const webAuth = new WebAuth()
+				// Set params info
+				webAuth.setCtx(ctx)
+				webAuth.setToken(token)
+				webAuth.setId(webAuth.extractIdFromJwt())
+				webAuth.setData({
+					password: await hash(password, 10)
+				})
+
+				if(webAuth.getId()) {
+					await webAuth.updateUser()
+					await webAuth.deleteToken("reset_password_")
+				}
+
+				return {
+					message: "Modification du mot de passe effectué avec succès."
 				}
 			}
 		})

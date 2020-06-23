@@ -10,8 +10,9 @@ const webAuth = new WebAuth()
 const rules = {
 	isAuthenticatedUser: rule()(async (parent, args, ctx: GetGen<"context">): Promise<boolean> => {
 		// Set params info
-		webAuth.setId(webAuth.extractIdFromJwt(ctx))
-		webAuth.setToken(webAuth.extractTokenFromJwt(ctx))
+		webAuth.setCtx(ctx)
+		webAuth.setId(webAuth.extractIdFromJwt())
+		webAuth.setToken(webAuth.extractTokenFromJwt())
 
 		// Return true if token exist in redis
 		return await webAuth.existInRedis()

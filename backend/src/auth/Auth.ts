@@ -56,19 +56,26 @@ export default class Auth {
 	protected _rememberMe: boolean = false
 
 	/**
-	 * App context
-	 * @type GetGen<"context"> | undefined
-	 * @default null
-	 */
-	protected ctx: GetGen<"context"> | null = null
-
-	/**
 	 * Jwt ttl
 	 * @type string
 	 * @default process.env.REDIS_TTL
 	 */
 		// @ts-ignore
 	protected _jwtTtl: string | undefined = process.env.REDIS_TTL
+
+	/**
+	 * App context
+	 * @type GetGen<"context"> | undefined
+	 * @default null
+	 */
+	protected _ctx: GetGen<"context"> | null = null
+
+	/**
+	 * User data
+	 * @type Object
+	 * @default {}
+	 */
+	protected _data: Object = {}
 	//endregion
 
 	//region Getters Setters
@@ -192,17 +199,55 @@ export default class Auth {
 		return this._jwtTtl
 	}
 
+	/**
+	 * Set jwt ttl
+	 * @return void
+	 * @param ctx
+	 */
+	public setCtx(ctx: GetGen<"context">): void {
+		this._ctx = ctx
+	}
+
+	/**
+	 * Get jwt ttl
+	 * @return GetGen<"context">
+	 */
+	public getCtx(): GetGen<"context"> {
+		//@ts-ignore
+		return this._ctx
+	}
+
+	/**
+	 * Set data
+	 * @return void
+	 * @param data
+	 */
+	public setData(data: object): void {
+		this._data = data
+	}
+
+
+	/**
+	 * Get jwt ttl
+	 * @return GetGen<"context">
+	 */
+	public getData(): object {
+		return this._data
+	}
+
 	//endregion
 
 	//region Public Functions
 	/**
 	 * Set User to the class
 	 * @return Promise<void>
-	 * @param ctx
 	 */
-	public async setPrismaUser(ctx: GetGen<"context">): Promise<void> {
+	public async setPrismaUser(): Promise<void> {
 		try {
-			const res = await this.getPrismaUserByEmail(ctx)
+			this.setData({
+				email: this.getEmail()
+			})
+			const res = await this.getPrismaUser()
 
 			if (!res) {
 				CustomError.error("Aucun utilisateur pour cette adresse mail.")
@@ -234,27 +279,40 @@ export default class Auth {
 	/**
 	 * Set jwt token to the class
 	 * @return void
+	 * @param prefix
+	 * @param payload?
+	 * @param options?
 	 */
-	public signToken(): void {
-		const options = {
-			audience: "access_token",
-			issuer: "cloudlivery",
-			jwtid: "1",
-			subject: "user"
+	public signToken(prefix: string = "signin_", payload?: object, options?: object): void {
+		let payloadDatas = payload
+		if(!payload) {
+			payloadDatas = {
+				userId: this.getUser().id
+			}
+		}
+		let optionsDatas = options
+		if(!options) {
+			optionsDatas = {
+				audience: "access_token",
+				issuer: "cloudlivery",
+				jwtid: "1",
+				subject: "user"
+			}
 		}
 
 		if (!this.getRememberMe()) {
-			Object.assign(options, {
+			Object.assign(optionsDatas, {
 				expiresIn: `${process.env.REDIS_TTL}s`
 			})
 		}
 
-		this.setToken(sign({userId: this.getUser().id}, APP_SECRET, options))
+		// @ts-ignore
+		this.setToken(sign(payloadDatas, APP_SECRET, optionsDatas))
 
 		if (this.getRememberMe()) {
-			redis.set(`signin_${this.getUser().id}`, this.getToken())
+			redis.set(`${prefix}${this.getUser().id}`, this.getToken())
 		} else {
-			redis.set(`signin_${this.getUser().id}`, this.getToken(), String(process.env.REDIS_TTL))
+			redis.set(`${prefix}${this.getUser().id}`, this.getToken(), String(process.env.REDIS_TTL))
 		}
 	}
 
@@ -283,26 +341,25 @@ export default class Auth {
 	 * Delete jwt token from the class
 	 * @return Promise<void>
 	 */
-	public async deleteToken(): Promise<void> {
-		await redis.delete(`signin_${this.getId()}`)
+	public async deleteToken(prefix: string = "signin_"): Promise<void> {
+		await redis.delete(`${prefix}${this.getId()}`)
 		this.setToken("")
 	}
 
 	/**
 	 * Extract user id from jwt received by http header
 	 * @return number
-	 * @param ctx
 	 */
-	public extractIdFromJwt(ctx: GetGen<"context">): number {
-		const Authorization = ctx.request.get("Authorization")
+	public extractIdFromJwt(): number {
+		const Authorization = this.getToken() || this.getCtx().request.get("Authorization")
 
 		if (Authorization) {
 			const token = Authorization.replace("Bearer ", "")
 			const verifiedToken: Token = verify(token, APP_SECRET) as Token
-
+			
 			return verifiedToken.userId
 		} else {
-			CustomError.error("Erreur lors de la déconnexion.")
+			CustomError.error("Erreur lors de la recupération du token par le jwt.")
 		}
 
 		return -1
@@ -311,10 +368,9 @@ export default class Auth {
 	/**
 	 * Extract user token from jwt received by http header
 	 * @return string
-	 * @param ctx
 	 */
-	public extractTokenFromJwt(ctx: GetGen<"context">): string {
-		const Authorization = ctx.request.get("Authorization")
+	public extractTokenFromJwt(): string {
+		const Authorization = this.getCtx().request.get("Authorization")
 
 		if (Authorization) {
 			return Authorization.replace("Bearer ", "")
@@ -325,29 +381,89 @@ export default class Auth {
 		return ""
 	}
 
-	public async existInRedis(): Promise<boolean> {
-		return await redis.compare(`signin_${this.getId()}`, this.getToken())
+	/**
+	 * Check if token exist in redis
+	 * @return string
+	 * @param prefix
+	 */
+	public async existInRedis(prefix: string = "signin_"): Promise<boolean> {
+		return await redis.compare(`${prefix}${this.getId()}`, this.getToken())
 	}
 
-	public async createUser(ctx: GetGen<"context">): Promise<any> {
+	/**
+	 * Create an user
+	 * @return Promise<any>
+	 */
+	public async createUser(): Promise<any> {
 		try {
-			return await ctx.prisma.user.create({
+			return await this.getCtx().prisma.user.create({
 				data: this.getUser()
 			})
 		} catch (e) {
-			CustomError.error("Erreur lors de la création de l'utilisateur google.")
+			CustomError.error("Erreur lors de la création de l'utilisateur.")
 		}
 
 		return ""
 	}
 
-	public getPrismaUserByEmail(ctx: GetGen<"context">): Promise<any> {
-		return ctx.prisma.user.findOne({
-			where: {
-				email: this.getEmail()
-			}
+	/**
+	 * Create an user
+	 * @return Promise<any>
+	 */
+	public async updateUser(): Promise<any> {
+		try {
+			return await this.getCtx().prisma.user.update({
+				where: {
+					id: this.getId()
+				},
+				data: this.getData()
+			})
+		} catch (e) {
+			CustomError.error("Erreur lors de la modification de l'utilisateur.")
+		}
+
+		return ""
+	}
+
+	/**
+	 * Get an user fetch by email
+	 * @return Promise<any>
+	 */
+	public getPrismaUser(): Promise<any> {
+		return this.getCtx().prisma.user.findOne({
+			where: this.getData()
 		})
 	}
 
+	/**
+	 * Generate reset password url with token
+	 * @return string
+	 * @param prefix
+	 */
+	public generateResetPasswordUrl(prefix: string): string {
+		const payloadDatas = {
+			userId: this.getUser().id,
+			type: "reset_password"
+		}
+		const options = {
+			audience: "reset_password_token",
+			issuer: "cloudlivery",
+			jwtid: "3",
+			subject: "user"
+		}
+		this.signToken(prefix, payloadDatas, options)
+
+		return process.env.BASE_URL_FRONT + "/auth/password/reset/" + this.getToken()
+	}
+
+	/**
+	 * Verify a token
+	 * @return boolean
+	 */
+	public verifyToken(): boolean {
+		const verifiedToken: Token = verify(this.getToken(), APP_SECRET) as Token
+
+		return !!verifiedToken.userId
+	}
 	//endregion
 }
