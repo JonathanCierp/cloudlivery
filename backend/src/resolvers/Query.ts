@@ -62,7 +62,7 @@ export const Query = queryType({
 
 				const result = await page.evaluate(() => {
 
-					return { products }
+					return products
 				})
 
 				fs.writeFile('myjsonfile.json', JSON.stringify(result), 'utf8', () => {
