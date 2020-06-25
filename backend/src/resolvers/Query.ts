@@ -4,6 +4,12 @@ import WebAuth from "../auth/WebAuth"
 import { intArg, queryType, stringArg } from "nexus"
 import { getUserId } from "../utils"
 
+// TODO refactor
+var fs = require('fs');
+const puppeteer = require('puppeteer-extra')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin())
+
 export const Query = queryType({
 	definition(t) {
 		t.field("me", {
@@ -39,6 +45,35 @@ export const Query = queryType({
 
 				return {
 					valid: webAuth.verifyToken() && await webAuth.existInRedis("reset_password_")
+				}
+			}
+		})
+		t.field("scraping", {
+			type: "Default",
+			nullable: true,
+			resolve: async (parent, { }, ctx) => {
+				const browser = await puppeteer.launch({ headless: true })
+				const page = await browser.newPage()
+				await page.setViewport({ width: 800, height: 600 })
+				let products: any[] = []
+
+				console.log(`Testing the stealth plugin..`)
+				await page.goto('https://www.carrefour.fr/s?q=oeufs&page=1')
+
+				const result = await page.evaluate(() => {
+
+					return { products }
+				})
+
+				fs.writeFile('myjsonfile.json', JSON.stringify(result), 'utf8', () => {
+
+				});
+
+				console.log(`All done, check the screenshots. ✨`)
+				await browser.close()
+
+				return {
+					message: ""
 				}
 			}
 		})

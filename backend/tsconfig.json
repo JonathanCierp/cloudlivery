@@ -2,7 +2,10 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"rootDir": "src",
-		"lib": ["esnext"],
+		"lib": [
+			"esnext",
+			"dom"
+		],
 		"strict": true,
 		"allowSyntheticDefaultImports": true
 	},
