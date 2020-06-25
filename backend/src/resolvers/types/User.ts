@@ -8,6 +8,7 @@ export const User = objectType({
 		t.model.lastname()
 		t.model.firstname()
 		t.model.email()
+		t.model.civilite()
 		//t.model.posts({ pagination: false })
 		t.model.updatedAt()
 		t.model.createdAt()

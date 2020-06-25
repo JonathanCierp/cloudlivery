@@ -44,7 +44,7 @@
 				if(this.lazy) {
 					this.validate(e.target.checked)
 				}
-				this.$emit("change", e.target.checked)
+				this.$emit("input", e.target.checked)
 			},
 			validate(value) {
 				if(this.rules) {
@@ -92,6 +92,9 @@
 </script>
 
 <style scoped>
+	.custom-form-checkbox {
+		height: 22px;
+	}
 	.custom-form-checkbox label input[type='checkbox'] {
 		display: none;
 	}

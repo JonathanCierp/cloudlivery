@@ -4,7 +4,7 @@ import CustomError from "./CustomError"
 // Utils
 import {APP_SECRET} from "../utils"
 import {sign, verify} from "jsonwebtoken"
-import {compare} from "bcryptjs"
+import {compare, hash} from "bcryptjs"
 // Types
 import {GetGen} from "nexus/dist/typegenTypeHelpers"
 import {Token, TokenPayload, User} from "../types/auth"
@@ -76,6 +76,13 @@ export default class Auth {
 	 * @default {}
 	 */
 	protected _data: Object = {}
+
+	/**
+	 * Hashed password
+	 * @type string
+	 * @default empty string
+	 */
+	protected _hashedPassword: string = ""
 	//endregion
 
 	//region Getters Setters
@@ -226,7 +233,6 @@ export default class Auth {
 		this._data = data
 	}
 
-
 	/**
 	 * Get jwt ttl
 	 * @return GetGen<"context">
@@ -235,6 +241,22 @@ export default class Auth {
 		return this._data
 	}
 
+	/**
+	 * Set hashed password
+	 * @return void
+	 * @param hashedPassword
+	 */
+	public setHashedPassword(hashedPassword: string): void {
+		this._hashedPassword = hashedPassword
+	}
+
+	/**
+	 * Get hashed password
+	 * @return string
+	 */
+	public getHashedPassword(): string {
+		return this._hashedPassword
+	}
 	//endregion
 
 	//region Public Functions
@@ -397,7 +419,8 @@ export default class Auth {
 	public async createUser(): Promise<any> {
 		try {
 			return await this.getCtx().prisma.user.create({
-				data: this.getUser()
+				// @ts-ignore
+				data: this.getData() || this.getUser()
 			})
 		} catch (e) {
 			CustomError.error("Erreur lors de la création de l'utilisateur.")
@@ -464,6 +487,10 @@ export default class Auth {
 		const verifiedToken: Token = verify(this.getToken(), APP_SECRET) as Token
 
 		return !!verifiedToken.userId
+	}
+
+	public async hashPassword(): Promise<void> {
+		this.setHashedPassword(await hash(this.getPassword(), 10))
 	}
 	//endregion
 }

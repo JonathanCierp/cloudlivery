@@ -1,7 +1,7 @@
 <template>
-	<div class="signup shadow flex items-center justify-center h-full">
-		<div class="signup__card bg-white py-10 px-8 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
-			<nuxt-link class="inline-block mb-8" to="/">
+	<div class="signup flex items-center justify-center sm:h-full">
+		<div class="signup__card bg-white pt-5 pb-10 px-8 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
+			<nuxt-link class="inline-block mb-5" to="/">
 				<img class="inline px-1 w-10" src="@/assets/img/icons/logo.svg" alt="Logo du site">
 				<span class="font-bold align-middle">Cloudlivery</span>
 			</nuxt-link>
@@ -9,19 +9,19 @@
 				<span class="font-bold align-middle">S'inscrire</span>
 			</div>
 			<custom-form ref="form" @submit.prevent="onSignup" class="signup__card__body flex flex-col items-center justify-center mt-5">
-				<div class="signup__card__body__row flex items-center justify-start my-2 w-full ml-2">
+				<custom-form-group-row class="signup__card__body__row my-5">
 					<custom-form-radio v-model="form.civilite" :rules="['required']" name="civilite" label="Madame" value="Mme" class="mr-3" />
 					<custom-form-radio v-model="form.civilite" :rules="['required']" name="civilite" label="Monsieur" value="Mr" class="ml-3" />
-				</div>
-				<div class="signup__card__body__row flex items-center justify-center flex-col sm:flex-row w-full sm:my-3">
-					<custom-form-input v-model="form.lastname" icon-left="icon-user" placeholder="Nom" :rules="['required']" lazy autocomplete="off" class="sm:mr-2" />
-					<custom-form-input v-model="form.firstname" icon-left="icon-user" placeholder="Prénom" :rules="['required']" lazy autocomplete="off" class="sm:ml-2" />
-				</div>
-				<div class="signup__card__body__row flex items-center justify-center flex-col sm:flex-row w-full sm:my-3">
-					<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy autocomplete="off" class="sm:mr-2" />
-					<custom-form-input v-model="form.password" icon-left="icon-lock" placeholder="Mot de passe" :rules="['required']" lazy autocomplete="off" class="sm:ml-2" />
-				</div>
-				<div class="signup__card__body__row flex items-center justify-start my-4 ml-2 w-full">
+				</custom-form-group-row>
+				<custom-form-group-row class="signup__card__body__row flex-col sm:flex-row">
+					<custom-form-input v-model="form.lastname" icon-left="icon-user" placeholder="Nom" :rules="['required']" lazy class="sm:mr-2" />
+					<custom-form-input v-model="form.firstname" icon-left="icon-user" placeholder="Prénom" :rules="['required']" lazy class="sm:ml-2" />
+				</custom-form-group-row>
+				<custom-form-group-row class="signup__card__body__row flex-col sm:flex-row">
+					<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy class="sm:mr-2" />
+					<custom-form-input v-model="form.password" icon-left="icon-lock" placeholder="Mot de passe" :rules="['required']" lazy class="sm:ml-2" />
+				</custom-form-group-row>
+				<custom-form-group class="signup__card__body__row flex items-center justify-start mt-8 mb-4 ml-2 w-full">
 					<custom-form-checkbox v-model="policy" :rules="['required']" lazy>
 						<template v-slot:label>
 							<span>
@@ -29,14 +29,14 @@
 							</span>
 						</template>
 					</custom-form-checkbox>
-				</div>
-				<div class="signup__card__actions flex w-full justify-center mb-3 mt-5 sm:mt-8">
+				</custom-form-group>
+				<div class="signup__card__actions flex w-full justify-center my-8 sm:mt-8">
 					<custom-button ref="signupButton" type="submit" class="signup__card__actions__signup rounded-full w-full hover:opacity-75 flex items-center justify-center">
 						<span class="font-bold">Créer mon compte</span>
 					</custom-button>
 				</div>
 			</custom-form>
-			<p class="text-center signup__connect mt-5">
+			<p class="text-center signup__connect my-5">
 				Vous avez déjà un compte ? <nuxt-link to="/auth/signin" class="hover:opacity-75">Connectez-vous</nuxt-link>
 			</p>
 		</div>
@@ -46,9 +46,13 @@
 <script>
 	import CustomForm from "@/components/custom/form/CustomForm"
 	import CustomFormInput from "@/components/custom/form/CustomFormInput"
+	import CustomFormGroup from "@/components/custom/form/CustomFormGroup"
+	import CustomFormGroupRow from "@/components/custom/form/CustomFormGroupRow"
 	import CustomFormCheckbox from "@/components/custom/form/CustomFormCheckbox"
 	import CustomFormRadio from "@/components/custom/form/CustomFormRadio"
 	import CustomButton from "@/components/custom/button/CustomButton"
+
+	import GqlSignup from "@/utils/apollo/mutation/signup"
 
 	export default {
 		layout: "blank",
@@ -56,6 +60,8 @@
 		middleware: ["isAuthenticated"],
 		components: {
 			CustomForm,
+			CustomFormGroup,
+			CustomFormGroupRow,
 			CustomFormInput,
 			CustomFormCheckbox,
 			CustomFormRadio,
@@ -74,9 +80,20 @@
 			}
 		},
 		methods: {
-			onSignup() {
-				if(this.$refs.form.validate()) {
-
+			async onSignup() {
+				if(this.$refs.form.validate() && this.policy) {
+					this.$refs.signupButton.setState("loading")
+					try {
+						const res = await this.$apollo.mutate({
+							mutation: GqlSignup,
+							variables: this.form
+						})
+						this.$refs.signupButton.setState("initial")
+						this.$router.push("/")
+					}catch (e) {
+						console.log(e.graphQLErrors[0].message)
+						this.$refs.signupButton.setState("initial")
+					}
 				}
 			}
 		}

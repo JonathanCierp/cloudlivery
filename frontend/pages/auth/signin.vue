@@ -1,6 +1,6 @@
 <template>
 	<div class="signin shadow flex items-center justify-center h-full">
-		<div class="signin__card bg-white py-10 px-10 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
+		<div class="signin__card bg-white py-8 px-8 shadow h-full sm:py-8 sm:h-auto sm:min-h-auto">
 			<nuxt-link class="inline-block mb-8" to="/">
 				<img class="inline px-1 w-10" src="@/assets/img/icons/logo.svg" alt="Logo du site">
 				<span class="font-bold align-middle">Cloudlivery</span>
@@ -9,22 +9,26 @@
 				<span class="font-bold align-middle">Se connecter</span>
 			</div>
 			<custom-form ref="form" @submit.prevent="onSignin" class="signin__card__body flex flex-col items-center justify-center mt-5">
-				<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy autocomplete="off" />
-				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy autocomplete="off" />
+				<custom-form-group>
+					<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy />
+				</custom-form-group>
+				<custom-form-group>
+				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
+				</custom-form-group>
 				<div class="signin__card__body__forget flex items-center relative justify-end my-1">
 					<nuxt-link class="text-sm underline hover:opacity-75" to="/auth/password/reset">
 						Mot de passe oublié ?
 					</nuxt-link>
 				</div>
-				<div class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
+				<custom-form-group class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
 					<custom-form-checkbox v-model="form.rememberMe" label="Se souvenir de moi" />
-				</div>
+				</custom-form-group>
 				<div class="signin__card__actions flex w-full justify-center my-3">
 					<custom-button ref="loginButton" type="submit" class="signin__card__actions__signin rounded-full w-full hover:opacity-75 flex items-center justify-center">
 						<span class="font-bold">Me connecter</span>
 					</custom-button>
 				</div>
-				<div class="signin__card__actions w-full my-3">
+				<div class="signin__card__actions w-full my-3 text-center">
 					<span class="text-sm">Vous n'avez pas de compte ?</span>
 					<nuxt-link class="signin__card__actions__signup rounded-full w-full text-sm hover:opacity-75" to="/auth/signup">
 						<span class="align-middle font-bold underline">M'inscrire</span>
@@ -50,6 +54,7 @@
 	import IconLock from "@/components/icons/IconLock"
 	import IconGoogleColor from "@/components/icons/IconGoogleColor"
 	import CustomForm from "@/components/custom/form/CustomForm"
+	import CustomFormGroup from "@/components/custom/form/CustomFormGroup"
 	import CustomFormCheckbox from "@/components/custom/form/CustomFormCheckbox"
 	import CustomFormInput from "@/components/custom/form/CustomFormInput"
 	import CustomButton from "@/components/custom/button/CustomButton"
@@ -67,6 +72,7 @@
 			IconLock,
 			IconGoogleColor,
 			CustomForm,
+			CustomFormGroup,
 			CustomFormCheckbox,
 			CustomFormInput,
 			CustomButton,
@@ -98,7 +104,7 @@
 						this.$refs.googleButton.setState("initial")
 						this.$router.push("/")
 					}catch (e) {
-						console.log(e.graphQLErrors[0].message)
+						//console.log(e.graphQLErrors[0].message)
 						this.$refs.loginButton.setState("initial")
 						this.$refs.googleButton.setState("initial")
 					}

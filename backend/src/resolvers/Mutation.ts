@@ -14,15 +14,26 @@ import { User, GoogleUserAuth } from "../types/auth"
 export const Mutation = mutationType({
 	definition(t) {
 		t.field("signup", {
-			type: "AuthPayload",
+			type: "Default",
 			args: {
-				lastname: stringArg(),
-				firstname: stringArg(),
+				civilite: stringArg({ nullable: false }),
+				firstname: stringArg({ nullable: false }),
+				lastname: stringArg({ nullable: false }),
 				email: stringArg({ nullable: false }),
 				password: stringArg({ nullable: false })
 			},
-			resolve: async (_parent, { lastname, firstname, email, password }, ctx) => {
-				const hashedPassword = await hash(password, 10)
+			resolve: async (_parent, { civilite, firstname, lastname, email, password }, ctx) => {
+				const webAuth = new WebAuth()
+				webAuth.setCtx(ctx)
+				webAuth.setPassword(password)
+				await webAuth.hashPassword()
+
+				webAuth.setData({
+					email
+				})
+				if(await webAuth.getPrismaUser()) {
+					throw new Error("Un utilisateur existe déjà pour ce mail.")
+				}
 				if(email === "") {
 					throw new Error("L'email ne peut pas être vide.")
 				}
@@ -32,21 +43,18 @@ export const Mutation = mutationType({
 				if(password === "") {
 					throw new Error("Le mot de passe ne peut pas être vide.")
 				}
-				const user = await ctx.prisma.user.create({
-					data: {
-						lastname,
-						firstname,
-						email,
-						password: hashedPassword,
-					}
+
+				webAuth.setData({
+					civilite,
+					lastname,
+					firstname,
+					email,
+					password: webAuth.getHashedPassword(),
 				})
+				await webAuth.createUser()
 
 				return {
-					// @ts-ignore
-					token: sign({ userId: user.id }, APP_SECRET, {
-						expiresIn: process.env.REDIS_TTL_JWT
-					}),
-					user
+					message: ""
 				}
 			}
 		})
@@ -135,10 +143,24 @@ export const Mutation = mutationType({
 					email: googleAuth.getEmail()
 				})
 
-				if(!await googleAuth.getPrismaUser()) {
+				googleAuth.setGoogleUser(await googleAuth.getPrismaUser())
+
+				if(!await googleAuth.getGoogleUser()) {
 					// Create user
 					await googleAuth.createUser()
 				}
+				if(!googleAuth.getGoogleUser().google_id) {
+					// Update user
+					googleAuth.setId(googleAuth.getGoogleUser().id)
+					googleAuth.setData({
+						google_id: user.google_id
+					})
+					await googleAuth.updateUser()
+				}
+
+				googleAuth.setData({
+					email: googleAuth.getEmail()
+				})
 
 				googleAuth.setUser(await googleAuth.getPrismaUser())
 

@@ -1,0 +1,5 @@
+mutation signup($civilite: String!, $firstname: String!, $lastname: String!, $email: String!, $password: String!){
+  signup(civilite: $civilite, firstname: $firstname, lastname: $lastname, email: $email, password: $password) {
+    message
+  }
+}

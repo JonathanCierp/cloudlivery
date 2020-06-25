@@ -10,7 +10,7 @@
 		</div>
 		<div class="custom-form-input flex items-center relative justify-center my-4" :class="`${classes} ${type === 'password' ? 'mt-1' : ''}`">
 			<component v-if="iconLeft" class="pointer-events-none absolute inset-y-0 left-0 flex items-center" :is="iconLeftComponent" />
-			<input :type="typeEdited" @input="oninput" @blur="onBlur" class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 text-gray-700 leading-tight focus:shadow-outline" :placeholder="placeholder">
+			<input :type="typeEdited" @input="oninput" @blur="onBlur" class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 text-gray-700 leading-tight focus:shadow-outline" :placeholder="placeholder" autocomplete="off">
 			<span class="custom-form-input-text--error absolute left-0 font-semibold">{{ errorMessage }}</span>
 			<span v-if="state === 'valid'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-tick /></span>
 			<span v-if="state === 'error'" class="pointer-events-none absolute inset-y-0 right-0 flex items-center"><icon-close /></span>

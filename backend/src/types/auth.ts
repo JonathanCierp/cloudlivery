@@ -4,6 +4,7 @@ export interface User {
 	lastname: string | null
 	firstname: string | null
 	email: string
+	civilite: string
 	password: string | null
 	updatedAt: Date
 	createdAt: Date
@@ -24,6 +25,7 @@ export interface TokenPayload {
 }
 
 export interface GoogleUserAuth {
+	id: number
 	google_id: string
 	lastname: string
 	firstname: string
