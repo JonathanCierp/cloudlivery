@@ -1,7 +1,7 @@
 // Packages
 import { RedisClient } from "redis"
 // Constants
-import { redisConstants } from "../utils"
+import { redisConstants } from "../../utils"
 
 const redisClient = require('redis')
 const client = redisClient.createClient(redisConstants.REDIS_PORT, redisConstants.REDIS_HOST)

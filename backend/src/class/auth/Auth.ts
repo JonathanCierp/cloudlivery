@@ -2,12 +2,12 @@
 import {client, Redis} from "../redis/Redis"
 import CustomError from "./CustomError"
 // Utils
-import {APP_SECRET} from "../utils"
+import {APP_SECRET} from "../../utils"
 import {sign, verify} from "jsonwebtoken"
 import {compare, hash} from "bcryptjs"
 // Types
 import {GetGen} from "nexus/dist/typegenTypeHelpers"
-import {Token, TokenPayload, User} from "../types/auth"
+import {Token, TokenPayload, User} from "../../types/auth"
 
 // Start redis
 const redis = new Redis(client)
@@ -207,7 +207,7 @@ export default class Auth {
 	}
 
 	/**
-	 * Set jwt ttl
+	 * Set context app
 	 * @return void
 	 * @param ctx
 	 */
@@ -216,7 +216,7 @@ export default class Auth {
 	}
 
 	/**
-	 * Get jwt ttl
+	 * Get context app
 	 * @return GetGen<"context">
 	 */
 	public getCtx(): GetGen<"context"> {

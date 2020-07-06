@@ -3,11 +3,11 @@ import {client, Redis} from "../redis/Redis"
 import CustomError from "./CustomError"
 import Auth from "./Auth";
 // Utils
-import {APP_SECRET} from "../utils"
+import {APP_SECRET} from "../../utils"
 import {sign, verify} from "jsonwebtoken"
 // Types
 import {GetGen} from "nexus/dist/typegenTypeHelpers"
-import {GoogleUserAuth} from "../types/auth";
+import {GoogleUserAuth} from "../../types/auth";
 
 // Start redis
 const redis = new Redis(client)

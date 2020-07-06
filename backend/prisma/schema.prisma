@@ -20,3 +20,183 @@ model User {
 
   @@map(name: "users")
 }
+
+model Provider {
+  id Int @id @default(autoincrement())
+  label String @unique
+  marques Marque[]
+  labels_qualites LabelsQualite[]
+  promotions Promotion[]
+  preferences_alimentaires PreferencesAlimentaire[]
+  substances_controversees SubstancesControverse[]
+  formats Format[]
+  rayons Rayon[]
+  produits Produit[]
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "providers")
+}
+
+model Marque {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "marques")
+}
+
+model LabelsQualite {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "labels_qualites")
+}
+
+model Promotion {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "promotions")
+}
+
+model PreferencesAlimentaire {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "preferences_alimentaires")
+}
+
+model SubstancesControverse {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "substances_controversees")
+}
+
+model Format {
+  id Int @id @default(autoincrement())
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "formats")
+}
+
+model Rayon {
+  id Int @id @default(autoincrement())
+  rayon_produits RayonProduit[]
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  code String @unique
+  slug String @unique
+  uri String @unique
+  level Int
+  resultats Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "rayons")
+}
+
+model RayonProduit {
+  id Int @id @default(autoincrement())
+  rayon Rayon @relation(fields: [rayon_id], references: [id])
+  rayon_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "rayon_produits")
+}
+
+model Produit {
+  id Int @id @default(autoincrement())
+  rayon_produits RayonProduit[]
+  produit_images ProduitImage[]
+  produit_flags ProduitFlag[]
+  produit_prices ProduitPrice[]
+  provider Provider @relation(fields: [provider_id], references: [id])
+  provider_id Int
+  label String @unique
+  brand String @unique
+  slug String @unique
+  uri String @unique
+  packaging String
+  origin String
+  format String
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produits")
+}
+
+model ProduitPrice {
+  id Int @id @default(autoincrement())
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  price Float
+  unit_of_measure String
+  per_unit_label String
+  tax_message String
+  per_unit Float
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_prices")
+}
+
+
+model ProduitImage {
+  id Int @id @default(autoincrement())
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  largest String @unique
+  size_1500x1500 String @unique
+  size_540x540 String @unique
+  size_380x380 String @unique
+  size_340x340 String @unique
+  size_340x240 String @unique
+  size_280x280 String @unique
+  size_195x195 String @unique
+  size_150x150 String @unique
+  size_43x43 String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_images")
+}
+
+model ProduitFlag {
+  id Int @id @default(autoincrement())
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  label String @unique
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_flags")
+}

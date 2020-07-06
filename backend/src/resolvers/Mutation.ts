@@ -1,7 +1,8 @@
 // Classes
-import WebAuth from "../auth/WebAuth"
-import GoogleAuth from "../auth/GoogleAuth"
-import Mail from "../mail/Mail"
+import WebAuth from "../class/auth/WebAuth"
+import GoogleAuth from "../class/auth/GoogleAuth"
+import Mail from "../class/mail/Mail"
+import Scraping from "../class/scraping/Scraping"
 // Utils
 import { APP_SECRET } from "../utils"
 // Packages
@@ -143,19 +144,21 @@ export const Mutation = mutationType({
 					email: googleAuth.getEmail()
 				})
 
-				googleAuth.setGoogleUser(await googleAuth.getPrismaUser())
+				const googleUser = await googleAuth.getPrismaUser()
 
-				if(!await googleAuth.getGoogleUser()) {
+				if(googleUser) {
+					googleAuth.setGoogleUser(googleUser)
+					if(!googleAuth.getGoogleUser().google_id) {
+						// Update user
+						googleAuth.setId(googleAuth.getGoogleUser().id)
+						googleAuth.setData({
+							google_id: user.google_id
+						})
+						await googleAuth.updateUser()
+					}
+				}else {
 					// Create user
 					await googleAuth.createUser()
-				}
-				if(!googleAuth.getGoogleUser().google_id) {
-					// Update user
-					googleAuth.setId(googleAuth.getGoogleUser().id)
-					googleAuth.setData({
-						google_id: user.google_id
-					})
-					await googleAuth.updateUser()
 				}
 
 				googleAuth.setData({
@@ -240,6 +243,19 @@ export const Mutation = mutationType({
 
 				return {
 					message: "Modification du mot de passe effectué avec succès."
+				}
+			}
+		})
+		t.field("setupDatas", {
+			type: "Default",
+			resolve: async (_parent, { }, ctx) => {
+				const scraping = new Scraping()
+				scraping.setCtx(ctx)
+				await scraping.createPrismaProvider()
+				await scraping.createPrismaMarques()
+
+				return {
+					message: "Ok"
 				}
 			}
 		})

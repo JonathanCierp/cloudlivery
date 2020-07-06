@@ -1,5 +1,5 @@
 // Classes
-import WebAuth from "../auth/Auth"
+import WebAuth from "../class/auth/Auth"
 // Utils
 import { rule, shield } from "graphql-shield"
 // Types
