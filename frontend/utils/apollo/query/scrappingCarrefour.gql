@@ -1,0 +1,19 @@
+query scrappingCarrefour {
+  scraping {
+    carrefour {
+      id
+      type
+      attributes {
+        title
+        packaging
+        price {
+          price
+          perUnitLabel
+        }
+        images {
+          largest
+        }
+      }
+    }
+  }
+}
