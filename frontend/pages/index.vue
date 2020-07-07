@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto my-5 flex item-center justify-center flex-wrap">
-		<div v-for="item in scraping.carrefour" class="bg-white m-2 shadow w-1/5">
+		<!--<div v-for="item in scraping.carrefour" class="bg-white m-2 shadow w-1/5">
 			<div>
 				<span class="block">{{ item.attributes.title }}</span>
 				<span class="block">{{ item.attributes.packaging }}</span>
@@ -15,7 +15,7 @@
 			<div>
 				<span class="block">{{ item.attributes.price.price.replace(".", ",") }}€</span>
 			</div>
-		</div>
+		</div>-->
 	</div>
 </template>
 
@@ -30,7 +30,7 @@
 		},
 		data() {
 			return {
-				scraping: {}
+				scrapingCarrefour: {}
 			}
 		}
 	}

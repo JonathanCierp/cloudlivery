@@ -138,7 +138,6 @@ model Produit {
   rayon_produits RayonProduit[]
   produit_images ProduitImage[]
   produit_flags ProduitFlag[]
-  produit_prices ProduitPrice[]
   provider Provider @relation(fields: [provider_id], references: [id])
   provider_id Int
   label String @unique
@@ -148,16 +147,6 @@ model Produit {
   packaging String
   origin String
   format String
-  updatedAt DateTime @updatedAt @default(now())
-  createdAt DateTime @default(now())
-
-	@@map(name: "produits")
-}
-
-model ProduitPrice {
-  id Int @id @default(autoincrement())
-  produit Produit @relation(fields: [produit_id], references: [id])
-  produit_id Int
   price Float
   unit_of_measure String
   per_unit_label String
@@ -166,9 +155,8 @@ model ProduitPrice {
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
-	@@map(name: "produit_prices")
+	@@map(name: "produits")
 }
-
 
 model ProduitImage {
   id Int @id @default(autoincrement())

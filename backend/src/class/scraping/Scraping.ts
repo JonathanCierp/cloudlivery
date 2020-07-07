@@ -1,5 +1,6 @@
 import { GetGen } from "nexus/dist/typegenTypeHelpers";
 import CustomError from "../auth/CustomError";
+import { Provider } from "@prisma/client";
 
 export default class Scraping {
 
@@ -13,10 +14,18 @@ export default class Scraping {
 
 	/**
 	 * Provider
+	 * @type Provider | undefined
+	 * @default provider
+	 */
+	//@ts-ignore
+	protected _provider: Provider
+
+	/**
+	 * Providers
 	 * @type Array<string>
 	 * @default providers
 	 */
-	protected _provider: Array<string> = [
+	protected _providers: Array<string> = [
 		"CARREFOUR"
 	]
 
@@ -312,16 +321,33 @@ export default class Scraping {
 	 * @return void
 	 * @param provider
 	 */
-	public setProvider(provider: Array<string>): void {
+	public setProvider(provider: Provider): void {
 		this._provider = provider
+	}
+
+	/**
+	 * Get provider
+	 * @return Provider
+	 */
+	public getProvider(): Provider {
+		return this._provider
+	}
+
+	/**
+	 * Set provider
+	 * @return void
+	 * @param provider
+	 */
+	public setProviders(providers: Array<string>): void {
+		this._providers = providers
 	}
 
 	/**
 	 * Get provider
 	 * @return Array<string>
 	 */
-	public getProvider(): Array<string> {
-		return this._provider
+	public getProviders(): Array<string> {
+		return this._providers
 	}
 
 	/**
@@ -429,7 +455,7 @@ export default class Scraping {
 
 	//region public functions
 	public async createPrismaProvider() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(!resProvider) {
 				try {
@@ -448,7 +474,7 @@ export default class Scraping {
 	}
 
 	public async createPrismaMarques() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let marque of this.getMarques()[`${provider}`]) {
@@ -478,7 +504,7 @@ export default class Scraping {
 	}
 
 	public async createPrismaFormats() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let format of this.getFormats()[`${provider}`]) {
@@ -508,7 +534,7 @@ export default class Scraping {
 	}
 	
 	public async createPrismaLabelsQualites() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let labelsQualite of this.getLabelsQualites()[`${provider}`]) {
@@ -537,7 +563,7 @@ export default class Scraping {
 	}
 	
 	public async createPrismaPreferencesAlimentaires() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let preferencesAlimentaire of this.getPreferencesAlimentaires()[`${provider}`]) {
@@ -566,7 +592,7 @@ export default class Scraping {
 	}
 	
 	public async createPrismaPromotions() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let promotion of this.getPromotions()[`${provider}`]) {
@@ -596,7 +622,7 @@ export default class Scraping {
 	}
 	
 	public async createPrismaSubstancesControversees() {
-		for(let provider of this.getProvider()){
+		for(let provider of this.getProviders()){
 			const resProvider = await this.getPrismaProvider(provider)
 			if(resProvider) {
 				for(let substancesControversee of this.getSubstancesControversees()[`${provider}`]) {
@@ -625,7 +651,8 @@ export default class Scraping {
 		return ""
 	}
 
-	public async getPrismaProvider(provider: string) {
+	public async getPrismaProvider(provider: string): Promise<Provider> {
+		// @ts-ignore
 		return this.getCtx().prisma.provider.findOne({
 			where: {
 				label: provider
@@ -677,6 +704,14 @@ export default class Scraping {
 		return this.getCtx().prisma.substancesControverse.findOne({
 			where: {
 				label: format
+			}
+		})
+	}
+
+	public async getPrismaProduits() {
+		return this.getCtx().prisma.produit.findMany({
+			where: {
+				provider_id: this.getProvider().id
 			}
 		})
 	}

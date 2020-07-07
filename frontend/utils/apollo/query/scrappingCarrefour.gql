@@ -1,18 +1,28 @@
 query scrappingCarrefour {
-  scraping {
+  scrapingCarrefour {
+    count
     carrefour {
       id
-      type
-      attributes {
-        title
-        packaging
-        price {
-          price
-          perUnitLabel
+      label
+      packaging
+      price
+      per_unit_label
+      rayon_produits {
+        rayon {
+          code
+          label
+          slug
+          level
         }
-        images {
-          largest
-        }
+      }
+      provider {
+        label
+      }
+      produit_images {
+        largest
+      }
+      produit_flags {
+        label
       }
     }
   }
