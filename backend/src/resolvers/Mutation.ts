@@ -253,6 +253,11 @@ export const Mutation = mutationType({
 				scraping.setCtx(ctx)
 				await scraping.createPrismaProvider()
 				await scraping.createPrismaMarques()
+				//await scraping.createPrismaFormats()
+				//await scraping.getPrismaLabelsQualite()
+				//await scraping.getPrismaPreferencesAlimentaires()
+				//await scraping.getPrismaPromotion()
+				//await scraping.getPrismaSubstancesControversee()
 
 				return {
 					message: "Ok"

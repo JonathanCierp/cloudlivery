@@ -11,10 +11,20 @@ export default class Scraping {
 	 */
 	protected _ctx: GetGen<"context"> | null = null
 
+	/**
+	 * Provider
+	 * @type Array<string>
+	 * @default providers
+	 */
 	protected _provider: Array<string> = [
 		"CARREFOUR"
 	]
 
+	/**
+	 * Marques
+	 * @type any
+	 * @default marques by providers
+	 */
 	protected _marques: any = {
 		"CARREFOUR": [
 			"ABATILLES",
@@ -221,6 +231,61 @@ export default class Scraping {
 			"VRAI"
 		]
 	}
+
+	/**
+	 * Formats
+	 * @type any
+	 * @default formats by providers
+	 */
+	protected _formats: any = {
+		"CARREFOUR": [
+
+		]
+	}
+
+	/**
+	 * labels Qualites
+	 * @type any
+	 * @default labelsQualites by providers
+	 */
+	protected _labelsQualites: any = {
+		"CARREFOUR": [
+
+		]
+	}
+
+	/**
+	 * Preferences Alimentaires
+	 * @type any
+	 * @default preferencesAlimentaires by providers
+	 */
+	protected _preferencesAlimentaires: any = {
+		"CARREFOUR": [
+
+		]
+	}
+
+	/**
+	 * Promotions
+	 * @type any
+	 * @default promotions by providers
+	 */
+	protected _promotions: any = {
+		"CARREFOUR": [
+
+		]
+	}
+
+	/**
+	 * Substances Controversees
+	 * @type any
+	 * @default substancesControversees by providers
+	 */
+	protected _substancesControversees: any = {
+		"CARREFOUR": [
+
+		]
+	}
 	//endregion
 
 	//region Getters Setters
@@ -275,6 +340,91 @@ export default class Scraping {
 	public getMarques(): any {
 		return this._marques
 	}
+
+	/**
+	 * Set formats
+	 * @return void
+	 * @param formats
+	 */
+	public setFormats(formats: any): void {
+		this._formats = formats
+	}
+
+	/**
+	 * Get marques
+	 * @return Object
+	 */
+	public getFormats(): any {
+		return this._formats
+	}
+
+	/**
+	 * Set labelsQualites
+	 * @return void
+	 * @param labelsQualites
+	 */
+	public setLabelsQualites(labelsQualites: any): void {
+		this._labelsQualites = labelsQualites
+	}
+
+	/**
+	 * Get labelsQualites
+	 * @return Object
+	 */
+	public getLabelsQualites(): any {
+		return this._labelsQualites
+	}
+
+	/**
+	 * Set preferencesAlimentaires
+	 * @return void
+	 * @param preferencesAlimentaires
+	 */
+	public setPreferencesAlimentaires(preferencesAlimentaires: any): void {
+		this._preferencesAlimentaires = preferencesAlimentaires
+	}
+
+	/**
+	 * Get preferencesAlimentaires
+	 * @return Object
+	 */
+	public getPreferencesAlimentaires(): any {
+		return this._preferencesAlimentaires
+	}
+
+	/**
+	 * Set promotions
+	 * @return void
+	 * @param marques
+	 */
+	public setPromotions(promotions: any): void {
+		this._promotions = promotions
+	}
+
+	/**
+	 * Get promotions
+	 * @return Object
+	 */
+	public getPromotions(): any {
+		return this._promotions
+	}
+
+	/**
+	 * Set substancesControversees
+	 * @return void
+	 * @param marques
+	 */
+	public setSubstancesControversees(substancesControversees: any): void {
+		this._substancesControversees = substancesControversees
+	}
+
+	/**
+	 * Get substancesControversees
+	 * @return Object
+	 */
+	public getSubstancesControversees(): any {
+		return this._substancesControversees
+	}
 	//endregion
 
 	//region public functions
@@ -297,14 +447,6 @@ export default class Scraping {
 		return ""
 	}
 
-	public async getPrismaProvider(provider: string) {
-		return this.getCtx().prisma.provider.findOne({
-			where: {
-				label: provider
-			}
-		})
-	}
-
 	public async createPrismaMarques() {
 		for(let provider of this.getProvider()){
 			const resProvider = await this.getPrismaProvider(provider)
@@ -313,10 +455,14 @@ export default class Scraping {
 					const resMarque = await this.getPrismaMarque(marque)
 					if(!resMarque) {
 						try {
-							return await this.getCtx().prisma.marque.create({
+							await this.getCtx().prisma.marque.create({
 								data: {
-									provider_id: resProvider.id,
-									label: marque
+									label: marque,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
 								}
 							})
 						} catch (e) {
@@ -331,10 +477,206 @@ export default class Scraping {
 		return ""
 	}
 
+	public async createPrismaFormats() {
+		for(let provider of this.getProvider()){
+			const resProvider = await this.getPrismaProvider(provider)
+			if(resProvider) {
+				for(let format of this.getFormats()[`${provider}`]) {
+					const resMarque = await this.getPrismaFormat(format)
+					if(!resMarque) {
+						try {
+							await this.getCtx().prisma.format.create({
+								data: {
+									label: format,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
+								}
+							})
+						} catch (e) {
+							console.log(e)
+							CustomError.error("Erreur lors de la création du format.")
+						}
+					}
+				}
+			}
+		}
+
+		return ""
+	}
+	
+	public async createPrismaLabelsQualites() {
+		for(let provider of this.getProvider()){
+			const resProvider = await this.getPrismaProvider(provider)
+			if(resProvider) {
+				for(let labelsQualite of this.getLabelsQualites()[`${provider}`]) {
+					const resMarque = await this.getPrismaLabelsQualite(labelsQualite)
+					if(!resMarque) {
+						try {
+							await this.getCtx().prisma.labelsQualite.create({
+								data: {
+									label: labelsQualite,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
+								}
+							})
+						} catch (e) {
+							CustomError.error("Erreur lors de la création du label qualité.")
+						}
+					}
+				}
+			}
+		}
+
+		return ""
+	}
+	
+	public async createPrismaPreferencesAlimentaires() {
+		for(let provider of this.getProvider()){
+			const resProvider = await this.getPrismaProvider(provider)
+			if(resProvider) {
+				for(let preferencesAlimentaire of this.getPreferencesAlimentaires()[`${provider}`]) {
+					const resMarque = await this.getPrismaPreferencesAlimentaires(preferencesAlimentaire)
+					if(!resMarque) {
+						try {
+							await this.getCtx().prisma.preferencesAlimentaire.create({
+								data: {
+									label: preferencesAlimentaire,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
+								}
+							})
+						} catch (e) {
+							CustomError.error("Erreur lors de la création des préférences alimentaires.")
+						}
+					}
+				}
+			}
+		}
+
+		return ""
+	}
+	
+	public async createPrismaPromotions() {
+		for(let provider of this.getProvider()){
+			const resProvider = await this.getPrismaProvider(provider)
+			if(resProvider) {
+				for(let promotion of this.getPromotions()[`${provider}`]) {
+					const resMarque = await this.getPrismaPromotion(promotion)
+					if(!resMarque) {
+						try {
+							await this.getCtx().prisma.promotion.create({
+								data: {
+									label: promotion,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
+								}
+							})
+						} catch (e) {
+							console.log(e)
+							CustomError.error("Erreur lors de la création des promotions.")
+						}
+					}
+				}
+			}
+		}
+
+		return ""
+	}
+	
+	public async createPrismaSubstancesControversees() {
+		for(let provider of this.getProvider()){
+			const resProvider = await this.getPrismaProvider(provider)
+			if(resProvider) {
+				for(let substancesControversee of this.getSubstancesControversees()[`${provider}`]) {
+					const resMarque = await this.getPrismaSubstancesControversee(substancesControversee)
+					if(!resMarque) {
+						try {
+							await this.getCtx().prisma.substancesControverse.create({
+								data: {
+									label: substancesControversee,
+									provider: {
+										connect: {
+											label: provider,
+										}
+									}
+								}
+							})
+						} catch (e) {
+							console.log(e)
+							CustomError.error("Erreur lors de la création des substances controversées.")
+						}
+					}
+				}
+			}
+		}
+
+		return ""
+	}
+
+	public async getPrismaProvider(provider: string) {
+		return this.getCtx().prisma.provider.findOne({
+			where: {
+				label: provider
+			}
+		})
+	}
+
 	public async getPrismaMarque(marque: string) {
 		return this.getCtx().prisma.marque.findOne({
 			where: {
 				label: marque
+			}
+		})
+	}
+
+	public async getPrismaFormat(format: string) {
+		return this.getCtx().prisma.format.findOne({
+			where: {
+				label: format
+			}
+		})
+	}
+
+	public async getPrismaLabelsQualite(format: string) {
+		return this.getCtx().prisma.labelsQualite.findOne({
+			where: {
+				label: format
+			}
+		})
+	}
+
+	public async getPrismaPreferencesAlimentaires(format: string) {
+		return this.getCtx().prisma.preferencesAlimentaire.findOne({
+			where: {
+				label: format
+			}
+		})
+	}
+
+	public async getPrismaPromotion(format: string) {
+		return this.getCtx().prisma.promotion.findOne({
+			where: {
+				label: format
+			}
+		})
+	}
+
+	public async getPrismaSubstancesControversee(format: string) {
+		return this.getCtx().prisma.substancesControverse.findOne({
+			where: {
+				label: format
 			}
 		})
 	}
