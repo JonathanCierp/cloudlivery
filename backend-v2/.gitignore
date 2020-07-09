@@ -1,7 +1,6 @@
-./idea
-./src/generated
-./*.env
-./node_modules
-./schema.graphql
-./dist
-./prisma/migrations
+src/prisma/generated
+config/*.env
+node_modules
+src/prisma/schema.graphql
+dist
+src/prisma/migrations
