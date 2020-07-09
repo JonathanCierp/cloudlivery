@@ -67,7 +67,11 @@ export interface NexusGenFieldTypes {
     message: string; // String!
   }
   Mutation: { // field return type
+    googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    resetPassword: NexusGenRootTypes['Default']; // Default!
+    resetPasswordSave: NexusGenRootTypes['Default']; // Default!
     signin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    signout: NexusGenRootTypes['Default']; // Default!
   }
   Query: { // field return type
     me: NexusGenRootTypes['Default'] | null; // Default
@@ -86,6 +90,20 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    googleSignin: { // args
+      email: string; // String!
+      firstname?: string | null; // String
+      google_id?: string | null; // String
+      lastname?: string | null; // String
+      rememberMe?: boolean | null; // Boolean
+    }
+    resetPassword: { // args
+      email: string; // String!
+    }
+    resetPasswordSave: { // args
+      password: string; // String!
+      token: string; // String!
+    }
     signin: { // args
       email: string; // String!
       password: string; // String!

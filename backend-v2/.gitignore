@@ -4,3 +4,4 @@ node_modules
 src/prisma/schema.graphql
 dist
 src/prisma/migrations
+src/prisma/.env

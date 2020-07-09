@@ -17,7 +17,11 @@ type Default {
 }
 
 type Mutation {
+  googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean = false): AuthPayload!
+  resetPassword(email: String!): Default!
+  resetPasswordSave(password: String!, token: String!): Default!
   signin(email: String!, password: String!, rememberMe: Boolean = false): AuthPayload!
+  signout: Default!
 }
 
 type Query {

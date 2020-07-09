@@ -14,7 +14,6 @@ export const Query = queryType({
 				auth.setData({
 					email: "azerty24041997@gmail.com"
 				})
-				console.log(await auth.getPrismaUser())
 
 				return {
 					message: "Hello world !"

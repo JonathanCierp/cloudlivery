@@ -1,261 +1,88 @@
 // Classes
-//import { client, Redis } from "../redis/Redis"
+import { client, Redis } from "../redis/Redis"
 import CustomError from "../error/CustomError"
 // Utils
-//import { APP_SECRET } from "../../utils"
-//import { sign, verify } from "jsonwebtoken"
+import { appSecret } from "../../utils"
+import { sign, verify } from "jsonwebtoken"
 import { compare, hash } from "bcryptjs"
 // Types
-//import { GetGen } from "nexus/dist/typegenTypeHelpers"
 //import { Token, TokenPayload, User } from "../../types/auth"
-import { User, Data, TokenPayload, TokenOptions } from "../../types/auth/Auth"
+import { User, Data, TokenPayload, TokenOptions, Token } from "../../types/auth"
+import { GetGen } from "nexus-plugin-prisma/dist/schema/typegen";
 
 // Start redis
-//const redis = new Redis(client)
+const redis = new Redis(client)
+// Constants
 
 export default class Auth {
 	//region Protected parameters
 	/**
 	 * User id
 	 * @type number
-	 * @default -1
+	 * @default undefined
 	 */
-	protected _id: number = -1
+	id: number | undefined
 	/**
 	 * User email
 	 * @type string
-	 * @default empty string
+	 * @default undefined
 	 */
-	protected _email: string = ""
+	email: string | undefined
 	/**
 	 * User id
 	 * @type string
-	 * @default empty string
+	 * @default undefined
 	 */
-	protected _password: string = ""
+	password: string | undefined
 	/**
 	 * User id
 	 * @type User
-	 * @default null
+	 * @default undefined
 	 */
-	protected _user: User | undefined
+	user: User | undefined
 	/**
 	 * User id
 	 * @type string
-	 * @default empty string
+	 * @default undefined
 	 */
-	protected _token: string = ""
+	token: string | undefined
 	/**
 	 * TODO Check users connected >7d then ask password or if google auth ask again google connection
 	 * Know if user perma connected
 	 * true: 7d connected
 	 * false: 3h
 	 * @type boolean
-	 * @default false
+	 * @default undefined
 	 */
-	protected _rememberMe: boolean = false
+	rememberMe: boolean | undefined
 
 	/**
 	 * Jwt ttl
 	 * @type string
-	 * @default process.env.REDIS_TTL
+	 * @default undefined
 	 */
-		// @ts-ignore
-	protected _jwtTtl: string | undefined = process.env.REDIS_TTL
+	jwtTtl: string | undefined
 
 	/**
 	 * App context
-	 * @type GetGen<"context"> | undefined
+	 * @type GetGen<any> | undefined
 	 * @default null
 	 */
-	protected _ctx: GetGen<"context"> | null = null
+	ctx: GetGen<any> | undefined
 
 	/**
 	 * User data
 	 * @type Data
-	 * @default {}
+	 * @default undefined
 	 */
-	protected _data: Data = {}
+	data: Data | undefined
 
 	/**
 	 * Hashed password
 	 * @type string
-	 * @default empty string
+	 * @default undefined
 	 */
-	protected _hashedPassword: string = ""
-	//endregion
-
-	//region Getters Setters
-	/**
-	 * Set email
-	 * @return void
-	 * @param email
-	 */
-	public setEmail(email: string): void {
-		this._email = email
-	}
-
-	/**
-	 * Get email
-	 * @return string
-	 */
-	public getEmail(): string {
-		return this._email
-	}
-
-	/**
-	 * Set password
-	 * @return void
-	 * @param password
-	 */
-	public setPassword(password: string): void {
-		this._password = password
-	}
-
-	/**
-	 * Get password
-	 * @return string
-	 */
-	public getPassword(): string {
-		return this._password
-	}
-
-	/**
-	 * Set user
-	 * @return void
-	 * @param user
-	 */
-	public setUser(user: User): void {
-		this._user = user
-	}
-
-	/**
-	 * Get user
-	 * @return string
-	 */
-	public getUser(): User | undefined {
-		return this._user
-	}
-
-	/**
-	 * Set token
-	 * @return void
-	 * @param token
-	 */
-	public setToken(token: string): void {
-		this._token = token
-	}
-
-	/**
-	 * Get token
-	 * @return string
-	 */
-	public getToken(): string {
-		return this._token
-	}
-
-	/**
-	 * Set id
-	 * @return void
-	 * @param id
-	 */
-	public setId(id: number): void {
-		this._id = id
-	}
-
-	/**
-	 * Get id
-	 * @return string
-	 */
-	public getId(): number {
-		return this._id
-	}
-
-	/**
-	 * Set rememberMe
-	 * @return void
-	 * @param rememberMe
-	 */
-	public setRememberMe(rememberMe: boolean): void {
-		this._rememberMe = rememberMe
-	}
-
-	/**
-	 * Get rememberMe
-	 * @return boolean
-	 */
-	public getRememberMe(): boolean {
-		return this._rememberMe
-	}
-
-	/**
-	 * Set jwt ttl
-	 * @return void
-	 * @param jwtTtl
-	 */
-	public setJwtTtl(jwtTtl: string | undefined): void {
-		this._jwtTtl = jwtTtl
-	}
-
-	/**
-	 * Get jwt ttl
-	 * @return number
-	 */
-	public getJwtTtl(): string | undefined {
-		return this._jwtTtl
-	}
-
-	/**
-	 * Set context app
-	 * @return void
-	 * @param ctx
-	 */
-	public setCtx(ctx: GetGen<"context">): void {
-		this._ctx = ctx
-	}
-
-	/**
-	 * Get context app
-	 * @return GetGen<"context">
-	 */
-	public getCtx(): GetGen<"context"> {
-		//@ts-ignore
-		return this._ctx
-	}
-
-	/**
-	 * Set data
-	 * @return void
-	 * @param data
-	 */
-	public setData(data: Data): void {
-		this._data = data
-	}
-
-	/**
-	 * Get data
-	 * @return Data
-	 */
-	public getData(): Data {
-		return this._data
-	}
-
-	/**
-	 * Set hashed password
-	 * @return void
-	 * @param hashedPassword
-	 */
-	public setHashedPassword(hashedPassword: string): void {
-		this._hashedPassword = hashedPassword
-	}
-
-	/**
-	 * Get hashed password
-	 * @return string
-	 */
-	public getHashedPassword(): string {
-		return this._hashedPassword
-	}
+	hashedPassword: string | undefined
 	//endregion
 
 	//region Public Functions
@@ -263,18 +90,17 @@ export default class Auth {
 	 * Set User to the class
 	 * @return Promise<void>
 	 */
-	public async setPrismaUser(): Promise<void> {
+	async setPrismaUser(): Promise<void> {
 		try {
 			const res = await this.getPrismaUser()
 
 			if (!res) {
-				CustomError.error("Aucun utilisateur pour cette adresse mail.")
+				CustomError.userNotFoundByMail()
 			}
 
-			//@ts-ignore
-			this.setUser(res)
+			this.user = res
 		} catch (e) {
-			CustomError.error("Aucun utilisateur pour cette adresse mail.")
+			CustomError.request()
 		}
 	}
 
@@ -282,19 +108,21 @@ export default class Auth {
 	 * Compare given password with database password
 	 * @return Promise<void>
 	 */
-	public async comparePassword(): Promise<boolean> {
+	async comparePassword(): Promise<boolean> {
 		let bool = false
-		
+
 		try {
-			if(this.getUser()) {
-				bool = await compare(this.getPassword(), this.getUser()?.password)
+			if (this.user) {
+				if (this.password != null) {
+					bool = await compare(this.password, this.user?.password)
+				}
 			}
 		} catch (e) {
-			CustomError.error("Mot de passe incorrect.")
+			CustomError.incorrectPassword()
 		}
-		
+
 		if (!bool) {
-			CustomError.error("Mot de passe incorrect.")
+			CustomError.incorrectPassword()
 		}
 
 		return bool
@@ -307,19 +135,18 @@ export default class Auth {
 	 * @param payload?
 	 * @param options?
 	 */
-	public signToken(prefix: string, payload: TokenPayload, options: TokenOptions): void {
-		console.log(prefix)
-		console.log(payload)
-		console.log(options)
-		/*
-		// @ts-ignore
-		this.setToken(sign(payloadDatas, APP_SECRET, optionsDatas))
+	signToken(prefix: string, payload: TokenPayload, options: TokenOptions): void {
+		this.token = sign(payload, appSecret, options)
 
-		if (this.getRememberMe()) {
-			redis.set(`${prefix}${this.getUser().id}`, this.getToken())
-		} else {
-			redis.set(`${prefix}${this.getUser().id}`, this.getToken(), String(process.env.REDIS_TTL))
-		}*/
+		if(payload.type === "reset_password") {
+			redis.set(`${prefix}${this.user?.id}`, this.token, String(3600))
+		}else {
+			if (this.rememberMe) {
+				redis.set(`${prefix}${this.user?.id}`, this.token, String(process.env.REDIS_BIG_TTL))
+			} else {
+				redis.set(`${prefix}${this.user?.id}`, this.token, String(process.env.REDIS_TTL))
+			}
+		}
 	}
 
 	/**
@@ -327,8 +154,8 @@ export default class Auth {
 	 * @return void
 	 * @param oldToken
 	 */
-	public refreshToken(oldToken: string): void {
-		const payload: TokenPayload = verify(oldToken, APP_SECRET, {
+	refreshToken(oldToken: string): void {
+		const payload: TokenPayload = verify(oldToken, appSecret, {
 			audience: "access_token",
 			issuer: "cloudlivery"
 		}) as TokenPayload
@@ -339,7 +166,7 @@ export default class Auth {
 		delete payload.exp
 		delete payload.jti
 
-		this.setToken(sign(payload, APP_SECRET, {jwtid: "2", expiresIn: this.getJwtTtl()}))
+		this.setToken(sign(payload, appSecret, {jwtid: "2", expiresIn: this.getJwtTtl()}))
 		/*}*/
 	}
 
@@ -347,41 +174,48 @@ export default class Auth {
 	 * Delete jwt token from the class
 	 * @return Promise<void>
 	 */
-	public async deleteToken(prefix: string = "signin_"): Promise<void> {
-		await redis.delete(`${prefix}${this.getId()}`)
-		this.setToken("")
+	async deleteToken(prefix: string = "signin_"): Promise<void> {
+		await redis.delete(`${prefix}${this.id}`)
+		this.token = ""
 	}
 
 	/**
 	 * Extract user id from jwt received by http header
 	 * @return number
 	 */
-	public extractIdFromJwt(): number {
-		const Authorization = this.getToken() || this.getCtx().request.get("Authorization")
+	extractIdFromJwt(): number {
+		const Authorization = this.token || this.ctx.request.get("Authorization")
+		let userId: number = -1
 
 		if (Authorization) {
 			const token = Authorization.replace("Bearer ", "")
-			const verifiedToken: Token = verify(token, APP_SECRET) as Token
-			
-			return verifiedToken.userId
+			const verifiedToken: Token = verify(token, appSecret, (e: any, v: any) => {
+				if(e) {
+					CustomError.invalidToken()
+				}
+
+				return v
+			}) as unknown as Token
+			console.log(verifiedToken)
+			userId = verifiedToken.userId
 		} else {
 			CustomError.error("Erreur lors de la recupération du token par le jwt.")
 		}
 
-		return -1
+		return userId
 	}
 
 	/**
 	 * Extract user token from jwt received by http header
 	 * @return string
 	 */
-	public extractTokenFromJwt(): string {
+	extractTokenFromJwt(): string {
 		const Authorization = this.getCtx().request.get("Authorization")
 
 		if (Authorization) {
 			return Authorization.replace("Bearer ", "")
 		} else {
-			CustomError.error("Erreur lors de la déconnexion.")
+			CustomError.signout()
 		}
 
 		return ""
@@ -392,7 +226,7 @@ export default class Auth {
 	 * @return string
 	 * @param prefix
 	 */
-	public async existInRedis(prefix: string = "signin_"): Promise<boolean> {
+	async existInRedis(prefix: string = "signin_"): Promise<boolean> {
 		return await redis.compare(`${prefix}${this.getId()}`, this.getToken())
 	}
 
@@ -400,45 +234,32 @@ export default class Auth {
 	 * Create an user
 	 * @return Promise<any>
 	 */
-	public async createUser(): Promise<any> {
-		try {
-			return await this.getCtx().prisma.user.create({
-				// @ts-ignore
-				data: this.getData() || this.getUser()
-			})
-		} catch (e) {
-			CustomError.error("Erreur lors de la création de l'utilisateur.")
-		}
-
-		return ""
+	async createUser(): Promise<User> {
+		return await this.ctx.prisma.user.create({
+			data: this.user
+		})
 	}
 
 	/**
 	 * Create an user
 	 * @return Promise<any>
 	 */
-	public async updateUser(): Promise<any> {
-		try {
-			return await this.getCtx().prisma.user.update({
-				where: {
-					id: this.getId()
-				},
-				data: this.getData()
-			})
-		} catch (e) {
-			CustomError.error("Erreur lors de la modification de l'utilisateur.")
-		}
-
-		return ""
+	async updateUser(): Promise<User> {
+		return await this.ctx.prisma.user.update({
+			where: {
+				id: this.id
+			},
+			data: this.user
+		})
 	}
 
 	/**
 	 * Get an user fetch by email
-	 * @return Promise<any>
+	 * @return Promise<User>
 	 */
-	public getPrismaUser(): Promise<any> {
-		return this.getCtx().prisma.user.findOne({
-			where: this.getData()
+	getPrismaUser(): Promise<User> {
+		return this.ctx.prisma.user.findOne({
+			where: this.data
 		})
 	}
 
@@ -447,34 +268,36 @@ export default class Auth {
 	 * @return string
 	 * @param prefix
 	 */
-	public generateResetPasswordUrl(prefix: string): string {
-		const payloadDatas = {
-			userId: this.getUser().id,
+	generateResetPasswordUrl(prefix: string): string {
+		const payloadDatas: TokenPayload = {
+			userId: this.user?.id,
 			type: "reset_password"
 		}
-		const options = {
+		const options: TokenOptions = {
 			audience: "reset_password_token",
 			issuer: "cloudlivery",
 			jwtid: "3",
-			subject: "user"
+			subject: "user",
+			expiresIn: "1h"
 		}
 		this.signToken(prefix, payloadDatas, options)
 
-		return process.env.BASE_URL_FRONT + "/auth/password/reset/" + this.getToken()
+		return process.env.BASE_URL_FRONT + "/auth/password/reset/" + this.token
 	}
 
 	/**
 	 * Verify a token
 	 * @return boolean
 	 */
-	public verifyToken(): boolean {
-		const verifiedToken: Token = verify(this.getToken(), APP_SECRET) as Token
+	verifyToken(): boolean {
+		const verifiedToken: Token = verify(this.getToken(), appSecret) as Token
 
 		return !!verifiedToken.userId
 	}
 
-	public async hashPassword(): Promise<void> {
+	async hashPassword(): Promise<void> {
 		this.setHashedPassword(await hash(this.getPassword(), 10))
 	}
+
 	//endregion
 }

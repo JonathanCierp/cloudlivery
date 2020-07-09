@@ -12,6 +12,6 @@ export const getClient = (/*token*/) => {
 				})
 			}
 		},*/
-		onError: (e) => { console.log(e) }
+		onError: (e) => { /*console.log(e)*/ }
 	});
 }
