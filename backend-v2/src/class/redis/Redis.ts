@@ -14,25 +14,7 @@ class Redis {
 	 * @type any
 	 * @default null
 	 */
-	private _client: any
-	//endregion
-
-	//region Getters Setters
-	/**
-	 * Set client
-	 * @return void
-	 * @param client
-	 */
-	public setClient(client: any): void {
-		this._client = client
-	}
-	/**
-	 * Get client
-	 * @return any
-	 */
-	public getClient(): any {
-		return this._client
-	}
+	client: any
 	//endregion
 
 	/**
@@ -40,7 +22,7 @@ class Redis {
 	 * @param client
 	 */
 	constructor(client: RedisClient) {
-		this.setClient(client)
+		this.client = client
 
 		this.init()
 	}
@@ -50,11 +32,11 @@ class Redis {
 	 * @return void
 	 */
 	init(): void {
-		this.getClient().on('connect', () => {
+		this.client.on('connect', () => {
 			console.log("------------ REDIS CONNECTED SUCCESS ------------")
 
 		})
-		this.getClient().on('error', () => {
+		this.client.on('error', () => {
 			console.log("------------ REDIS CONNECTED ERROR ------------")
 
 		})
@@ -67,7 +49,7 @@ class Redis {
 	 */
 	async get(key: string): Promise<string> {
 		return await new Promise((resolve, reject) => {
-			this.getClient().get(key, (err: any, reply: string) => {
+			this.client.get(key, (err: any, reply: string) => {
 				resolve(reply)
 			})
 		})
@@ -82,9 +64,9 @@ class Redis {
 	 */
 	set(key: string, value: string, ttl: string | null = null): void {
 		if(ttl) {
-			this.getClient().set(key, value, "EX", ttl)
+			this.client.set(key, value, "EX", ttl)
 		}else {
-			this.getClient().set(key, value)
+			this.client.set(key, value)
 		}
 	}
 
@@ -93,11 +75,17 @@ class Redis {
 	 * @return Promise<string>
 	 * @param key
 	 */
-	async delete(key: string): Promise<string> {
+	async delete(key: string): Promise<any> {
 		return await new Promise((resolve, reject) => {
-			this.getClient().del(key, (err: any, reply: number) => {
-				reply === 1 ? resolve("Déconnecté avec succès.") : reject("Erreur lors de la déconnexion")
+			this.client.del(key, (err: any, reply: number) => {
+				reply === 1 ? resolve(true) : reject(false)
 			})
+		})
+		.then(response => {
+			return response
+		})
+		.catch(error => {
+			return error
 		})
 	}
 
@@ -109,7 +97,7 @@ class Redis {
 	 */
 	compare(key: string, jwt: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			this._client.get(key, (err: any, reply: string) => {
+			this.client.get(key, (err: any, reply: string) => {
 				if(err) {
 					reject(false)
 				}
@@ -129,7 +117,7 @@ class Redis {
 	 * @return void
 	 */
 	close(): void {
-		this.getClient().quit()
+		this.client.quit()
 	}
 }
 

@@ -24,13 +24,6 @@ model User {
 model Provider {
   id Int @id @default(autoincrement())
   label String @unique
-  marques Marque[]
-  labels_qualites LabelsQualite[]
-  promotions Promotion[]
-  preferences_alimentaires PreferencesAlimentaire[]
-  substances_controversees SubstancesControverse[]
-  formats Format[]
-  rayons Rayon[]
   produits Produit[]
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -40,8 +33,6 @@ model Provider {
 
 model Marque {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -51,8 +42,6 @@ model Marque {
 
 model LabelsQualite {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -62,8 +51,6 @@ model LabelsQualite {
 
 model Promotion {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -73,8 +60,6 @@ model Promotion {
 
 model PreferencesAlimentaire {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -84,8 +69,6 @@ model PreferencesAlimentaire {
 
 model SubstancesControverse {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -95,8 +78,6 @@ model SubstancesControverse {
 
 model Format {
   id Int @id @default(autoincrement())
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -115,6 +96,7 @@ model Rayon {
   uri String @unique
   level Int
   resultats Int
+  scraping Boolean @default(false)
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
@@ -138,20 +120,28 @@ model Produit {
   rayon_produits RayonProduit[]
   produit_images ProduitImage[]
   produit_flags ProduitFlag[]
+  produit_labels_qualites ProduitLabelsQualite[]
+  produit_promotions ProduitPromotion[]
+  produit_preferences_alimentaires ProduitPreferencesAlimentaire[]
+  produit_substances_controversees ProduitSubstancesControverse[]
+  produit_formats ProduitFormat[]
   provider Provider @relation(fields: [provider_id], references: [id])
   provider_id Int
+  marque Marque @relation(fields: [marque_id], references: [id])
+  marque_id Int
   label String @unique
-  brand String @unique
-  slug String @unique
-  uri String @unique
-  packaging String
-  origin String
-  format String
-  price Float
-  unit_of_measure String
-  per_unit_label String
-  tax_message String
-  per_unit Float
+  brand String? @unique
+  ean String? @unique
+  slug String? @unique
+  uri String? @unique
+  packaging String?
+  origin String?
+  format String?
+  price Float?
+  unit_of_measure String?
+  per_unit_label String?
+  tax_message String?
+  per_unit Float?
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
@@ -163,15 +153,15 @@ model ProduitImage {
   produit Produit @relation(fields: [produit_id], references: [id])
   produit_id Int
   largest String @unique
-  size_1500x1500 String @unique
-  size_540x540 String @unique
-  size_380x380 String @unique
-  size_340x340 String @unique
-  size_340x240 String @unique
-  size_280x280 String @unique
-  size_195x195 String @unique
-  size_150x150 String @unique
-  size_43x43 String @unique
+  size_1500x1500 String? @unique
+  size_540x540 String? @unique
+  size_380x380 String? @unique
+  size_340x340 String? @unique
+  size_340x240 String? @unique
+  size_280x280 String? @unique
+  size_195x195 String? @unique
+  size_150x150 String? @unique
+  size_43x43 String? @unique
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
@@ -187,4 +177,65 @@ model ProduitFlag {
   createdAt DateTime @default(now())
 
 	@@map(name: "produit_flags")
+}
+
+model ProduitLabelsQualite {
+  id Int @id @default(autoincrement())
+  labels_qualite LabelsQualite @relation(fields: [labels_qualite_id], references: [id])
+  labels_qualite_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_labels_qualites")
+}
+
+
+model ProduitPromotion {
+  id Int @id @default(autoincrement())
+  promotion Promotion @relation(fields: [promotion_id], references: [id])
+  promotion_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_promotions")
+}
+
+model ProduitPreferencesAlimentaire {
+  id Int @id @default(autoincrement())
+  preferences_alimentaire PreferencesAlimentaire @relation(fields: [preferences_alimentaire_id], references: [id])
+  preferences_alimentaire_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_preferences_alimentaires")
+}
+
+model ProduitSubstancesControverse {
+  id Int @id @default(autoincrement())
+  substances_controversee SubstancesControverse @relation(fields: [substances_controversee_id], references: [id])
+  substances_controversee_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_substances_controversees")
+}
+
+model ProduitFormat {
+  id Int @id @default(autoincrement())
+  format Format @relation(fields: [format_id], references: [id])
+  format_id Int
+  produit Produit @relation(fields: [produit_id], references: [id])
+  produit_id Int
+  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime @default(now())
+
+	@@map(name: "produit_formats")
 }

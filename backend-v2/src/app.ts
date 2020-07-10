@@ -3,6 +3,7 @@ import schema from "./schema"
 import { context } from "./prisma/context"
 
 const server = new GraphQLServer({
+	// @ts-ignore
 	schema,
 	context,
 	middlewares: []

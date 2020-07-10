@@ -35,6 +35,9 @@ export interface NexusGenRootTypes {
   Default: { // root type
     message: string; // String!
   }
+  DefaultBool: { // root type
+    valid: boolean; // Boolean!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
@@ -66,15 +69,20 @@ export interface NexusGenFieldTypes {
   Default: { // field return type
     message: string; // String!
   }
+  DefaultBool: { // field return type
+    valid: boolean; // Boolean!
+  }
   Mutation: { // field return type
     googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     resetPassword: NexusGenRootTypes['Default']; // Default!
     resetPasswordSave: NexusGenRootTypes['Default']; // Default!
+    setupDatas: NexusGenRootTypes['Default']; // Default!
     signin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     signout: NexusGenRootTypes['Default']; // Default!
   }
   Query: { // field return type
-    me: NexusGenRootTypes['Default'] | null; // Default
+    me: NexusGenRootTypes['User']; // User!
+    tokenIsOk: NexusGenRootTypes['DefaultBool'] | null; // DefaultBool
   }
   User: { // field return type
     civilite: string; // String!
@@ -95,7 +103,7 @@ export interface NexusGenArgTypes {
       firstname?: string | null; // String
       google_id?: string | null; // String
       lastname?: string | null; // String
-      rememberMe?: boolean | null; // Boolean
+      rememberMe: boolean; // Boolean!
     }
     resetPassword: { // args
       email: string; // String!
@@ -107,7 +115,12 @@ export interface NexusGenArgTypes {
     signin: { // args
       email: string; // String!
       password: string; // String!
-      rememberMe?: boolean | null; // Boolean
+      rememberMe: boolean; // Boolean!
+    }
+  }
+  Query: {
+    tokenIsOk: { // args
+      token: string; // String!
     }
   }
 }
@@ -117,7 +130,7 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "AuthPayload" | "Default" | "Mutation" | "Query" | "User";
+export type NexusGenObjectNames = "AuthPayload" | "Default" | "DefaultBool" | "Mutation" | "Query" | "User";
 
 export type NexusGenInputNames = never;
 

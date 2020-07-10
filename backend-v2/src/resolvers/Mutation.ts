@@ -1,21 +1,22 @@
 // Classes
 import Auth from "../class/auth/Auth"
-import CustomError from "../class/error/CustomError";
-import Mail from "../class/mail/Mail";
+import CustomError from "../class/error/CustomError"
+import Mail from "../class/mail/Mail"
+import Scraping from "../class/scraping/Scraping"
 // Utils
 import { mutationType, stringArg, booleanArg } from "@nexus/schema"
-import { hash } from "bcryptjs";
+import { hash } from "bcryptjs"
 
 export const Mutation = mutationType({
 	definition(t) {
 		t.field("signin", {
-			// @ts-ignore
 			type: "AuthPayload",
 			args: {
 				email: stringArg({ nullable: false }),
 				password: stringArg({ nullable: false }),
-				rememberMe: booleanArg({ default: false })
+				rememberMe: booleanArg({ default: false, nullable: false })
 			},
+			// @ts-ignore
 			resolve: async (_parent, { email, password, rememberMe }, ctx) => {
 				const auth = new Auth()
 				// Set params info
@@ -48,14 +49,13 @@ export const Mutation = mutationType({
 			}
 		})
 		t.field("googleSignin", {
-			// @ts-ignore
 			type: "AuthPayload",
 			args: {
 				google_id: stringArg(),
 				lastname: stringArg(),
 				firstname: stringArg(),
 				email: stringArg({ nullable: false }),
-				rememberMe: booleanArg({ default: false })
+				rememberMe: booleanArg({ default: false, nullable: false })
 			},
 			//@ts-ignore
 			resolve: async (_parent, { google_id, lastname, firstname, email, rememberMe }, ctx) => {
@@ -123,7 +123,7 @@ export const Mutation = mutationType({
 				auth.ctx = ctx
 				auth.id = auth.extractIdFromJwt()
 				// Delete jwt token from the class
-				await auth.deleteToken()
+				await auth.deleteToken("signin_", "Erreur lors de la déconnexion.")
 
 				return {
 					message: "Déconnecté avec succès"
@@ -174,14 +174,96 @@ export const Mutation = mutationType({
 				auth.data = { id: auth.extractIdFromJwt() }
 				auth.user = await auth.getPrismaUser()
 
+				if(await auth.existInRedis("reset_password_")) {
+					CustomError.invalidToken()
+				}
+
 				if(auth.user) {
 					auth.user.password = await hash(password, 10)
 					await auth.updateUser()
-					await auth.deleteToken("reset_password_")
+					await auth.deleteToken("reset_password_", "Erreur lors de la modification du mot de passe.")
 				}
 
 				return {
 					message: "Modification du mot de passe effectué avec succès."
+				}
+			}
+		})
+		t.field("setupDatas", {
+			type: "Default",
+			resolve: async (_parent, { }, ctx) => {
+				const scraping = new Scraping()
+				scraping.ctx = ctx
+				//await scraping.createPrismaProvider()
+				//await scraping.createPrismaMarques()
+				//await scraping.createPrismaFormats()
+				//await scraping.createPrismaLabelsQualites()
+				//await scraping.createPrismaPreferencesAlimentaires()
+				//await scraping.createPrismaPromotions()
+				//await scraping.createPrismaSubstancesControversees()
+				//await scraping.createPrismaRayons()
+
+				/*await ctx.prisma.produit.create({
+					data: {
+						label: "Œufs gros OEUF CHAMPAG.ARDENNE",
+						ean: "3760214348141",
+						brand: "OEUF CHAMPAG.ARDENNE",
+						slug: "oeufs-gros-oeuf-champag-ardenne",
+						uri: "cremerie/oeufs",
+						packaging: "la boite de 12",
+						origin: "",
+						format: "",
+						price: 3.3,
+						unit_of_measure: "Pièce",
+						per_unit_label: "0.28 € / Pièce",
+						tax_message: "",
+						per_unit: 0.28,
+						provider: {
+							connect: {
+								label: "CARREFOUR"
+							}
+						},
+						marque: {
+							connect: {
+								label: "ABATILLES"
+							}
+						},
+						produit_images: {
+							create: [
+								{
+									largest: "https://www.carrefour.fr/media/1500x1500/Photosite/PGC/P.L.S./3760214348141_PHOTOSITE_20151006_101015_0.jpg?placeholder=1"
+								},
+								{
+									largest: "https://www.carrefour.fr/media/1500x1500/Photosite/PGC/P.L.S./3760214348141_PHOTOSITE_20151006_101015_3.jpg?placeholder=1"
+								},
+								{
+									largest: "https://www.carrefour.fr/media/1500x1500/Photosite/PGC/P.L.S./3760214348141_PHOTOSITE_20151006_101015_7.jpg?placeholder=1"
+								}
+							]
+						},
+						produit_labels_qualites: {
+							create: [
+								{
+									labels_qualite:{
+										connect: {
+											id: 1
+										}
+									}
+								},
+								{
+									labels_qualite:{
+										connect: {
+											id: 3
+										}
+									}
+								},
+							]
+						}
+					}
+				})*/
+
+				return {
+					message: "Ok"
 				}
 			}
 		})

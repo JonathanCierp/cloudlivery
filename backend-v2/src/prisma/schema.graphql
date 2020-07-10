@@ -16,16 +16,22 @@ type Default {
   message: String!
 }
 
+type DefaultBool {
+  valid: Boolean!
+}
+
 type Mutation {
-  googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean = false): AuthPayload!
+  googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean! = false): AuthPayload!
   resetPassword(email: String!): Default!
   resetPasswordSave(password: String!, token: String!): Default!
-  signin(email: String!, password: String!, rememberMe: Boolean = false): AuthPayload!
+  setupDatas: Default!
+  signin(email: String!, password: String!, rememberMe: Boolean! = false): AuthPayload!
   signout: Default!
 }
 
 type Query {
-  me: Default
+  me: User!
+  tokenIsOk(token: String!): DefaultBool
 }
 
 type User {

@@ -1,0 +1,50 @@
+mutation {
+  signin(email: "azerty24041997@gmail.com", password: "a", rememberMe: true) {
+    token
+    user {
+      id
+      google_id
+      email
+    }
+  }
+}
+mutation {
+  googleSignin(google_id: "105216199804027949206", lastname: "a", firstname: "b",
+    email: "azerty24041997@gmail.com", rememberMe: false) {
+    token
+    user {
+      id
+      google_id
+      email
+    }
+  }
+}
+mutation {
+  signout {
+    message
+  }
+}
+mutation {
+  resetPassword(email: "azerty24041997@gmail.com") {
+    message
+  }
+}
+mutation {
+  resetPasswordSave(token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInR5cGUiOiJyZXNldF9wYXNzd29yZCIsImlhdCI6MTU5NDM2ODc4OSwiZXhwIjoxNTk0MzcyMzg5LCJhdWQiOiJyZXNldF9wYXNzd29yZF90b2tlbiIsImlzcyI6ImNsb3VkbGl2ZXJ5Iiwic3ViIjoidXNlciIsImp0aSI6IjMifQ.J4SKWKrQkuN4uRpugQN9EUzknnpeFysHskqz8PU5Quc"
+  	password: "a"
+  ) {
+    message
+  }
+}
+query {
+  me {
+    id
+    google_id
+    email
+  }
+}
+query {
+  tokenIsOk(token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInR5cGUiOiJyZXNldF9wYXNzd29yZCIsImlhdCI6MTU5NDM2ODc4OSwiZXhwIjoxNTk0MzcyMzg5LCJhdWQiOiJyZXNldF9wYXNzd29yZF90b2tlbiIsImlzcyI6ImNsb3VkbGl2ZXJ5Iiwic3ViIjoidXNlciIsImp0aSI6IjMifQ.J4SKWKrQkuN4uRpugQN9EUzknnpeFysHskqz8PU5Quc") {
+    valid
+  }
+}
