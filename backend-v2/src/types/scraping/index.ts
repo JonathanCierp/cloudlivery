@@ -44,3 +44,7 @@ export interface Rayon {
 	resultats: number
 	scraping: boolean
 }
+
+export interface Image {
+
+}

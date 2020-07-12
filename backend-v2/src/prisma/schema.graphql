@@ -27,6 +27,7 @@ type Mutation {
   setupDatas: Default!
   signin(email: String!, password: String!, rememberMe: Boolean! = false): AuthPayload!
   signout: Default!
+  signup(civilite: String!, email: String!, firstname: String!, lastname: String!, password: String!): Default!
 }
 
 type Query {

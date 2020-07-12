@@ -19,6 +19,7 @@ export const Query = queryType({
 				// Set params info
 				auth.ctx = ctx
 				auth.id = auth.extractIdFromJwt()
+				auth.token = auth.extractTokenFromJwt()
 				if(!await auth.existInRedis()) {
 					CustomError.invalidToken()
 				}

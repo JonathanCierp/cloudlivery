@@ -1,4 +1,10 @@
 mutation {
+  signup(civilite: "Mr", lastname: "a", firstname: "b", password: "a",
+    email: "azerty24041997@gmail.com") {
+    message
+  }
+}
+mutation {
   signin(email: "azerty24041997@gmail.com", password: "a", rememberMe: true) {
     token
     user {
@@ -46,5 +52,10 @@ query {
 query {
   tokenIsOk(token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsInR5cGUiOiJyZXNldF9wYXNzd29yZCIsImlhdCI6MTU5NDM2ODc4OSwiZXhwIjoxNTk0MzcyMzg5LCJhdWQiOiJyZXNldF9wYXNzd29yZF90b2tlbiIsImlzcyI6ImNsb3VkbGl2ZXJ5Iiwic3ViIjoidXNlciIsImp0aSI6IjMifQ.J4SKWKrQkuN4uRpugQN9EUzknnpeFysHskqz8PU5Quc") {
     valid
+  }
+}
+mutation {
+  setupDatas {
+    message
   }
 }

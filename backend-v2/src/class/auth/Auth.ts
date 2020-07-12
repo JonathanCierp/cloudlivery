@@ -207,16 +207,18 @@ export default class Auth {
 	 * Extract user token from jwt received by http header
 	 * @return string
 	 */
-	extractTokenFromJwt(): string {
+	extractTokenFromJwt(): string | undefined {
 		const Authorization = this.ctx.request.get("Authorization")
+		let token: string | undefined
+
 
 		if (Authorization) {
-			return Authorization.replace("Bearer ", "")
+			token = Authorization.replace("Bearer ", "")
 		} else {
 			CustomError.signout()
 		}
 
-		return ""
+		return token
 	}
 
 	/**
@@ -304,10 +306,18 @@ export default class Auth {
 		return !!verifiedToken.userId
 	}
 
-	async hashPassword(): Promise<void> {
-		if (this.password != null) {
-			this.hashedPassword = await hash(this.password, 10)
+	async hashPassword(): Promise<string | undefined> {
+		let password: string | undefined
+
+		try {
+			if (this.password != null) {
+				password = await hash(this.password, 10)
+			}
+		}catch(e) {
+			CustomError.error("Erreur lors de la création du compte utilisateur.")
 		}
+
+		return password
 	}
 
 	//endregion

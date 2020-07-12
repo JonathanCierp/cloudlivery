@@ -79,6 +79,7 @@ export interface NexusGenFieldTypes {
     setupDatas: NexusGenRootTypes['Default']; // Default!
     signin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     signout: NexusGenRootTypes['Default']; // Default!
+    signup: NexusGenRootTypes['Default']; // Default!
   }
   Query: { // field return type
     me: NexusGenRootTypes['User']; // User!
@@ -116,6 +117,13 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
       rememberMe: boolean; // Boolean!
+    }
+    signup: { // args
+      civilite: string; // String!
+      email: string; // String!
+      firstname: string; // String!
+      lastname: string; // String!
+      password: string; // String!
     }
   }
   Query: {

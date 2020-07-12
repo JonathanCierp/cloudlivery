@@ -110,7 +110,6 @@ export default class Mail {
 						subject: this.subject,
 						html: data
 					}
-
 					this.transporter?.sendMail(mailOptions, (error: any, info: { response: string }) => {
 						if (error) {
 							console.log(error)
