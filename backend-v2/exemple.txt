@@ -59,3 +59,32 @@ mutation {
     message
   }
 }
+query {
+  produits {
+    count
+    data {
+      id
+      label
+      packaging
+      price
+      per_unit_label
+      provider {
+        label
+        prefix_url
+      }
+      produit_images {
+        largest
+      }
+      produit_labels_qualites {
+        labels_qualite {
+          label
+        }
+      }
+    }
+  }
+}
+mutation {
+  scrapingPuppeteer {
+    message
+  }
+}

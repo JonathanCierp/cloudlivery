@@ -1,6 +1,7 @@
 export interface Provider {
 	id?: number
-	label: string
+	label: string,
+	prefix_url: string
 }
 
 export interface Marque {

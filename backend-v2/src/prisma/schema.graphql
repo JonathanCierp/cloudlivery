@@ -20,6 +20,18 @@ type DefaultBool {
   valid: Boolean!
 }
 
+type DefaultProduit {
+  count: Int!
+  data: [Produit!]!
+}
+
+type LabelsQualite {
+  createdAt: DateTime!
+  id: Int!
+  label: String!
+  updatedAt: DateTime!
+}
+
 type Marque {
   createdAt: DateTime!
   id: Int!
@@ -31,6 +43,7 @@ type Mutation {
   googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean! = false): AuthPayload!
   resetPassword(email: String!): Default!
   resetPasswordSave(password: String!, token: String!): Default!
+  scrapingPuppeteer: Default!
   setupDatas: Default!
   signin(email: String!, password: String!, rememberMe: Boolean! = false): AuthPayload!
   signout: Default!
@@ -38,28 +51,79 @@ type Mutation {
 }
 
 type Produit {
-  civilite: String!
+  brand: String!
   createdAt: DateTime!
-  email: String!
-  firstname: String!
+  ean: String!
+  format: String!
   id: Int!
-  lastname: String!
+  label: String!
   marque: Marque!
+  origin: String!
+  packaging: String!
+  per_unit: String!
+  per_unit_label: String!
+  price: String!
+  produit_images: [ProduitImage!]!
+  produit_labels_qualites: [ProduitLabelsQualite!]!
+  produit_rayons: [ProduitRayon!]!
   provider: Provider!
+  slug: String!
+  tax_message: String!
+  unit_of_measure: String!
   updatedAt: DateTime!
+  uri: String!
+}
+
+type ProduitImage {
+  createdAt: DateTime!
+  id: Int!
+  largest: String!
+  size_1500x1500: String!
+  size_150x150: String!
+  size_195x195: String!
+  size_280x280: String!
+  size_340x240: String!
+  size_340x340: String!
+  size_380x380: String!
+  size_43x43: String!
+  size_540x540: String!
+  updatedAt: DateTime!
+}
+
+type ProduitLabelsQualite {
+  labels_qualite: LabelsQualite!
+}
+
+type ProduitRayon {
+  rayon: Rayon!
 }
 
 type Provider {
   createdAt: DateTime!
   id: Int!
   label: String!
+  prefix_url: String!
   updatedAt: DateTime!
 }
 
 type Query {
   me: User!
-  produits: DefaultBool
+  produits: DefaultProduit
   tokenIsOk(token: String!): DefaultBool
+}
+
+type Rayon {
+  code: String!
+  createdAt: DateTime!
+  id: Int!
+  label: String!
+  level: Int!
+  provider: Provider!
+  resultats: Int!
+  scraping: Boolean!
+  slug: String!
+  updatedAt: DateTime!
+  uri: String!
 }
 
 type User {

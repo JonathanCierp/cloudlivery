@@ -24,6 +24,7 @@ model User {
 model Provider {
   id Int @id @default(autoincrement())
   label String @unique
+  prefix_url String
   produits Produit[]
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
@@ -87,7 +88,7 @@ model Format {
 
 model Rayon {
   id Int @id @default(autoincrement())
-  rayon_produits RayonProduit[]
+  produit_rayons ProduitRayon[]
   provider Provider @relation(fields: [provider_id], references: [id])
   provider_id Int
   label String @unique
@@ -103,7 +104,7 @@ model Rayon {
 	@@map(name: "rayons")
 }
 
-model RayonProduit {
+model ProduitRayon {
   id Int @id @default(autoincrement())
   rayon Rayon @relation(fields: [rayon_id], references: [id])
   rayon_id Int
@@ -112,12 +113,12 @@ model RayonProduit {
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
-	@@map(name: "rayon_produits")
+	@@map(name: "produit_rayons")
 }
 
 model Produit {
   id Int @id @default(autoincrement())
-  rayon_produits RayonProduit[]
+  produit_rayons ProduitRayon[]
   produit_images ProduitImage[]
   produit_flags ProduitFlag[]
   produit_labels_qualites ProduitLabelsQualite[]

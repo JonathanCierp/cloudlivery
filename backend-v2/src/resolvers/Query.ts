@@ -46,31 +46,47 @@ export const Query = queryType({
 			}
 		})
 		t.field("produits", {
-			type: "DefaultBool",
+			type: "DefaultProduit",
 			nullable: true,
 			resolve: async (parent, { }, ctx) => {
-				let produits: Array<object> = await ctx.prisma.produit.findMany({
+				let produits = await ctx.prisma.produit.findMany({
 					select: {
 						id: true,
 						label: true,
+						brand: true,
 						ean: true,
 						slug: true,
+						uri: true,
+						packaging: true,
+						origin: true,
+						format: true,
 						price: true,
 						unit_of_measure: true,
 						per_unit_label: true,
+						tax_message: true,
 						per_unit: true,
+						updatedAt: true,
+						createdAt: true,
 						provider: {
 							select: {
-								label: true
+								id: true,
+								label: true,
+								prefix_url: true,
+								updatedAt: true,
+								createdAt: true
 							}
 						},
 						marque: {
 							select: {
-								label: true
+								id: true,
+								label: true,
+								updatedAt: true,
+								createdAt: true
 							}
 						},
 						produit_images: {
 							select: {
+								id: true,
 								largest: true,
 								size_1500x1500: true,
 								size_540x540: true,
@@ -80,25 +96,29 @@ export const Query = queryType({
 								size_280x280: true,
 								size_195x195: true,
 								size_150x150: true,
-								size_43x43: true
+								size_43x43: true,
+								updatedAt: true,
+								createdAt: true
 							}
 						},
 						produit_labels_qualites: {
 							select: {
 								labels_qualite: {
 									select: {
-										label: true
+										id: true,
+										label: true,
+										updatedAt: true,
+										createdAt: true
 									}
 								}
 							}
 						}
 					}
 				})
-				
-				console.log(produits[0])
 
 				return {
-					valid: true
+					count: produits.length,
+					data: produits
 				}
 			}
 		})

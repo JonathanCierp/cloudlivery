@@ -38,6 +38,16 @@ export interface NexusGenRootTypes {
   DefaultBool: { // root type
     valid: boolean; // Boolean!
   }
+  DefaultProduit: { // root type
+    count: number; // Int!
+    data: NexusGenRootTypes['Produit'][]; // [Produit!]!
+  }
+  LabelsQualite: { // root type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Marque: { // root type
     createdAt: any; // DateTime!
     id: number; // Int!
@@ -46,23 +56,70 @@ export interface NexusGenRootTypes {
   }
   Mutation: {};
   Produit: { // root type
-    civilite: string; // String!
+    brand: string; // String!
     createdAt: any; // DateTime!
-    email: string; // String!
-    firstname: string; // String!
+    ean: string; // String!
+    format: string; // String!
     id: number; // Int!
-    lastname: string; // String!
+    label: string; // String!
     marque: NexusGenRootTypes['Marque']; // Marque!
+    origin: string; // String!
+    packaging: string; // String!
+    per_unit: string; // String!
+    per_unit_label: string; // String!
+    price: string; // String!
+    produit_images: NexusGenRootTypes['ProduitImage'][]; // [ProduitImage!]!
+    produit_labels_qualites: NexusGenRootTypes['ProduitLabelsQualite'][]; // [ProduitLabelsQualite!]!
+    produit_rayons: NexusGenRootTypes['ProduitRayon'][]; // [ProduitRayon!]!
     provider: NexusGenRootTypes['Provider']; // Provider!
+    slug: string; // String!
+    tax_message: string; // String!
+    unit_of_measure: string; // String!
     updatedAt: any; // DateTime!
+    uri: string; // String!
+  }
+  ProduitImage: { // root type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    largest: string; // String!
+    size_1500x1500: string; // String!
+    size_150x150: string; // String!
+    size_195x195: string; // String!
+    size_280x280: string; // String!
+    size_340x240: string; // String!
+    size_340x340: string; // String!
+    size_380x380: string; // String!
+    size_43x43: string; // String!
+    size_540x540: string; // String!
+    updatedAt: any; // DateTime!
+  }
+  ProduitLabelsQualite: { // root type
+    labels_qualite: NexusGenRootTypes['LabelsQualite']; // LabelsQualite!
+  }
+  ProduitRayon: { // root type
+    rayon: NexusGenRootTypes['Rayon']; // Rayon!
   }
   Provider: { // root type
     createdAt: any; // DateTime!
     id: number; // Int!
     label: string; // String!
+    prefix_url: string; // String!
     updatedAt: any; // DateTime!
   }
   Query: {};
+  Rayon: { // root type
+    code: string; // String!
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    level: number; // Int!
+    provider: NexusGenRootTypes['Provider']; // Provider!
+    resultats: number; // Int!
+    scraping: boolean; // Boolean!
+    slug: string; // String!
+    updatedAt: any; // DateTime!
+    uri: string; // String!
+  }
   User: { // root type
     civilite: string; // String!
     createdAt: any; // DateTime!
@@ -95,6 +152,16 @@ export interface NexusGenFieldTypes {
   DefaultBool: { // field return type
     valid: boolean; // Boolean!
   }
+  DefaultProduit: { // field return type
+    count: number; // Int!
+    data: NexusGenRootTypes['Produit'][]; // [Produit!]!
+  }
+  LabelsQualite: { // field return type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Marque: { // field return type
     createdAt: any; // DateTime!
     id: number; // Int!
@@ -105,32 +172,80 @@ export interface NexusGenFieldTypes {
     googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     resetPassword: NexusGenRootTypes['Default']; // Default!
     resetPasswordSave: NexusGenRootTypes['Default']; // Default!
+    scrapingPuppeteer: NexusGenRootTypes['Default']; // Default!
     setupDatas: NexusGenRootTypes['Default']; // Default!
     signin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     signout: NexusGenRootTypes['Default']; // Default!
     signup: NexusGenRootTypes['Default']; // Default!
   }
   Produit: { // field return type
-    civilite: string; // String!
+    brand: string; // String!
     createdAt: any; // DateTime!
-    email: string; // String!
-    firstname: string; // String!
+    ean: string; // String!
+    format: string; // String!
     id: number; // Int!
-    lastname: string; // String!
+    label: string; // String!
     marque: NexusGenRootTypes['Marque']; // Marque!
+    origin: string; // String!
+    packaging: string; // String!
+    per_unit: string; // String!
+    per_unit_label: string; // String!
+    price: string; // String!
+    produit_images: NexusGenRootTypes['ProduitImage'][]; // [ProduitImage!]!
+    produit_labels_qualites: NexusGenRootTypes['ProduitLabelsQualite'][]; // [ProduitLabelsQualite!]!
+    produit_rayons: NexusGenRootTypes['ProduitRayon'][]; // [ProduitRayon!]!
     provider: NexusGenRootTypes['Provider']; // Provider!
+    slug: string; // String!
+    tax_message: string; // String!
+    unit_of_measure: string; // String!
     updatedAt: any; // DateTime!
+    uri: string; // String!
+  }
+  ProduitImage: { // field return type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    largest: string; // String!
+    size_1500x1500: string; // String!
+    size_150x150: string; // String!
+    size_195x195: string; // String!
+    size_280x280: string; // String!
+    size_340x240: string; // String!
+    size_340x340: string; // String!
+    size_380x380: string; // String!
+    size_43x43: string; // String!
+    size_540x540: string; // String!
+    updatedAt: any; // DateTime!
+  }
+  ProduitLabelsQualite: { // field return type
+    labels_qualite: NexusGenRootTypes['LabelsQualite']; // LabelsQualite!
+  }
+  ProduitRayon: { // field return type
+    rayon: NexusGenRootTypes['Rayon']; // Rayon!
   }
   Provider: { // field return type
     createdAt: any; // DateTime!
     id: number; // Int!
     label: string; // String!
+    prefix_url: string; // String!
     updatedAt: any; // DateTime!
   }
   Query: { // field return type
     me: NexusGenRootTypes['User']; // User!
-    produits: NexusGenRootTypes['DefaultBool'] | null; // DefaultBool
+    produits: NexusGenRootTypes['DefaultProduit'] | null; // DefaultProduit
     tokenIsOk: NexusGenRootTypes['DefaultBool'] | null; // DefaultBool
+  }
+  Rayon: { // field return type
+    code: string; // String!
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    level: number; // Int!
+    provider: NexusGenRootTypes['Provider']; // Provider!
+    resultats: number; // Int!
+    scraping: boolean; // Boolean!
+    slug: string; // String!
+    updatedAt: any; // DateTime!
+    uri: string; // String!
   }
   User: { // field return type
     civilite: string; // String!
@@ -185,7 +300,7 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "AuthPayload" | "Default" | "DefaultBool" | "Marque" | "Mutation" | "Produit" | "Provider" | "Query" | "User";
+export type NexusGenObjectNames = "AuthPayload" | "Default" | "DefaultBool" | "DefaultProduit" | "LabelsQualite" | "Marque" | "Mutation" | "Produit" | "ProduitImage" | "ProduitLabelsQualite" | "ProduitRayon" | "Provider" | "Query" | "Rayon" | "User";
 
 export type NexusGenInputNames = never;
 

@@ -4,12 +4,6 @@ import CustomError from "../error/CustomError"
 import { GetGen } from "nexus-plugin-prisma/dist/schema/typegen"
 import { Provider, Marque, Format, LabelsQualite, PreferencesAlimentaire, Promotion, SubstancesControversee, Rayon } from "../../types/scraping"
 
-/*provider: {
-	connect: {
-		label: provider,
-	}
-}*/
-
 export default class Scraping {
 
 	//region Protected parameters
@@ -32,8 +26,11 @@ export default class Scraping {
 	 * @type Array<string>
 	 * @default providers
 	 */
-	providers: Array<string> = [
-		"CARREFOUR"
+	providers: Array<Provider> = [
+		{
+			label: "CARREFOUR",
+			prefix_url: "https://www.carrefour.fr"
+		}
 	]
 
 	/**
@@ -338,269 +335,271 @@ export default class Scraping {
 		"Sans arôme artificiel"
 	]
 
-	rayons: Array<Rayon> = [
-		{
-			label: "Crémerie",
-			code: "CAR01",
-			slug: "cremerie",
-			uri: "cremerie",
-			level: 1,
-			resultats: 335,
-			scraping: false
-		},
-		{
-			label: "Oeufs",
-			code: "CAR01F01",
-			slug: "oeufs",
-			uri: "cremerie/oeufs",
-			level: 2,
-			resultats: 138,
-			scraping: true
-		},
-		{
-			label: "Yaourts, desserts et spécialités végétales",
-			code: "CAR01F02",
-			slug: "yaourts-desserts-et-specialites-vegetales",
-			uri: "cremerie/yaourts-desserts-et-specialites-vegetales",
-			level: 2,
-			resultats: 197,
-			scraping: false
-		},
-		{
-			label: "Yaourts et fromages blancs natures",
-			code: "CAR01F02SF01",
-			slug: "yaourts-et-fromages-blancs-natures",
-			uri: "cremerie/yaourts-desserts-et-specialites-vegetales/yaourts-et-fromages-blancs-natures",
-			level: 3,
-			resultats: 152,
-			scraping: true
-		},
-		{
-			label: "Desserts pâtissiers et italiens",
-			code: "CAR01F02SF02",
-			slug: "desserts-patissiers-et-italiens",
-			uri: "cremerie/yaourts-desserts-et-specialites-vegetales/desserts-patissiers-et-italiens",
-			level: 3,
-			resultats: 45,
-			scraping: true
-		},
-		{
-			label: "Viandes et Poissons",
-			code: "CAR02",
-			slug: "viandes-et-poissons",
-			uri: "viandes-et-poissons",
-			level: 1,
-			resultats: 576,
-			scraping: false
-		},
-		{
-			label: "Boucherie",
-			code: "CAR02F01",
-			slug: "boucherie",
-			uri: "viandes-et-poissons/boucherie",
-			level: 2,
-			resultats: 281,
-			scraping: false
-		},
-		{
-			label: "Porc",
-			code: "CAR02F01SF01",
-			slug: "porc",
-			uri: "viandes-et-poissons/boucherie/porc",
-			level: 3,
-			resultats: 68,
-			scraping: true
-		},
-		{
-			label: "Porc",
-			code: "CAR02F01SF01",
-			slug: "porc",
-			uri: "viandes-et-poissons/boucherie/porc",
-			level: 3,
-			resultats: 68,
-			scraping: true
-		},
-		{
-			label: "Veau",
-			code: "CAR02F01SF02",
-			slug: "veau",
-			uri: "viandes-et-poissons/boucherie/veau",
-			level: 3,
-			resultats: 33,
-			scraping: true
-		},
-		{
-			label: "Boeuf",
-			code: "CAR02F01SF03",
-			slug: "boeuf",
-			uri: "viandes-et-poissons/boucherie/boeuf",
-			level: 3,
-			resultats: 180,
-			scraping: true
-		},
-		{
-			label: "Poulets",
-			code: "CAR02F02SF01",
-			slug: "poulets",
-			uri: "viandes-et-poissons/volaille-et-rotisserie/poulets",
-			level: 3,
-			resultats: 115,
-			scraping: true
-		},
-		{
-			label: "Dindes",
-			code: "CAR02F02SF02",
-			slug: "dindes",
-			uri: "viandes-et-poissons/volaille-et-rotisserie/dindes",
-			level: 3,
-			resultats: 34,
-			scraping: true
-		},
-		{
-			label: "Poulets",
-			code: "CAR02F02SF01",
-			slug: "poulets",
-			uri: "viandes-et-poissons/volaille-et-rotisserie/poulets",
-			level: 3,
-			resultats: 115,
-			scraping: true
-		},
-		{
-			label: "Poissonnerie",
-			code: "CAR02F03",
-			slug: "poissonnerie",
-			uri: "viandes-et-poissons/poissonnerie",
-			level: 2,
-			resultats: 146,
-			scraping: false
-		},
-		{
-			label: "Saumons et truites",
-			code: "CAR02F03SF01",
-			slug: "saumons-et-truites",
-			uri: "viandes-et-poissons/saumons-et-truites",
-			level: 3,
-			resultats: 37,
-			scraping: true
-		},
-		{
-			label: "Crevettes et Fruits de mer",
-			code: "CAR02F03SF02",
-			slug: "crevettes-et-fruits-de-mer",
-			uri: "viandes-et-poissons/crevettes-et-fruits-de-mer",
-			level: 3,
-			resultats: 109,
-			scraping: true
-		},
-		{
-			label: "Boissons sans alcool",
-			code: "CAR03",
-			slug: "boissons-sans-alcool",
-			uri: "boissons-sans-alcool",
-			level: 1,
-			resultats: 342,
-			scraping: false
-		},
-		{
-			label: "Laits, Boissons lactées et Végétales",
-			code: "CAR03F01",
-			slug: "laits-boissons-lactees-et-vegetales",
-			uri: "boissons-sans-alcool/laits-boissons-lactees-et-vegetales",
-			level: 2,
-			resultats: 18,
-			scraping: false
-		},
-		{
-			label: "Écrémé",
-			code: "CAR03F01SF01",
-			slug: "ecreme",
-			uri: "boissons-sans-alcool/laits-boissons-lactees-et-vegetales/ecreme",
-			level: 3,
-			resultats: 18,
-			scraping: true
-		},
-		{
-			label: "Eaux",
-			code: "CAR03F02",
-			slug: "eaux",
-			uri: "boissons-sans-alcool/eaux",
-			level: 2,
-			resultats: 114,
-			scraping: false
-		},
-		{
-			label: "Eaux gazeuses",
-			code: "CAR03F02SF01",
-			slug: "eaux-gazeuses",
-			uri: "boissons-sans-alcool/eaux/eaux-gazeuses",
-			level: 3,
-			resultats: 48,
-			scraping: true
-		},
-		{
-			label: "Eaux plates",
-			code: "CAR03F02SF02",
-			slug: "eaux-plates",
-			uri: "boissons-sans-alcool/eaux/eaux-plates",
-			level: 3,
-			resultats: 66,
-			scraping: true
-		},
-		{
-			label: "Jus de fruits et de légumes",
-			code: "CAR03F03",
-			slug: "jus-de-fruits-et-de-legumes",
-			uri: "boissons-sans-alcool/jus-de-fruits-et-de-legumes",
-			level: 2,
-			resultats: 54,
-			scraping: false
-		},
-		{
-			label: "Jus d'orange",
-			code: "CAR03F03SF01",
-			slug: "jus-d-orange",
-			uri: "boissons-sans-alcool/jus-de-fruits-et-de-legumes/jus-d-orange",
-			level: 3,
-			resultats: 54,
-			scraping: true
-		},
-		{
-			label: "Colas, Thés glacés et Soft drinks",
-			code: "CAR03F04",
-			slug: "colas-thes-glaces-et-soft-drinks",
-			uri: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
-			level: 2,
-			resultats: 41,
-			scraping: false
-		},
-		{
-			label: "Colas",
-			code: "CAR03F04SF01",
-			slug: "colas",
-			uri: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
-			level: 3,
-			resultats: 41,
-			scraping: true
-		},
-		{
-			label: "Sirops et Boissons concentrées",
-			code: "CAR03F05",
-			slug: "sirops-et-boissons-concentrees",
-			uri: "boissons-sans-alcool/sirops-et-boissons-concentrees",
-			level: 2,
-			resultats: 115,
-			scraping: false
-		},
-		{
-			label: "Sirops",
-			code: "CAR03F05SF01",
-			slug: "sirops",
-			uri: "boissons-sans-alcool/sirops-et-boissons-concentrees/sirops",
-			level: 3,
-			resultats: 115,
-			scraping: true
-		}
-	]
+	rayons: any = {
+		"CARREFOUR": [
+			{
+				label: "Crémerie",
+				code: "CAR01",
+				slug: "cremerie",
+				uri: "/cremerie",
+				level: 1,
+				resultats: 335,
+				scraping: false
+			},
+			{
+				label: "Oeufs",
+				code: "CAR01F01",
+				slug: "oeufs",
+				uri: "/cremerie/oeufs",
+				level: 2,
+				resultats: 138,
+				scraping: true
+			},
+			{
+				label: "Yaourts, desserts et spécialités végétales",
+				code: "CAR01F02",
+				slug: "yaourts-desserts-et-specialites-vegetales",
+				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales",
+				level: 2,
+				resultats: 197,
+				scraping: false
+			},
+			{
+				label: "Yaourts et fromages blancs natures",
+				code: "CAR01F02SF01",
+				slug: "yaourts-et-fromages-blancs-natures",
+				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/yaourts-et-fromages-blancs-natures",
+				level: 3,
+				resultats: 152,
+				scraping: true
+			},
+			{
+				label: "Desserts pâtissiers et italiens",
+				code: "CAR01F02SF02",
+				slug: "desserts-patissiers-et-italiens",
+				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/desserts-patissiers-et-italiens",
+				level: 3,
+				resultats: 45,
+				scraping: true
+			},
+			{
+				label: "Viandes et Poissons",
+				code: "CAR02",
+				slug: "viandes-et-poissons",
+				uri: "/viandes-et-poissons",
+				level: 1,
+				resultats: 576,
+				scraping: false
+			},
+			{
+				label: "Boucherie",
+				code: "CAR02F01",
+				slug: "boucherie",
+				uri: "/viandes-et-poissons/boucherie",
+				level: 2,
+				resultats: 281,
+				scraping: false
+			},
+			{
+				label: "Porc",
+				code: "CAR02F01SF01",
+				slug: "porc",
+				uri: "/viandes-et-poissons/boucherie/porc",
+				level: 3,
+				resultats: 68,
+				scraping: true
+			},
+			{
+				label: "Porc",
+				code: "CAR02F01SF01",
+				slug: "porc",
+				uri: "/viandes-et-poissons/boucherie/porc",
+				level: 3,
+				resultats: 68,
+				scraping: true
+			},
+			{
+				label: "Veau",
+				code: "CAR02F01SF02",
+				slug: "veau",
+				uri: "/viandes-et-poissons/boucherie/veau",
+				level: 3,
+				resultats: 33,
+				scraping: true
+			},
+			{
+				label: "Boeuf",
+				code: "CAR02F01SF03",
+				slug: "boeuf",
+				uri: "/viandes-et-poissons/boucherie/boeuf",
+				level: 3,
+				resultats: 180,
+				scraping: true
+			},
+			{
+				label: "Poulets",
+				code: "CAR02F02SF01",
+				slug: "poulets",
+				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
+				level: 3,
+				resultats: 115,
+				scraping: true
+			},
+			{
+				label: "Dindes",
+				code: "CAR02F02SF02",
+				slug: "dindes",
+				uri: "/viandes-et-poissons/volaille-et-rotisserie/dindes",
+				level: 3,
+				resultats: 34,
+				scraping: true
+			},
+			{
+				label: "Poulets",
+				code: "CAR02F02SF01",
+				slug: "poulets",
+				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
+				level: 3,
+				resultats: 115,
+				scraping: true
+			},
+			{
+				label: "Poissonnerie",
+				code: "CAR02F03",
+				slug: "poissonnerie",
+				uri: "/viandes-et-poissons/poissonnerie",
+				level: 2,
+				resultats: 146,
+				scraping: false
+			},
+			{
+				label: "Saumons et truites",
+				code: "CAR02F03SF01",
+				slug: "saumons-et-truites",
+				uri: "/viandes-et-poissons/poissonnerie/saumons-et-truites",
+				level: 3,
+				resultats: 37,
+				scraping: true
+			},
+			{
+				label: "Crevettes et Fruits de mer",
+				code: "CAR02F03SF02",
+				slug: "crevettes-et-fruits-de-mer",
+				uri: "/viandes-et-poissons/poissonnerie/crevettes-et-fruits-de-mer",
+				level: 3,
+				resultats: 109,
+				scraping: true
+			},
+			{
+				label: "Boissons sans alcool",
+				code: "CAR03",
+				slug: "boissons-sans-alcool",
+				uri: "/boissons-sans-alcool",
+				level: 1,
+				resultats: 342,
+				scraping: false
+			},
+			{
+				label: "Laits, Boissons lactées et Végétales",
+				code: "CAR03F01",
+				slug: "laits-boissons-lactees-et-vegetales",
+				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales",
+				level: 2,
+				resultats: 18,
+				scraping: false
+			},
+			{
+				label: "Écrémé",
+				code: "CAR03F01SF01",
+				slug: "ecreme",
+				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales/ecreme",
+				level: 3,
+				resultats: 18,
+				scraping: true
+			},
+			{
+				label: "Eaux",
+				code: "CAR03F02",
+				slug: "eaux",
+				uri: "/boissons-sans-alcool/eaux",
+				level: 2,
+				resultats: 114,
+				scraping: false
+			},
+			{
+				label: "Eaux gazeuses",
+				code: "CAR03F02SF01",
+				slug: "eaux-gazeuses",
+				uri: "/boissons-sans-alcool/eaux/eaux-gazeuses",
+				level: 3,
+				resultats: 48,
+				scraping: true
+			},
+			{
+				label: "Eaux plates",
+				code: "CAR03F02SF02",
+				slug: "eaux-plates",
+				uri: "/boissons-sans-alcool/eaux/eaux-plates",
+				level: 3,
+				resultats: 66,
+				scraping: true
+			},
+			{
+				label: "Jus de fruits et de légumes",
+				code: "CAR03F03",
+				slug: "jus-de-fruits-et-de-legumes",
+				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes",
+				level: 2,
+				resultats: 54,
+				scraping: false
+			},
+			{
+				label: "Jus d'orange",
+				code: "CAR03F03SF01",
+				slug: "jus-d-orange",
+				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes/jus-d-orange",
+				level: 3,
+				resultats: 54,
+				scraping: true
+			},
+			{
+				label: "Colas, Thés glacés et Soft drinks",
+				code: "CAR03F04",
+				slug: "colas-thes-glaces-et-soft-drinks",
+				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+				level: 2,
+				resultats: 41,
+				scraping: false
+			},
+			{
+				label: "Colas",
+				code: "CAR03F04SF01",
+				slug: "colas",
+				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
+				level: 3,
+				resultats: 41,
+				scraping: true
+			},
+			{
+				label: "Sirops et Boissons concentrées",
+				code: "CAR03F05",
+				slug: "sirops-et-boissons-concentrees",
+				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees",
+				level: 2,
+				resultats: 115,
+				scraping: false
+			},
+			{
+				label: "Sirops",
+				code: "CAR03F05SF01",
+				slug: "sirops",
+				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees/sirops",
+				level: 3,
+				resultats: 115,
+				scraping: true
+			}
+		]
+	}
 	//endregion
 
 	//region public functions
@@ -609,13 +608,16 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaProvider(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start provider...")
 		for(let provider of this.providers){
-			const resProvider = await this.getPrismaProvider(provider)
+			const resProvider = await this.getPrismaProvider(provider.label)
 			if(!resProvider) {
 				try {
-					return await this.ctx.prisma.provider.create({
+					await this.ctx.prisma.provider.create({
 						data: {
-							label: provider
+							label: provider.label,
+							prefix_url: provider.prefix_url
 						}
 					})
 				} catch (e) {
@@ -623,6 +625,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End provider in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -630,6 +633,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaMarques(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start marque...")
 		for(let marque of this.marques) {
 			const resMarque = await this.getPrismaMarque(marque)
 			if(!resMarque) {
@@ -644,6 +649,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End marque in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -651,6 +657,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaFormats(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start format...")
 		for(let format of this.formats) {
 			const resFormat = await this.getPrismaFormat(format)
 			if(!resFormat) {
@@ -666,6 +674,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End format in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -673,6 +682,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaLabelsQualites(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start labels qualites...")
 		for(let labelsQualite of this.labelsQualites) {
 			const resLabelsQualite = await this.getPrismaLabelsQualite(labelsQualite)
 			if(!resLabelsQualite) {
@@ -687,6 +698,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End labels qualites in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -694,6 +706,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaPreferencesAlimentaires(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start preferences alimentaires...")
 		for(let preferencesAlimentaire of this.preferencesAlimentaires) {
 			const resPreferencesAlimentaire = await this.getPrismaPreferencesAlimentaire(preferencesAlimentaire)
 			if(!resPreferencesAlimentaire) {
@@ -708,6 +722,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End preferences alimentaires in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -715,6 +730,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaPromotions(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start promotions...")
 		for(let promotion of this.promotions) {
 			const resPromotion = await this.getPrismaPromotion(promotion)
 			if(!resPromotion) {
@@ -730,6 +747,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End promotions in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -737,6 +755,8 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaSubstancesControversees(): Promise<void> {
+		let start_time = new Date().getTime();
+		console.log("Start substances controversees...")
 		for(let substancesControversee of this.substancesControversees) {
 			const resSubstancesControversee = await this.getPrismaSubstancesControversee(substancesControversee)
 			if(!resSubstancesControversee) {
@@ -752,6 +772,7 @@ export default class Scraping {
 				}
 			}
 		}
+		console.log("End substances controversees in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
@@ -759,33 +780,40 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	public async createPrismaRayons(): Promise<void> {
-		for(let rayon of this.rayons) {
-			const resRayon = await this.getPrismaRayon(rayon.label)
-			if(!resRayon) {
-				try {
-					await this.ctx.prisma.rayon.create({
-						data: {
-							label: rayon.label,
-							code: rayon.code,
-							slug: rayon.slug,
-							uri: rayon.uri,
-							level: rayon.level,
-							resultats: rayon.resultats,
-							scraping: rayon.scraping,
-							provider: {
-								connect: {
-									// TODO : change label for other provider
-									label: "CARREFOUR",
+		let start_time = new Date().getTime();
+		console.log("Start rayon...")
+		for(let provider of this.providers){
+			const resProvider = await this.getPrismaProvider(provider.label)
+			if(resProvider) {
+				for(let rayon of this.rayons[`${provider.label}`]) {
+					const resRayon = await this.getPrismaRayon(rayon.label)
+					if(!resRayon) {
+						try {
+							await this.ctx.prisma.rayon.create({
+								data: {
+									label: rayon.label,
+									code: rayon.code,
+									slug: rayon.slug,
+									uri: rayon.uri,
+									level: rayon.level,
+									resultats: rayon.resultats,
+									scraping: rayon.scraping,
+									provider: {
+										connect: {
+											label: provider.label,
+										}
+									}
 								}
-							}
+							})
+						} catch (e) {
+							console.log(e)
+							CustomError.error("Erreur lors de la création des rayons.")
 						}
-					})
-				} catch (e) {
-					console.log(e)
-					CustomError.error("Erreur lors de la création des rayons.")
+					}
 				}
 			}
 		}
+		console.log("End rayon in : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 	}
 
 	/**
