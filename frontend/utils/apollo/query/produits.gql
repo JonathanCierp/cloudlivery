@@ -1,0 +1,20 @@
+query produits {
+  produits {
+    count
+    data {
+      id
+      label
+      packaging
+      price
+      per_unit_label
+      produit_images {
+        largest
+      }
+      produit_labels_qualites {
+        labels_qualite {
+          label
+        }
+      }
+    }
+  }
+}
