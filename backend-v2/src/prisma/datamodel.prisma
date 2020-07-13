@@ -129,11 +129,11 @@ model Produit {
   provider_id Int
   marque Marque @relation(fields: [marque_id], references: [id])
   marque_id Int
-  label String @unique
-  brand String? @unique
+  label String
+  brand String?
   ean String? @unique
   slug String? @unique
-  uri String? @unique
+  uri String?
   packaging String?
   origin String?
   format String?

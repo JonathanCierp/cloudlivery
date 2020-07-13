@@ -38,7 +38,30 @@ export interface NexusGenRootTypes {
   DefaultBool: { // root type
     valid: boolean; // Boolean!
   }
+  Marque: { // root type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Mutation: {};
+  Produit: { // root type
+    civilite: string; // String!
+    createdAt: any; // DateTime!
+    email: string; // String!
+    firstname: string; // String!
+    id: number; // Int!
+    lastname: string; // String!
+    marque: NexusGenRootTypes['Marque']; // Marque!
+    provider: NexusGenRootTypes['Provider']; // Provider!
+    updatedAt: any; // DateTime!
+  }
+  Provider: { // root type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Query: {};
   User: { // root type
     civilite: string; // String!
@@ -72,6 +95,12 @@ export interface NexusGenFieldTypes {
   DefaultBool: { // field return type
     valid: boolean; // Boolean!
   }
+  Marque: { // field return type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Mutation: { // field return type
     googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     resetPassword: NexusGenRootTypes['Default']; // Default!
@@ -81,8 +110,26 @@ export interface NexusGenFieldTypes {
     signout: NexusGenRootTypes['Default']; // Default!
     signup: NexusGenRootTypes['Default']; // Default!
   }
+  Produit: { // field return type
+    civilite: string; // String!
+    createdAt: any; // DateTime!
+    email: string; // String!
+    firstname: string; // String!
+    id: number; // Int!
+    lastname: string; // String!
+    marque: NexusGenRootTypes['Marque']; // Marque!
+    provider: NexusGenRootTypes['Provider']; // Provider!
+    updatedAt: any; // DateTime!
+  }
+  Provider: { // field return type
+    createdAt: any; // DateTime!
+    id: number; // Int!
+    label: string; // String!
+    updatedAt: any; // DateTime!
+  }
   Query: { // field return type
     me: NexusGenRootTypes['User']; // User!
+    produits: NexusGenRootTypes['DefaultBool'] | null; // DefaultBool
     tokenIsOk: NexusGenRootTypes['DefaultBool'] | null; // DefaultBool
   }
   User: { // field return type
@@ -138,7 +185,7 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "AuthPayload" | "Default" | "DefaultBool" | "Mutation" | "Query" | "User";
+export type NexusGenObjectNames = "AuthPayload" | "Default" | "DefaultBool" | "Marque" | "Mutation" | "Produit" | "Provider" | "Query" | "User";
 
 export type NexusGenInputNames = never;
 

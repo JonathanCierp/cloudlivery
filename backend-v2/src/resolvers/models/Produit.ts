@@ -1,10 +1,11 @@
 import { objectType } from "@nexus/schema"
 
-export const User = objectType({
-	name: "User",
+export const Produit = objectType({
+	name: "Produit",
 	definition(t) {
 		t.int("id")
-		t.string("google_id", { nullable: true })
+		t.field("provider", { type: "Provider" })
+		t.field("marque", { type: "Marque" })
 		t.string("lastname")
 		t.string("firstname")
 		t.string("email")

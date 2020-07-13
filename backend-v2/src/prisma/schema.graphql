@@ -20,6 +20,13 @@ type DefaultBool {
   valid: Boolean!
 }
 
+type Marque {
+  createdAt: DateTime!
+  id: Int!
+  label: String!
+  updatedAt: DateTime!
+}
+
 type Mutation {
   googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean! = false): AuthPayload!
   resetPassword(email: String!): Default!
@@ -30,8 +37,28 @@ type Mutation {
   signup(civilite: String!, email: String!, firstname: String!, lastname: String!, password: String!): Default!
 }
 
+type Produit {
+  civilite: String!
+  createdAt: DateTime!
+  email: String!
+  firstname: String!
+  id: Int!
+  lastname: String!
+  marque: Marque!
+  provider: Provider!
+  updatedAt: DateTime!
+}
+
+type Provider {
+  createdAt: DateTime!
+  id: Int!
+  label: String!
+  updatedAt: DateTime!
+}
+
 type Query {
   me: User!
+  produits: DefaultBool
   tokenIsOk(token: String!): DefaultBool
 }
 
