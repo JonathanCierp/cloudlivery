@@ -14,7 +14,7 @@ export const Produit = objectType({
 		t.string("ean")
 		t.string("slug")
 		t.string("uri")
-		t.string("packaging")
+		t.string("packaging", { nullable: true })
 		t.string("origin")
 		t.string("format")
 		t.string("price")

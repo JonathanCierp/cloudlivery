@@ -41,6 +41,7 @@ type Marque {
 
 type Mutation {
   googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean! = false): AuthPayload!
+  resetData: Default!
   resetPassword(email: String!): Default!
   resetPasswordSave(password: String!, token: String!): Default!
   scrapingPuppeteer: Default!
@@ -59,7 +60,7 @@ type Produit {
   label: String!
   marque: Marque!
   origin: String!
-  packaging: String!
+  packaging: String
   per_unit: String!
   per_unit_label: String!
   price: String!

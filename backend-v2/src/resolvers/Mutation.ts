@@ -267,43 +267,41 @@ export const Mutation = mutationType({
 				await scrapingPuppeteer.launchBrowser()
 				await scrapingPuppeteer.newPage()
 
-				let providers = await ctx.prisma.provider.findMany()
-
 				console.log("Start scraping...")
-				let start_provider_time = new Date().getTime();
-				for(let provider of providers) {
-					scrapingPuppeteer.provider = provider.label
-					let rayons = await ctx.prisma.rayon.findMany({
-						where: {
-							scraping: true
-						},
-						orderBy: {
-							id: "desc"
-						}
-					})
-					console.log("Start provider : " + provider.label)
-					let results = []
-					for(let rayon of rayons) {
-						console.log("Start rayon : " + rayon.label)
-						let start_rayon_time = new Date().getTime();
-						let pageNumber = 1
-						do {
-							console.log("Scraping url : " + `${provider.prefix_url}/r${rayon.uri}?noRedirect=1&page=${pageNumber}`)
-							await scrapingPuppeteer.getPage(`${provider.prefix_url}/r${rayon.uri}?noRedirect=1&page=${pageNumber}`)
-							if(results[rayon.id]) {
-								results[rayon.id] = results[rayon.id].concat(await scrapingPuppeteer.getPageData())
-							}else {
-								results[rayon.id] = await scrapingPuppeteer.getPageData()
-							}
-							pageNumber++
-						}while(results.length % 60 === 0)
-						await scrapingPuppeteer.treatScrapedData(results[rayon.id])
-						console.log(`Rayon end in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
-					}
-					console.log(`provider end in ${((new Date().getTime() - start_provider_time) / 1000).toFixed(2)}s`)
+				await scrapingPuppeteer.startScrapingByProvider()
+				console.log("End scraping")
+
+				return {
+					message: "Modification du mot de passe effectué avec succès."
 				}
-
-
+			}
+		})
+		t.field("resetData", {
+			type: "Default",
+			resolve: async (_parent, { }, ctx) => {
+				console.log("Delete all produits...")
+				await ctx.prisma.produitRayon.deleteMany({
+					where: {
+						id: {
+							gte: 1
+						}
+					}
+				})
+				await ctx.prisma.produitImage.deleteMany({
+					where: {
+						id: {
+							gte: 1
+						}
+					}
+				})
+				await ctx.prisma.produit.deleteMany({
+					where: {
+						id: {
+							gte: 1
+						}
+					}
+				})
+				console.log("End delete all produits")
 
 				return {
 					message: "Modification du mot de passe effectué avec succès."

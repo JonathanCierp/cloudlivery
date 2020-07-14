@@ -132,7 +132,7 @@ model Produit {
   marque_id Int
   label String
   brand String?
-  ean String? @unique
+  ean String?
   slug String? @unique
   uri String?
   packaging String?
@@ -153,16 +153,16 @@ model ProduitImage {
   id Int @id @default(autoincrement())
   produit Produit @relation(fields: [produit_id], references: [id])
   produit_id Int
-  largest String @unique
-  size_1500x1500 String? @unique
-  size_540x540 String? @unique
-  size_380x380 String? @unique
-  size_340x340 String? @unique
-  size_340x240 String? @unique
-  size_280x280 String? @unique
-  size_195x195 String? @unique
-  size_150x150 String? @unique
-  size_43x43 String? @unique
+  largest String
+  size_1500x1500 String?
+  size_540x540 String?
+  size_380x380 String?
+  size_340x340 String?
+  size_340x240 String?
+  size_280x280 String?
+  size_195x195 String?
+  size_150x150 String?
+  size_43x43 String?
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 
@@ -173,7 +173,7 @@ model ProduitFlag {
   id Int @id @default(autoincrement())
   produit Produit @relation(fields: [produit_id], references: [id])
   produit_id Int
-  label String @unique
+  label String
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 

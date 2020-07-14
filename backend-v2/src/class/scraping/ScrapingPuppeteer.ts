@@ -51,6 +51,51 @@ export default class ScrapingPuppeteer extends Scraping{
 		})
 	}
 
+	async startScrapingByProvider() {
+		let providers = await this.ctx.prisma.provider.findMany()
+		let start_provider_time = new Date().getTime();
+		for(let provider of providers) {
+			this.provider = provider.label
+			console.log("Start provider : " + provider.label)
+			await this.startScrapingByRayon(provider)
+			console.log(`provider end in ${((new Date().getTime() - start_provider_time) / 1000).toFixed(2)}s`)
+		}
+	}
+
+	async startScrapingByRayon(provider) {
+		let rayons = await this.ctx.prisma.rayon.findMany({
+			where: {
+				scraping: true
+			},
+			orderBy: {
+				id: "desc"
+			}
+		})
+		let results = []
+		let i = 0
+		for(let rayon of rayons) {
+			if(i >= 0 && i < 5) {
+				console.log("Start rayon : " + rayon.label)
+				let start_rayon_time = new Date().getTime();
+				let pageNumber = 1
+				do {
+					console.log("Scraping url : " + `${provider?.prefix_url}/r${rayon.uri}?noRedirect=1&page=${pageNumber}`)
+					await this.getPage(`${provider?.prefix_url}/r${rayon.uri}?noRedirect=1&page=${pageNumber}`)
+					if(results[rayon.id]) {
+						results[rayon.id] = results[rayon.id].concat(await this.getPageData())
+					}else {
+						results[rayon.id] = await this.getPageData()
+					}
+					pageNumber++
+				}while(results[rayon.id].length % 60 === 0)
+				await this.treatScrapedData(results[rayon.id])
+				console.log(`Rayon end in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
+			}
+
+			i++
+		}
+	}
+
 	async treatScrapedData(results: Array<any>) {
 		for(let result of results) {
 			this.result = result
@@ -59,17 +104,17 @@ export default class ScrapingPuppeteer extends Scraping{
 	}
 
 	async saveScrapeddata() {
-		let marque: string = this.extractMarque()
+		let marque: string = await this.extractMarque()
 
 		await this.saveMarque(marque)
 		await this.saveProduit()
 	}
 
-	extractMarque(): string {
+	async extractMarque(): string {
 		let marque: string = ""
 
 		for(let titl of this.result?.attributes.title.split(" ")){
-			if(titl === titl.toUpperCase()) {
+			if(titl === titl.toUpperCase() && titl !== "&" && titl !== "-" && titl !== ":" && titl.indexOf(0) === -1 && titl.indexOf(1) === -1 && titl.indexOf(2) === -1 && titl.indexOf(3) === -1 && titl.indexOf(4) === -1 && titl.indexOf(5) === -1 && titl.indexOf(6) === -1 && titl.indexOf(7) === -1 && titl.indexOf(8) === -1 && titl.indexOf(9) === -1) {
 				marque += titl + " "
 			}
 		}
@@ -81,6 +126,7 @@ export default class ScrapingPuppeteer extends Scraping{
 
 		return marque
 	}
+
 	async saveMarque(marque: string): Promise<void> {
 		let existMarque = await this.ctx.prisma.marque.findOne({
 			where: {
@@ -99,6 +145,7 @@ export default class ScrapingPuppeteer extends Scraping{
 
 		this.marque = marque
 	}
+
 	async extractProduit() {
 		let produit_images: Array<ProduitImage> = []
 
@@ -118,9 +165,14 @@ export default class ScrapingPuppeteer extends Scraping{
 		}
 
 		let produit_rayons: any[] = []
+		let rayon = {}
 
 		for(let categorie of this.result?.attributes.categories) {
-			let rayon = await this.ctx.prisma.rayon.findOne({
+			if(categorie.slug === "ecreme") {
+				categorie.slug = "ecreme"
+			}
+
+			rayon = await this.ctx.prisma.rayon.findOne({
 				where: {
 					slug: categorie.slug
 				}
@@ -135,7 +187,7 @@ export default class ScrapingPuppeteer extends Scraping{
 					}
 				}]
 			}else {
-				console.log("Le rayon n'existe pas : " + categorie.slug)
+				console.log("Le rayon n'existe pas : " + categorie.slug + " produit : " + this.result?.attributes.title)
 			}
 		}
 
@@ -144,7 +196,7 @@ export default class ScrapingPuppeteer extends Scraping{
 			ean: this.result?.attributes.ean,
 			brand: this.result?.attributes.brand,
 			slug: `${this.result?.attributes.slug}-${this.result?.attributes.ean}`,
-			uri: this.result?.attributes.uri,
+			uri: rayon ? `${rayon.uri}/${this.result?.attributes.slug}-${this.result?.attributes.ean}` : "/",
 			packaging: this.result?.attributes.packaging,
 			origin: this.result?.attributes.origin,
 			format: this.result?.attributes.format,
@@ -189,6 +241,7 @@ export default class ScrapingPuppeteer extends Scraping{
 			}*/
 		}
 	}
+
 	async saveProduit() {
 		let slug = `${this.result?.attributes.slug}-${this.result?.attributes.ean}`
 		

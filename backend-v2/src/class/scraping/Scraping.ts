@@ -343,7 +343,7 @@ export default class Scraping {
 				slug: "cremerie",
 				uri: "/cremerie",
 				level: 1,
-				resultats: 335,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -352,7 +352,7 @@ export default class Scraping {
 				slug: "oeufs",
 				uri: "/cremerie/oeufs",
 				level: 2,
-				resultats: 138,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -361,7 +361,7 @@ export default class Scraping {
 				slug: "yaourts-desserts-et-specialites-vegetales",
 				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales",
 				level: 2,
-				resultats: 197,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -370,7 +370,7 @@ export default class Scraping {
 				slug: "yaourts-et-fromages-blancs-natures",
 				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/yaourts-et-fromages-blancs-natures",
 				level: 3,
-				resultats: 152,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -379,7 +379,7 @@ export default class Scraping {
 				slug: "desserts-patissiers-et-italiens",
 				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/desserts-patissiers-et-italiens",
 				level: 3,
-				resultats: 45,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -388,7 +388,7 @@ export default class Scraping {
 				slug: "viandes-et-poissons",
 				uri: "/viandes-et-poissons",
 				level: 1,
-				resultats: 576,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -397,7 +397,7 @@ export default class Scraping {
 				slug: "boucherie",
 				uri: "/viandes-et-poissons/boucherie",
 				level: 2,
-				resultats: 281,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -406,7 +406,7 @@ export default class Scraping {
 				slug: "porc",
 				uri: "/viandes-et-poissons/boucherie/porc",
 				level: 3,
-				resultats: 68,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -415,7 +415,7 @@ export default class Scraping {
 				slug: "porc",
 				uri: "/viandes-et-poissons/boucherie/porc",
 				level: 3,
-				resultats: 68,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -424,7 +424,7 @@ export default class Scraping {
 				slug: "veau",
 				uri: "/viandes-et-poissons/boucherie/veau",
 				level: 3,
-				resultats: 33,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -433,7 +433,7 @@ export default class Scraping {
 				slug: "boeuf",
 				uri: "/viandes-et-poissons/boucherie/boeuf",
 				level: 3,
-				resultats: 180,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -442,7 +442,7 @@ export default class Scraping {
 				slug: "poulets",
 				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
 				level: 3,
-				resultats: 115,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -451,7 +451,7 @@ export default class Scraping {
 				slug: "dindes",
 				uri: "/viandes-et-poissons/volaille-et-rotisserie/dindes",
 				level: 3,
-				resultats: 34,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -460,7 +460,7 @@ export default class Scraping {
 				slug: "poulets",
 				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
 				level: 3,
-				resultats: 115,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -469,7 +469,7 @@ export default class Scraping {
 				slug: "poissonnerie",
 				uri: "/viandes-et-poissons/poissonnerie",
 				level: 2,
-				resultats: 146,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -478,7 +478,7 @@ export default class Scraping {
 				slug: "saumons-et-truites",
 				uri: "/viandes-et-poissons/poissonnerie/saumons-et-truites",
 				level: 3,
-				resultats: 37,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -487,7 +487,7 @@ export default class Scraping {
 				slug: "crevettes-et-fruits-de-mer",
 				uri: "/viandes-et-poissons/poissonnerie/crevettes-et-fruits-de-mer",
 				level: 3,
-				resultats: 109,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -496,7 +496,7 @@ export default class Scraping {
 				slug: "boissons-sans-alcool",
 				uri: "/boissons-sans-alcool",
 				level: 1,
-				resultats: 342,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -505,7 +505,7 @@ export default class Scraping {
 				slug: "laits-boissons-lactees-et-vegetales",
 				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales",
 				level: 2,
-				resultats: 18,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -514,7 +514,7 @@ export default class Scraping {
 				slug: "ecreme",
 				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales/ecreme",
 				level: 3,
-				resultats: 18,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -523,7 +523,7 @@ export default class Scraping {
 				slug: "eaux",
 				uri: "/boissons-sans-alcool/eaux",
 				level: 2,
-				resultats: 114,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -532,7 +532,7 @@ export default class Scraping {
 				slug: "eaux-gazeuses",
 				uri: "/boissons-sans-alcool/eaux/eaux-gazeuses",
 				level: 3,
-				resultats: 48,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -541,7 +541,7 @@ export default class Scraping {
 				slug: "eaux-plates",
 				uri: "/boissons-sans-alcool/eaux/eaux-plates",
 				level: 3,
-				resultats: 66,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -550,7 +550,7 @@ export default class Scraping {
 				slug: "jus-de-fruits-et-de-legumes",
 				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes",
 				level: 2,
-				resultats: 54,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -559,7 +559,16 @@ export default class Scraping {
 				slug: "jus-d-orange",
 				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes/jus-d-orange",
 				level: 3,
-				resultats: 54,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Formats pockets",
+				code: "CAR03F03SF02",
+				slug: "formats-pockets",
+				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes/formats-pockets",
+				level: 3,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -568,7 +577,7 @@ export default class Scraping {
 				slug: "colas-thes-glaces-et-soft-drinks",
 				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
 				level: 2,
-				resultats: 41,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -577,7 +586,7 @@ export default class Scraping {
 				slug: "colas",
 				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
 				level: 3,
-				resultats: 41,
+				resultats: 0,
 				scraping: true
 			},
 			{
@@ -586,7 +595,7 @@ export default class Scraping {
 				slug: "sirops-et-boissons-concentrees",
 				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees",
 				level: 2,
-				resultats: 115,
+				resultats: 0,
 				scraping: false
 			},
 			{
@@ -595,9 +604,117 @@ export default class Scraping {
 				slug: "sirops",
 				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees/sirops",
 				level: 3,
-				resultats: 115,
+				resultats: 0,
 				scraping: true
-			}
+			},
+			{
+				label: "Bio et Ecologie",
+				code: "CAR04",
+				slug: "bio-et-ecologie",
+				uri: "/bio-et-ecologie",
+				level: 1,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Boissons",
+				code: "CAR04F01",
+				slug: "boissons",
+				uri: "/bio-et-ecologie/boissons",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Sodas, thés glacés et sirops",
+				code: "CAR04F01SF01",
+				slug: "sodas-thes-glaces-et-sirops",
+				uri: "/bio-et-ecologie/boissons/sodas-thes-glaces-et-sirops",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Jus de fruits",
+				code: "CAR04F01SF02",
+				slug: "jus-de-fruits",
+				uri: "/bio-et-ecologie/boissons/jus-de-fruits",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Crèmerie",
+				code: "CAR04F02",
+				slug: "cremerie",
+				uri: "/bio-et-ecologie/cremerie",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Lait et oeufs",
+				code: "CAR04F02SF01",
+				slug: "lait-et-oeufs",
+				uri: "/bio-et-ecologie/cremerie/lait-et-oeufs",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Le Marché",
+				code: "CAR04F03",
+				slug: "le-marche",
+				uri: "/bio-et-ecologie/le-marche",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Boucherie et Poissonnerie",
+				code: "CAR04F03SF01",
+				slug: "boucherie-et-poissonnerie",
+				uri: "/bio-et-ecologie/le-marche/boucherie-et-poissonnerie",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Frais et surgelés",
+				code: "CAR04F04",
+				slug: "frais-et-surgeles",
+				uri: "/bio-et-ecologie/frais-et-surgeles",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Traiteur bio",
+				code: "CAR04F04SF01",
+				slug: "traiteur-bio",
+				uri: "/bio-et-ecologie/frais-et-surgeles/traiteur-bio",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Epicerie Salée",
+				code: "CAR04F05",
+				slug: "epicerie-salee",
+				uri: "/bio-et-ecologie/epicerie-salee",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
+				label: "Pâtes, riz et féculents",
+				code: "CAR04F05SF01",
+				slug: "pates-riz-et-feculents",
+				uri: "/bio-et-ecologie/epicerie-salee/pates-riz-et-feculents",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
 		]
 	}
 	//endregion

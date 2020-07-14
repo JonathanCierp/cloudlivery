@@ -64,7 +64,7 @@ export interface NexusGenRootTypes {
     label: string; // String!
     marque: NexusGenRootTypes['Marque']; // Marque!
     origin: string; // String!
-    packaging: string; // String!
+    packaging?: string | null; // String
     per_unit: string; // String!
     per_unit_label: string; // String!
     price: string; // String!
@@ -170,6 +170,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    resetData: NexusGenRootTypes['Default']; // Default!
     resetPassword: NexusGenRootTypes['Default']; // Default!
     resetPasswordSave: NexusGenRootTypes['Default']; // Default!
     scrapingPuppeteer: NexusGenRootTypes['Default']; // Default!
@@ -187,7 +188,7 @@ export interface NexusGenFieldTypes {
     label: string; // String!
     marque: NexusGenRootTypes['Marque']; // Marque!
     origin: string; // String!
-    packaging: string; // String!
+    packaging: string | null; // String
     per_unit: string; // String!
     per_unit_label: string; // String!
     price: string; // String!
