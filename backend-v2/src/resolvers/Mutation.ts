@@ -9,6 +9,7 @@ import {mutationType, stringArg, booleanArg} from "@nexus/schema"
 import {hash} from "bcryptjs"
 // Types
 import { ProduitImage } from "../types/scraping";
+import ScrapingPuppeteerCarrefour from "../class/scraping/ScrapingPuppeteerCarrefour";
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -262,13 +263,22 @@ export const Mutation = mutationType({
 		t.field("scrapingPuppeteer", {
 			type: "Default",
 			resolve: async (_parent, { }, ctx) => {
-				const scrapingPuppeteer = new ScrapingPuppeteer()
+				/*const scrapingPuppeteer = new ScrapingPuppeteer()
 				scrapingPuppeteer.ctx = ctx
 				await scrapingPuppeteer.launchBrowser()
 				await scrapingPuppeteer.newPage()
 
 				console.log("Start scraping...")
 				await scrapingPuppeteer.startScrapingByProvider()
+				console.log("End scraping")*/
+
+				const scrapingPuppeteerCarrefour = new ScrapingPuppeteerCarrefour()
+				scrapingPuppeteerCarrefour.ctx = ctx
+				await scrapingPuppeteerCarrefour.launchBrowser()
+				await scrapingPuppeteerCarrefour.newPage()
+
+				console.log("Start scraping...")
+				await scrapingPuppeteerCarrefour.startScrapingByProvider()
 				console.log("End scraping")
 
 				return {

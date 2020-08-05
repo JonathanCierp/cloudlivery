@@ -74,7 +74,7 @@ export default class ScrapingPuppeteer extends Scraping{
 		let results = []
 		let i = 0
 		for(let rayon of rayons) {
-			if(i >= 0 && i < 5) {
+			/*if(i >= 0 && i < 5) {*/
 				console.log("Start rayon : " + rayon.label)
 				let start_rayon_time = new Date().getTime();
 				let pageNumber = 1
@@ -90,7 +90,7 @@ export default class ScrapingPuppeteer extends Scraping{
 				}while(results[rayon.id].length % 60 === 0)
 				await this.treatScrapedData(results[rayon.id])
 				console.log(`Rayon end in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
-			}
+			/*}*/
 
 			i++
 		}
@@ -187,7 +187,9 @@ export default class ScrapingPuppeteer extends Scraping{
 					}
 				}]
 			}else {
-				console.log("Le rayon n'existe pas : " + categorie.slug + " produit : " + this.result?.attributes.title)
+				if(categorie.slug !== "mon-boucher" && categorie.slug !== "mon-poissonnier") {
+					console.log("Le rayon n'existe pas : " + categorie.slug + " produit : " + this.result?.attributes.title)
+				}
 			}
 		}
 
@@ -251,11 +253,15 @@ export default class ScrapingPuppeteer extends Scraping{
 			}
 		})
 
-		if(!existProduit) {
-			await this.ctx.prisma.produit.create({
-				// @ts-ignore
-				data: await this.extractProduit()
-			})
+
+		if (!existProduit) {
+			let produits = await this.extractProduit()
+			if(this.result?.attributes.categories.slug !== "mon-boucher" && this.result?.attributes.categories.slug !== "mon-poissonnier") {
+				await this.ctx.prisma.produit.create({
+					// @ts-ignore
+					data: await this.extractProduit()
+				})
+			}
 		}
 	}
 }

@@ -437,6 +437,24 @@ export default class Scraping {
 				scraping: true
 			},
 			{
+				label: "Viande hachée et Farce",
+				code: "CAR02F01SF04",
+				slug: "viande-hachee-et-farce",
+				uri: "/viandes-et-poissons/boucherie/viande-hachee-et-farce",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			{
+				label: "Volaille et Rôtisserie",
+				code: "CAR02F02",
+				slug: "volaille-et-rotisserie",
+				uri: "/viandes-et-poissons/volaille-et-rotisserie",
+				level: 2,
+				resultats: 0,
+				scraping: false
+			},
+			{
 				label: "Poulets",
 				code: "CAR02F02SF01",
 				slug: "poulets",
@@ -657,6 +675,24 @@ export default class Scraping {
 				code: "CAR04F02SF01",
 				slug: "lait-et-oeufs",
 				uri: "/bio-et-ecologie/cremerie/lait-et-oeufs",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},
+			/*{
+				label: "Lait, boissons lactées et végétales",
+				code: "CAR04F02SF02",
+				slug: "lait-boissons-lactees-et-vegetales",
+				uri: "/bio-et-ecologie/cremerie/lait-boissons-lactees-et-vegetales",
+				level: 3,
+				resultats: 0,
+				scraping: true
+			},*/
+			{
+				label: "Yaourts et desserts",
+				code: "CAR04F02SF03",
+				slug: "yaourts-et-desserts",
+				uri: "/bio-et-ecologie/cremerie/yaourts-et-desserts",
 				level: 3,
 				resultats: 0,
 				scraping: true
