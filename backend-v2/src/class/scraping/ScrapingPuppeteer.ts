@@ -87,6 +87,7 @@ export default class ScrapingPuppeteer extends Scraping{
 						results[rayon.id] = await this.getPageData()
 					}
 					pageNumber++
+					await this.page.close()
 				}while(results[rayon.id].length % 60 === 0)
 				await this.treatScrapedData(results[rayon.id])
 				console.log(`Rayon end in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)

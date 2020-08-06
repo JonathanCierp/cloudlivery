@@ -275,7 +275,6 @@ export const Mutation = mutationType({
 				const scrapingPuppeteerCarrefour = new ScrapingPuppeteerCarrefour()
 				scrapingPuppeteerCarrefour.ctx = ctx
 				await scrapingPuppeteerCarrefour.launchBrowser()
-				await scrapingPuppeteerCarrefour.newPage()
 
 				console.log("Start scraping...")
 				await scrapingPuppeteerCarrefour.startScrapingByProvider()

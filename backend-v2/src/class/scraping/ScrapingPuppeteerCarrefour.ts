@@ -10,13 +10,43 @@ import { ProduitImage } from "../../types/scraping";
 
 puppeteer.use(StealthPlugin())
 
-export default class ScrapingPuppeteerCarrefour extends Scraping{
+export default class ScrapingPuppeteerCarrefour extends Scraping {
 	puppeteer: any
 	browser: any
 	page: any
 	ctx: GetGen<any> | undefined
 	rayons = [
-		"https://www.carrefour.fr/r/bio-et-ecologie?noRedirect=1"
+		"https://www.carrefour.fr/r/bio-et-ecologie?noRedirect=1",
+		"https://www.carrefour.fr/r/fruits-et-legumes?noRedirect=1",
+		"https://www.carrefour.fr/r/viandes-et-poissons?noRedirect=1",
+		"https://www.carrefour.fr/r/pains-et-patisseries?noRedirect=1",
+		"https://www.carrefour.fr/r/cremerie?noRedirect=1",
+		"https://www.carrefour.fr/r/fromage-et-charcuterie?noRedirect=1",
+		"https://www.carrefour.fr/r/surgeles?noRedirect=1",
+		"https://www.carrefour.fr/r/epicerie-salee?noRedirect=1",
+		"https://www.carrefour.fr/r/epicerie-sucree?noRedirect=1",
+		"https://www.carrefour.fr/r/boissons-sans-alcool?noRedirect=1",
+		"https://www.carrefour.fr/r/traiteur?noRedirect=1",
+		"https://www.carrefour.fr/r/alcools-et-produits-aperitifs?noRedirect=1",
+
+		//"https://www.carrefour.fr/r/produits-du-terroir?noRedirect=1",
+		//"https://www.carrefour.fr/r/hygiene-et-beaute?noRedirect=1",
+		//"https://www.carrefour.fr/r/le-monde-de-bebe?noRedirect=1",
+		//"https://www.carrefour.fr/r/entretien-et-nettoyage?noRedirect=1",
+		//"https://www.carrefour.fr/r/animaux?noRedirect=1",
+		//"https://www.carrefour.fr/r/maison-loisir-textile?noRedirect=1",
+		//"https://www.carrefour.fr/r/jardin-outdoor?noRedirect=1",
+		//"https://www.carrefour.fr/r/maison-interieur?noRedirect=1",
+		//"https://www.carrefour.fr/r/cuisine-et-arts-de-la-table?noRedirect=1",
+		//"https://www.carrefour.fr/r/electromenager?noRedirect=1",
+		//"https://www.carrefour.fr/r/bricolage-auto?noRedirect=1",
+		//"https://www.carrefour.fr/r/beaute-entretien-et-proprete?noRedirect=1",
+		//"https://www.carrefour.fr/r/bagagerie-sport-et-loisirs?noRedirect=1",
+		//"https://www.carrefour.fr/r/telephonie-et-objets-connectes?noRedirect=1",
+		//"https://www.carrefour.fr/r/image-et-son?noRedirect=1",
+		//"https://www.carrefour.fr/r/informatique-bureau?noRedirect=1",
+		//"https://www.carrefour.fr/r/culture-et-jeux-videos?noRedirect=1",
+		//"https://www.carrefour.fr/r/jeux-et-jouets?noRedirect=1"
 	]
 
 	ScrapingCarrefour() {
@@ -26,7 +56,7 @@ export default class ScrapingPuppeteerCarrefour extends Scraping{
 	}
 
 	async launchBrowser(): Promise<void> {
-		this.browser = await puppeteer.launch({ headless: true })
+		this.browser = await puppeteer.launch({headless: true})
 	}
 
 	async newPage(): Promise<void> {
@@ -55,33 +85,42 @@ export default class ScrapingPuppeteerCarrefour extends Scraping{
 
 	async startScrapingByRayon(provider) {
 		let results = []
-		
-		for(let rayon of this.rayons) {
+		let total = []
+
+		for (let rayon of this.rayons) {
 			console.log("Start rayon : " + rayon)
 			let start_rayon_time = new Date().getTime();
 
-			for(let pageNumber = 1; pageNumber >= 1; pageNumber++){
+			for (let pageNumber = 1; pageNumber <= 7; pageNumber++) {
+				await this.newPage()
 				console.log("Scraping url : " + `${rayon}&page=${pageNumber}`)
 				await this.getPage(`${rayon}&page=${pageNumber}`)
 
-				if(results[rayon]) {
+				if (results[rayon]) {
 					results[rayon] = results[rayon].concat(await this.getPageData())
-				}else {
+				} else {
 					results[rayon] = await this.getPageData()
 				}
 
-				if(pageNumber % 10 === 0) {
-					console.log("Start pause page")
-					await this.sleep(30000)
-					console.log("End pause")
-				}
-				if(results[rayon].length % 60 !== 0) {
+				console.log("Start pause page")
+				await this.sleep(5000)
+				console.log("End pause page")
+
+				await this.page.close()
+				if (results[rayon].length % 60 !== 0) {
 					break;
 				}
 			}
 
-			console.log(results[rayon].length)
-		
+			console.log("Start pause rayon")
+			await this.sleep(30000)
+			console.log("End pause rayon")
+
+			total = [...total, {
+				url: rayon,
+				total: results[rayon].length
+			}]
+
 			/*do {
 				console.log("Scraping url : " + `${rayon}&page=${pageNumber}`)
 				await this.getPage(`${rayon}&page=${pageNumber}`)
@@ -104,6 +143,8 @@ export default class ScrapingPuppeteerCarrefour extends Scraping{
 			//await this.sleep(120000)
 			//console.log("End pause")
 		}
+
+		console.log(total)
 	}
 
 	async getPageData(): Promise<void> {
