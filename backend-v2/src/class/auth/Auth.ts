@@ -10,7 +10,7 @@ import { Data, Token, TokenOptions, TokenPayload, User } from "../../types/auth"
 import { GetGen } from "nexus-plugin-prisma/dist/schema/typegen"
 
 // Start redis
-const redis = new Redis(client)
+const redis = new Redis()
 // Constants
 
 export default class Auth {

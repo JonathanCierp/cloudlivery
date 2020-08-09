@@ -1,10 +1,9 @@
 // Packages
-import { RedisClient } from "redis"
+import { RedisClient, createClient } from "redis"
 // Constants
 import { redisConstants } from "../../utils"
 
-const redisClient = require('redis')
-const client = redisClient.createClient(redisConstants.REDIS_PORT, redisConstants.REDIS_HOST)
+const client = createClient(redisConstants.REDIS_PORT, redisConstants.REDIS_HOST)
 
 class Redis {
 
@@ -21,7 +20,7 @@ class Redis {
 	 * Constructor of the class
 	 * @param client
 	 */
-	constructor(client: RedisClient) {
+	constructor() {
 		this.client = client
 
 		this.init()

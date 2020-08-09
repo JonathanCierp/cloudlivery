@@ -15,6 +15,8 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 	browser: any
 	page: any
 	ctx: GetGen<any> | undefined
+	start: number
+	end: number
 	rayons = [
 		"https://www.carrefour.fr/r/bio-et-ecologie?noRedirect=1",
 		"https://www.carrefour.fr/r/fruits-et-legumes?noRedirect=1",
@@ -86,6 +88,7 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 	async startScrapingByRayon(provider) {
 		let results = []
 		let total = []
+		let i = 1
 
 		for (let rayon of this.rayons) {
 			console.log("Start rayon : " + rayon)
@@ -102,19 +105,15 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 					results[rayon] = await this.getPageData()
 				}
 
-				console.log("Start pause page")
-				await this.sleep(5000)
-				console.log("End pause page")
-
 				await this.page.close()
 				if (results[rayon].length % 60 !== 0) {
 					break;
 				}
+				if(i === this.end) {
+					break;
+				}
+				i++
 			}
-
-			console.log("Start pause rayon")
-			await this.sleep(30000)
-			console.log("End pause rayon")
 
 			total = [...total, {
 				url: rayon,
