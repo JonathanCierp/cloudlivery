@@ -263,8 +263,8 @@ export const Mutation = mutationType({
 		t.field("scrapingPuppeteer", {
 			type: "Default",
 			args: {
-				start: intArg(),
-				end: intArg(),
+				start: stringArg(),
+				end: stringArg(),
 			},
 			resolve: async (_parent, { start, end }, ctx) => {
 				/*const scrapingPuppeteer = new ScrapingPuppeteer()

@@ -953,7 +953,7 @@ export default class Scraping {
 									scraping: rayon.scraping,
 									provider: {
 										connect: {
-											label: provider.label,
+											label: provider.label
 										}
 									}
 								}

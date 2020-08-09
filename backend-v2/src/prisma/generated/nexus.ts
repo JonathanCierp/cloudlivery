@@ -276,6 +276,10 @@ export interface NexusGenArgTypes {
       password: string; // String!
       token: string; // String!
     }
+    scrapingPuppeteer: { // args
+      end?: string | null; // String
+      start?: string | null; // String
+    }
     signin: { // args
       email: string; // String!
       password: string; // String!

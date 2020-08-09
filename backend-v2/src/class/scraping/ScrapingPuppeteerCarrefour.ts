@@ -7,6 +7,7 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 // Types
 import { GetGen } from "nexus-plugin-prisma/dist/schema/typegen";
 import { ProduitImage } from "../../types/scraping";
+import prisma from "nexus-plugin-prisma";
 
 puppeteer.use(StealthPlugin())
 
@@ -88,9 +89,10 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 	async startScrapingByRayon(provider) {
 		let results = []
 		let total = []
-		let i = 1
 
-		for (let rayon of this.rayons) {
+		for (let i = this.start; i <= this.end; i++) {
+			let rayon = this.rayons[i]
+
 			console.log("Start rayon : " + rayon)
 			let start_rayon_time = new Date().getTime();
 
@@ -109,10 +111,6 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 				if (results[rayon].length % 60 !== 0) {
 					break;
 				}
-				if(i === this.end) {
-					break;
-				}
-				i++
 			}
 
 			total = [...total, {
@@ -120,30 +118,12 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 				total: results[rayon].length
 			}]
 
-			/*do {
-				console.log("Scraping url : " + `${rayon}&page=${pageNumber}`)
-				await this.getPage(`${rayon}&page=${pageNumber}`)
-				if(results[rayon]) {
-					results[rayon] = results[rayon].concat(await this.getPageData())
-				}else {
-					results[rayon] = await this.getPageData()
-				}
-				length += results[rayon].length
-				pageNumber++
-				if(pageNumber % 10 === 0) {
-					console.log("Start pause page")
-					await this.sleep(30000)
-					console.log("End pause")
-				}
-			}while(results[rayon].length % 60 === 0)*/
-
 			console.log(`Rayon end in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
-			//console.log("Start pause rayon")
-			//await this.sleep(120000)
-			//console.log("End pause")
-		}
 
-		console.log(total)
+			for(let result of results[rayon]) {
+				await this.extractProduit(result)
+			}
+		}
 	}
 
 	async getPageData(): Promise<void> {
@@ -157,5 +137,171 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 
 	sleep(ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	async extractProduit(result) {
+		let provider = await this.ctx.prisma.provider.findOne({
+			where: {
+				label: "CARREFOUR"
+			}
+		})
+		let produit_images: Array<ProduitImage> = []
+		let produit_rayons: Array<any> = []
+		let produit_flags: Array<any> = []
+
+		if(result?.attributes.images) {
+			for(let images of result?.attributes.images){
+				produit_images = [...produit_images, {
+					largest: "https://www.carrefour.fr" + images.largest,
+					size_1500x1500: "https://www.carrefour.fr" + images["1500x1500"],
+					size_540x540: "https://www.carrefour.fr" + images["540x540"],
+					size_380x380: "https://www.carrefour.fr" + images["380x380"],
+					size_340x340: "https://www.carrefour.fr" + images["340x340"],
+					size_340x240: "https://www.carrefour.fr" + images["340x240"],
+					size_280x280: "https://www.carrefour.fr" + images["280x280"],
+					size_195x195: "https://www.carrefour.fr" + images["195x195"],
+					size_150x150: "https://www.carrefour.fr" + images["150x150"],
+					size_43x43: "https://www.carrefour.fr" + images["43x43"]
+				}]
+			}
+		}
+
+		if(result?.attributes.categories) {
+			for(let rayon of result?.attributes.categories) {
+				let exist = await this.ctx.prisma.rayon.findOne({
+					where: {
+						slug: rayon.slug
+					}
+				})
+				if(!exist) {
+					let rayonCreated = await this.ctx.prisma.rayon.create({
+						data: {
+							code: rayon.code,
+							label: rayon.label,
+							slug: rayon.slug,
+							uri: rayon.uri,
+							level: rayon.level,
+							scraping: false,
+							resultats: 0,
+							provider: {
+								connect: {
+									label: provider.label
+								}
+							}
+						}
+					})
+
+					produit_rayons = [...produit_rayons, {
+						rayon:{
+							connect: {
+								id: rayonCreated.id
+							}
+						}
+					}]
+				}else {
+					produit_rayons = [...produit_rayons, {
+						rayon:{
+							connect: {
+								id: exist.id
+							}
+						}
+					}]
+				}
+			}
+		}
+
+		if(result?.attributes.flag) {
+			for(let flag of result?.attributes.flag) {
+				produit_flags = [...produit_flags, {
+					label: "https://www.carrefour.fr/" + flag.replace(".", "-") + ".svg",
+				}]
+			}
+		}
+
+		let produit = {
+			label: result?.attributes.title,
+			ean: result?.attributes.ean,
+			brand: result?.attributes.brand,
+			slug: `${result?.attributes.slug}-${result?.attributes.ean}-${result?.attributes.format.toLowerCase().replace(" ", "-")}`,
+			uri: result?.attributes.uri,
+			packaging: result?.attributes.packaging,
+			origin: result?.attributes.origin,
+			format: result?.attributes.format,
+			price: result?.attributes.price.price,
+			unit_of_measure: result?.attributes.price.unitOfMeasure,
+			per_unit_label: result?.attributes.price.perUnitLabel,
+			tax_message: result?.attributes.price.taxMessage,
+			per_unit: result?.attributes.price.perUnit,
+			provider: {
+				connect: {
+					label: provider.label
+				}
+			},
+			marque: {
+				connect: {
+					label: await this.extractMarque(result?.attributes.title)
+				}
+			},
+			produit_images: {
+				create: produit_images
+			},
+			produit_rayons: {
+				create: produit_rayons
+			}
+		}
+
+		await this.saveProduit(produit)
+	}
+
+	async extractMarque(title): string {
+		let marque: string = ""
+
+		for(let titl of title.split(" ")){
+			if(titl === titl.toUpperCase() && titl !== "&" && titl !== "-" && titl !== ":" && titl.indexOf(0) === -1 && titl.indexOf(1) === -1 && titl.indexOf(2) === -1 && titl.indexOf(3) === -1 && titl.indexOf(4) === -1 && titl.indexOf(5) === -1 && titl.indexOf(6) === -1 && titl.indexOf(7) === -1 && titl.indexOf(8) === -1 && titl.indexOf(9) === -1 && titl !== "/") {
+				marque += titl + " "
+			}
+		}
+		marque = marque.trim()
+
+		if(marque === "") {
+			marque = "SANS MARQUE"
+		}
+
+		await this.saveMarque(marque)
+
+		return marque
+	}
+
+	async saveMarque(marque: string): Promise<void> {
+		let existMarque = await this.ctx.prisma.marque.findOne({
+			where: {
+				label: marque
+			}
+		})
+
+		if(!existMarque) {
+			await this.ctx.prisma.marque.create({
+				data: {
+					label: marque
+				}
+			})
+			console.log("Erreur, la marque n'existe pas, création de : " + marque)
+		}
+
+		this.marque = marque
+	}
+
+	async saveProduit(produit) {
+		let existProduit = await this.ctx.prisma.produit.findOne({
+			where: {
+				slug: produit.slug
+			}
+		})
+
+		if(!existProduit) {
+			await this.ctx.prisma.produit.create({
+				data: produit
+			})
+		}
 	}
 }

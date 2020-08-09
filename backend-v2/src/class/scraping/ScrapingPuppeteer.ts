@@ -224,24 +224,6 @@ export default class ScrapingPuppeteer extends Scraping{
 			produit_rayons: {
 				create: produit_rayons
 			}
-			/*produit_labels_qualites: {
-				create: [
-					{
-						labels_qualite:{
-							connect: {
-								id: 1
-							}
-						}
-					},
-					{
-						labels_qualite:{
-							connect: {
-								id: 3
-							}
-						}
-					},
-				]
-			}*/
 		}
 	}
 
