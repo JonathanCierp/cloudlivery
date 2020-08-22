@@ -26,9 +26,9 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 		"https://www.carrefour.fr/r/cremerie?noRedirect=1",
 		"https://www.carrefour.fr/r/fromage-et-charcuterie?noRedirect=1",
 		"https://www.carrefour.fr/r/surgeles?noRedirect=1",
+		"https://www.carrefour.fr/r/boissons-sans-alcool?noRedirect=1",
 		"https://www.carrefour.fr/r/epicerie-salee?noRedirect=1",
 		"https://www.carrefour.fr/r/epicerie-sucree?noRedirect=1",
-		"https://www.carrefour.fr/r/boissons-sans-alcool?noRedirect=1",
 		"https://www.carrefour.fr/r/traiteur?noRedirect=1",
 		"https://www.carrefour.fr/r/alcools-et-produits-aperitifs?noRedirect=1",
 
@@ -227,11 +227,11 @@ export default class ScrapingPuppeteerCarrefour extends Scraping {
 			packaging: result?.attributes.packaging,
 			origin: result?.attributes.origin,
 			format: result?.attributes.format,
-			price: result?.attributes.price.price,
+			price: result?.attributes.price.price.toString(),
 			unit_of_measure: result?.attributes.price.unitOfMeasure,
 			per_unit_label: result?.attributes.price.perUnitLabel,
 			tax_message: result?.attributes.price.taxMessage,
-			per_unit: result?.attributes.price.perUnit,
+			per_unit: result?.attributes.price.perUnit.toString(),
 			provider: {
 				connect: {
 					label: provider.label

@@ -10,6 +10,7 @@ import {hash} from "bcryptjs"
 // Types
 import { ProduitImage } from "../types/scraping";
 import ScrapingPuppeteerCarrefour from "../class/scraping/ScrapingPuppeteerCarrefour";
+import ScrapingPuppeteerIntermarche from "../class/scraping/ScrapingPuppeteerIntermarche";
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -253,6 +254,7 @@ export const Mutation = mutationType({
 				await scraping.createPrismaPromotions()
 				await scraping.createPrismaSubstancesControversees()
 				await scraping.createPrismaRayons()
+
 				console.log("Total time : " + ((new Date().getTime() - start_time) / 1000).toFixed(2))
 
 				return {
@@ -276,15 +278,24 @@ export const Mutation = mutationType({
 				await scrapingPuppeteer.startScrapingByProvider()
 				console.log("End scraping")*/
 
-				const scrapingPuppeteerCarrefour = new ScrapingPuppeteerCarrefour()
-				scrapingPuppeteerCarrefour.ctx = ctx
-				scrapingPuppeteerCarrefour.start = start
-				scrapingPuppeteerCarrefour.end = end
-				await scrapingPuppeteerCarrefour.launchBrowser()
+				const scraping = new Scraping()
+				scraping.ctx = ctx
+				await scraping.launchBrowser()
+				await scraping.newPage()
+
+				console.log("Start scraping Carrefour...")
+				await scraping.startScrapingCarrefour()
+				console.log("End scraping Carrefour")
+
+				/*const scrapingPuppeteerIntermarche = new ScrapingPuppeteerIntermarche()
+				scrapingPuppeteerIntermarche.ctx = ctx
+				scrapingPuppeteerIntermarche.start = start
+				scrapingPuppeteerIntermarche.end = end
+				await scrapingPuppeteerIntermarche.launchBrowser()
 
 				console.log("Start scraping...")
-				await scrapingPuppeteerCarrefour.startScrapingByProvider()
-				console.log("End scraping")
+				await scrapingPuppeteerIntermarche.startScrapingByProvider()
+				console.log("End scraping")*/
 
 				return {
 					message: "Modification du mot de passe effectué avec succès."

@@ -113,7 +113,6 @@ export interface NexusGenRootTypes {
     id: number; // Int!
     label: string; // String!
     level: number; // Int!
-    provider: NexusGenRootTypes['Provider']; // Provider!
     resultats: number; // Int!
     scraping: boolean; // Boolean!
     slug: string; // String!
@@ -241,7 +240,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     label: string; // String!
     level: number; // Int!
-    provider: NexusGenRootTypes['Provider']; // Provider!
     resultats: number; // Int!
     scraping: boolean; // Boolean!
     slug: string; // String!

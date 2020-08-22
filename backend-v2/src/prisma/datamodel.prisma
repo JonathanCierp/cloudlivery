@@ -89,8 +89,6 @@ model Format {
 model Rayon {
   id Int @id @default(autoincrement())
   produit_rayons ProduitRayon[]
-  provider Provider @relation(fields: [provider_id], references: [id])
-  provider_id Int
   label String @unique
   code String @unique
   slug String @unique
@@ -138,11 +136,11 @@ model Produit {
   packaging String?
   origin String?
   format String?
-  price Float?
+  price String?
   unit_of_measure String?
   per_unit_label String?
   tax_message String?
-  per_unit Float?
+  per_unit String?
   updatedAt DateTime @updatedAt @default(now())
   createdAt DateTime @default(now())
 

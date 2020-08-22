@@ -4,7 +4,6 @@ export const Rayon = objectType({
 	name: "Rayon",
 	definition(t) {
 		t.int("id")
-		t.field("provider", { type: "Provider" })
 		t.string("label")
 		t.string("code")
 		t.string("slug")

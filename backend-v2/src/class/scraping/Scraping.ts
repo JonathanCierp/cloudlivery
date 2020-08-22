@@ -1,8 +1,31 @@
 // Classes
 import CustomError from "../error/CustomError"
 // Types
-import { GetGen } from "nexus-plugin-prisma/dist/schema/typegen"
-import { Provider, Marque, Format, LabelsQualite, PreferencesAlimentaire, Promotion, SubstancesControversee, Rayon } from "../../types/scraping"
+import {GetGen} from "nexus-plugin-prisma/dist/schema/typegen"
+import {
+	Provider,
+	Marque,
+	Format,
+	LabelsQualite,
+	PreferencesAlimentaire,
+	Promotion,
+	SubstancesControversee,
+	Rayon
+} from "../../types/scraping"
+// Utils
+const puppeteer = require('puppeteer-extra')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+const Apify = require('apify')
+
+
+const slugify = (text) => {
+	return text.toString().toLowerCase()
+		.replace(/\s+/g, '-')           // Replace spaces with -
+		.replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+		.replace(/\-\-+/g, '-')         // Replace multiple - with single -
+		.replace(/^-+/, '')             // Trim - from start of text
+		.replace(/-+$/, '');            // Trim - from end of text
+}
 
 export default class Scraping {
 
@@ -30,222 +53,11 @@ export default class Scraping {
 		{
 			label: "CARREFOUR",
 			prefix_url: "https://www.carrefour.fr"
+		},
+		{
+			label: "AUCHAN",
+			prefix_url: "https://www.auchan.com"
 		}
-	]
-
-	/**
-	 * Marques
-	 * @type Array<string>
-	 * @default marques by providers
-	 */
-	marques: Array<string> = [
-		"ABATILLES",
-		"AGRILAIT",
-		"ALDELIS",
-		"ALSACE LAIT",
-		"ANCHOIS ROQUES",
-		"ANGULAS AGUINAGA",
-		"APPETI' MARINE",
-		"ARCENS",
-		"ATELIER BLINI",
-		"AURELE",
-		"AUTHENTIQUE GREC BY IFANTIS",
-		"BADOIT",
-		"BASKALIA",
-		"BIO LOGIK",
-		"BIOPYRENEES",
-		"BLASON D'OR",
-		"BLINI",
-		"BONNE MAMAN",
-		"BOURGAIN",
-		"BREIZH COLA",
-		"BREIZH SAVEURS",
-		"BRIOCHE PASQUIER",
-		"CALIN",
-		"CANDIA",
-		"CAP OCEAN",
-		"CARREFOUR",
-		"CARREFOUR BIO",
-		"CARREFOUR CLASSIC'",
-		"CAVIAR DE L'ISLE",
-		"CAZAUBON",
-		"C'EST QUI LE PATRON",
-		"CHARAL",
-		"CITE MARINE",
-		"COCA-COLA",
-		"COCA-COLA-ZERO",
-		"COMPAGNIE DES PECHES",
-		"COMPTOIR SUSHI",
-		"CONSERV. PROVENCALES",
-		"CONTREX",
-		"COQUY",
-		"CORAYA",
-		"CORSICA COLA",
-		"COURMAYEUR",
-		"CRISTALINE",
-		"CULTIMER",
-		"DANONE",
-		"DELICADEZAS IBERICAS",
-		"DELICE MORNANTAIS",
-		"DELICEMER",
-		"DELPEYRAT",
-		"DELPIERRE",
-		"DUO LOZERE",
-		"ETREZ",
-		"EVIAN",
-		"EYGUEBELLE",
-		"FAUCHON",
-		"FERME COLLET",
-		"FERME DE LA BAZINIERE",
-		"FERMIERS DE LOUE",
-		"FJORD",
-		"FLEURY MICHON",
-		"FORCE BIO",
-		"FOURNIER ET FILS",
-		"FOURNIER FILS",
-		"FRUIS",
-		"FRUISS",
-		"FUN BLUE",
-		"GALVANINA",
-		"GERVITA",
-		"GIRALP",
-		"GU",
-		"GUY SANCHES",
-		"GUYADER",
-		"HAMOUD BOUALEM",
-		"HAPPY YOURS",
-		"HENAFF",
-		"HEPAR",
-		"HIGHTLAND SPRING",
-		"ILE BLEUE",
-		"JARDIN BIO",
-		"JOCKEY",
-		"JOKER",
-		"JOLIVAL",
-		"KER RONAN",
-		"KIMURA",
-		"KRISTSEN",
-		"LA BRESSANE",
-		"LA LAITIERE",
-		"LA MAISON GUIOT",
-		"LA MARQUE DU CONSOMMATEUR",
-		"LA MONEGASQUE",
-		"LA NOUVELLE AGRICULTURE",
-		"LA P'TITE SAUCE DU POISSONNIER",
-		"LABEYRIE",
-		"LACTER",
-		"LAITERIE LES FAYES",
-		"LAITIERE DE LA MOTTE",
-		"LARTIGAU",
-		"L'ASSIETTE BLEUE",
-		"LE CRAULOIS",
-		"LE DELICE MORNANTAIS",
-		"LE GAULOIS",
-		"LE MARCHE",
-		"LE MARMITON",
-		"LE MONDE DU SAUMON",
-		"LE PETIT FUME",
-		"LEGENDES DU POITOU",
-		"LES 2 VACHE",
-		"LES 300 & BIO",
-		"LES BONS METS BIO",
-		"LES BONS MORCEAUX",
-		"LES ENTREES DE LA MER",
-		"LES FAYES",
-		"LES LAITIERS RESPONSABLES-YOPLAIT",
-		"LES NATURELS",
-		"LES VOLAILLES DE NOS REGIONS",
-		"LOUE",
-		"L'ŒUF ARDENNAIS",
-		"MAIRIE DOLIN",
-		"MAISON BRIAU",
-		"MAITRE COQ",
-		"MALO",
-		"MANGAJO",
-		"MAREDOC",
-		"MARIE-AMELIE",
-		"MAXIM'S DE PARIS",
-		"MISS ALGAE",
-		"MITI",
-		"MONIN",
-		"MONT BLANC",
-		"MONT ROUCOUS",
-		"MORITZ",
-		"MOULIN DE VALDONNE",
-		"MOWI",
-		"OASIS",
-		"OCEALLIANCE",
-		"OEUF CHAMPAG.ARDENNE",
-		"OGEU",
-		"OREO",
-		"OREZZA",
-		"PAC",
-		"PALAIS DES METS",
-		"PAROT",
-		"PECHALOU",
-		"PECHERIES SETOISES",
-		"PECHEUR DE SAVEURS",
-		"PECHEURS DES CALANQUES",
-		"PEPSI MAX",
-		"PÈRE DODU",
-		"PERLE DE LAI",
-		"PERRIER",
-		"PETIT PRIX",
-		"PETIT YOPLAIT",
-		"PIAF",
-		"PIERVAL",
-		"PLANCOET",
-		"PLEIN FRUIT",
-		"POUSSE EN CLAIRE",
-		"PREMIER",
-		"PRESSADE",
-		"QUEBEC",
-		"QUEZAC",
-		"REGHALAL",
-		"REO",
-		"RIANS",
-		"ROLMER",
-		"ROYAN FRAIS",
-		"ROZANA",
-		"SACRE BLEU",
-		"SAINT AMAND",
-		"SAINT AMOUR",
-		"SALVETAT",
-		"SAN PELLEGRINO",
-		"SANS MARQUE",
-		"SAVOI YAOURT",
-		"SIGGI'S",
-		"SIMON",
-		"SIROP SPORT",
-		"ST GEORGES",
-		"ST YORRE",
-		"STE ALIX",
-		"ST-YORRE",
-		"SUNTAT",
-		"SUSHI DAILY",
-		"SUSHI MARKET",
-		"TEISSIERE",
-		"TENDRE ET PLUS",
-		"TETES BRULEES MIX & KIFF",
-		"THONON",
-		"TOBLERONE",
-		"TRADITION BRETONNE",
-		"TROPICANA",
-		"VALLEE VERTE",
-		"VALS",
-		"VEDRENNE",
-		"VELOUTE",
-		"VERNIERE",
-		"VICHY CELESTINS",
-		"VITTEL",
-		"VOLAILLE FRANCAISE",
-		"VOLVIC",
-		"WATTWILLER",
-		"WILLIAM & JAMES",
-		"YAOS",
-		"YARDEN",
-		"YOPLAIT",
-		"VRAI"
 	]
 
 	/**
@@ -335,424 +147,208 @@ export default class Scraping {
 		"Sans arôme artificiel"
 	]
 
-	rayons: any = {
-		"CARREFOUR": [
-			{
-				label: "Crémerie",
-				code: "CAR01",
-				slug: "cremerie",
-				uri: "/cremerie",
-				level: 1,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Oeufs",
-				code: "CAR01F01",
-				slug: "oeufs",
-				uri: "/cremerie/oeufs",
-				level: 2,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Yaourts, desserts et spécialités végétales",
-				code: "CAR01F02",
-				slug: "yaourts-desserts-et-specialites-vegetales",
-				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Yaourts et fromages blancs natures",
-				code: "CAR01F02SF01",
-				slug: "yaourts-et-fromages-blancs-natures",
-				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/yaourts-et-fromages-blancs-natures",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Desserts pâtissiers et italiens",
-				code: "CAR01F02SF02",
-				slug: "desserts-patissiers-et-italiens",
-				uri: "/cremerie/yaourts-desserts-et-specialites-vegetales/desserts-patissiers-et-italiens",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Viandes et Poissons",
-				code: "CAR02",
-				slug: "viandes-et-poissons",
-				uri: "/viandes-et-poissons",
-				level: 1,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Boucherie",
-				code: "CAR02F01",
-				slug: "boucherie",
-				uri: "/viandes-et-poissons/boucherie",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Porc",
-				code: "CAR02F01SF01",
-				slug: "porc",
-				uri: "/viandes-et-poissons/boucherie/porc",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Porc",
-				code: "CAR02F01SF01",
-				slug: "porc",
-				uri: "/viandes-et-poissons/boucherie/porc",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Veau",
-				code: "CAR02F01SF02",
-				slug: "veau",
-				uri: "/viandes-et-poissons/boucherie/veau",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Boeuf",
-				code: "CAR02F01SF03",
-				slug: "boeuf",
-				uri: "/viandes-et-poissons/boucherie/boeuf",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Viande hachée et Farce",
-				code: "CAR02F01SF04",
-				slug: "viande-hachee-et-farce",
-				uri: "/viandes-et-poissons/boucherie/viande-hachee-et-farce",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Volaille et Rôtisserie",
-				code: "CAR02F02",
-				slug: "volaille-et-rotisserie",
-				uri: "/viandes-et-poissons/volaille-et-rotisserie",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Poulets",
-				code: "CAR02F02SF01",
-				slug: "poulets",
-				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Dindes",
-				code: "CAR02F02SF02",
-				slug: "dindes",
-				uri: "/viandes-et-poissons/volaille-et-rotisserie/dindes",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Poulets",
-				code: "CAR02F02SF01",
-				slug: "poulets",
-				uri: "/viandes-et-poissons/volaille-et-rotisserie/poulets",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Poissonnerie",
-				code: "CAR02F03",
-				slug: "poissonnerie",
-				uri: "/viandes-et-poissons/poissonnerie",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Saumons et truites",
-				code: "CAR02F03SF01",
-				slug: "saumons-et-truites",
-				uri: "/viandes-et-poissons/poissonnerie/saumons-et-truites",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Crevettes et Fruits de mer",
-				code: "CAR02F03SF02",
-				slug: "crevettes-et-fruits-de-mer",
-				uri: "/viandes-et-poissons/poissonnerie/crevettes-et-fruits-de-mer",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Boissons sans alcool",
-				code: "CAR03",
-				slug: "boissons-sans-alcool",
-				uri: "/boissons-sans-alcool",
-				level: 1,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Laits, Boissons lactées et Végétales",
-				code: "CAR03F01",
-				slug: "laits-boissons-lactees-et-vegetales",
-				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Écrémé",
-				code: "CAR03F01SF01",
-				slug: "ecreme",
-				uri: "/boissons-sans-alcool/laits-boissons-lactees-et-vegetales/ecreme",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Eaux",
-				code: "CAR03F02",
-				slug: "eaux",
-				uri: "/boissons-sans-alcool/eaux",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Eaux gazeuses",
-				code: "CAR03F02SF01",
-				slug: "eaux-gazeuses",
-				uri: "/boissons-sans-alcool/eaux/eaux-gazeuses",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Eaux plates",
-				code: "CAR03F02SF02",
-				slug: "eaux-plates",
-				uri: "/boissons-sans-alcool/eaux/eaux-plates",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Jus de fruits et de légumes",
-				code: "CAR03F03",
-				slug: "jus-de-fruits-et-de-legumes",
-				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Jus d'orange",
-				code: "CAR03F03SF01",
-				slug: "jus-d-orange",
-				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes/jus-d-orange",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Formats pockets",
-				code: "CAR03F03SF02",
-				slug: "formats-pockets",
-				uri: "/boissons-sans-alcool/jus-de-fruits-et-de-legumes/formats-pockets",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Colas, Thés glacés et Soft drinks",
-				code: "CAR03F04",
-				slug: "colas-thes-glaces-et-soft-drinks",
-				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Colas",
-				code: "CAR03F04SF01",
-				slug: "colas",
-				uri: "/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Sirops et Boissons concentrées",
-				code: "CAR03F05",
-				slug: "sirops-et-boissons-concentrees",
-				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Sirops",
-				code: "CAR03F05SF01",
-				slug: "sirops",
-				uri: "/boissons-sans-alcool/sirops-et-boissons-concentrees/sirops",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Bio et Ecologie",
-				code: "CAR04",
-				slug: "bio-et-ecologie",
-				uri: "/bio-et-ecologie",
-				level: 1,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Boissons",
-				code: "CAR04F01",
-				slug: "boissons",
-				uri: "/bio-et-ecologie/boissons",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Sodas, thés glacés et sirops",
-				code: "CAR04F01SF01",
-				slug: "sodas-thes-glaces-et-sirops",
-				uri: "/bio-et-ecologie/boissons/sodas-thes-glaces-et-sirops",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Jus de fruits",
-				code: "CAR04F01SF02",
-				slug: "jus-de-fruits",
-				uri: "/bio-et-ecologie/boissons/jus-de-fruits",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Crèmerie",
-				code: "CAR04F02",
-				slug: "cremerie",
-				uri: "/bio-et-ecologie/cremerie",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Lait et oeufs",
-				code: "CAR04F02SF01",
-				slug: "lait-et-oeufs",
-				uri: "/bio-et-ecologie/cremerie/lait-et-oeufs",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			/*{
-				label: "Lait, boissons lactées et végétales",
-				code: "CAR04F02SF02",
-				slug: "lait-boissons-lactees-et-vegetales",
-				uri: "/bio-et-ecologie/cremerie/lait-boissons-lactees-et-vegetales",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},*/
-			{
-				label: "Yaourts et desserts",
-				code: "CAR04F02SF03",
-				slug: "yaourts-et-desserts",
-				uri: "/bio-et-ecologie/cremerie/yaourts-et-desserts",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Le Marché",
-				code: "CAR04F03",
-				slug: "le-marche",
-				uri: "/bio-et-ecologie/le-marche",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Boucherie et Poissonnerie",
-				code: "CAR04F03SF01",
-				slug: "boucherie-et-poissonnerie",
-				uri: "/bio-et-ecologie/le-marche/boucherie-et-poissonnerie",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Frais et surgelés",
-				code: "CAR04F04",
-				slug: "frais-et-surgeles",
-				uri: "/bio-et-ecologie/frais-et-surgeles",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Traiteur bio",
-				code: "CAR04F04SF01",
-				slug: "traiteur-bio",
-				uri: "/bio-et-ecologie/frais-et-surgeles/traiteur-bio",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-			{
-				label: "Epicerie Salée",
-				code: "CAR04F05",
-				slug: "epicerie-salee",
-				uri: "/bio-et-ecologie/epicerie-salee",
-				level: 2,
-				resultats: 0,
-				scraping: false
-			},
-			{
-				label: "Pâtes, riz et féculents",
-				code: "CAR04F05SF01",
-				slug: "pates-riz-et-feculents",
-				uri: "/bio-et-ecologie/epicerie-salee/pates-riz-et-feculents",
-				level: 3,
-				resultats: 0,
-				scraping: true
-			},
-		]
-	}
+	/**
+	 * Instance puppeteer
+	 */
+	puppeteer: any
+
+	/**
+	 * Navigateur puppeteer
+	 */
+	browser: any
+
+	/**
+	 * Page du navigateur puppeteer
+	 */
+	page: any
+
+	/**
+	 * Contexte de l'applicaion
+	 */
+	ctx: GetGen<any> | undefined
+
+
+	marques = [
+		"LA MARQUE DU CONSOMMATEUR",
+		"AGRILAIT",
+		"BASKALIA",
+		"BEARN LAIT",
+		"C'EST QUI LE PATRON ?!",
+		"CANDIA",
+		"CARREFOUR BIO",
+		"CARREFOUR",
+		"ET ALDIA",
+		"FAIREFRANCE",
+		"GERENTE",
+		"GRANDLAIT",
+		"J'AIME LE LAIT D'ICI",
+		"LACTEL",
+		"LACTEL BIO",
+		"LAITERIE LES FAYES",
+		"LAITIK",
+		"LE GALL",
+		"LE LAIT DE MA REGION",
+		"LE LAIT EQUITABLE SARTHOIS",
+		"LE PETIT VENDEEN",
+		"LES FAYES",
+		"LES LAITIERS RESPONSABLES",
+		"MONT LAIT",
+		"ONETIK",
+		"VERNEUIL"
+	]
+
+	groupeRayons = [
+		{
+			code: "R01",
+			label: "Crémerie",
+			slug: "cremerie",
+			uri: "/r/cremerie",
+			level: 1,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R01SR01",
+			label: "Lait",
+			slug: "cremerie/lait",
+			uri: "/r/cremerie/lait",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R01SR01SSR01",
+			label: "Lait demi-écrémé",
+			slug: "cremerie/lait/lait-demi-ecreme",
+			uri: "/r/cremerie/lait/lait-demi-ecreme",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R01SR01SSR02",
+			label: "Lait écrémé",
+			slug: "cremerie/lait/lait-ecreme",
+			uri: "/r/cremerie/lait/lait-ecreme",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R01SR01SSR03",
+			label: "Lait entier",
+			slug: "cremerie/lait/lait-entier",
+			uri: "/r/cremerie/lait/lait-entier",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		}
+	]
+
+	rayons = [
+		/*{
+			label: "lait",
+			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/ecreme?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-ecreme/ca-n01010102",
+			rayons: [
+				{
+					code: "R01",
+					label: "Crémerie",
+					slug: "cremerie",
+					uri: "/r/cremerie",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01",
+					label: "Lait",
+					slug: "cremerie/lait",
+					uri: "/r/cremerie/lait",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01SSR02",
+					label: "Lait écrémé",
+					slug: "cremerie/lait/lait-ecreme",
+					uri: "/r/cremerie/lait/lait-ecreme",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},*/
+		{
+			label: "lait",
+			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/entier?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-entier/ca-n01010103",
+			rayons: [
+				{
+					code: "R01",
+					label: "Crémerie",
+					slug: "cremerie",
+					uri: "/r/cremerie",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01",
+					label: "Lait",
+					slug: "cremerie/lait",
+					uri: "/r/cremerie/lait",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01SSR03",
+					label: "Lait entier",
+					slug: "cremerie/lait/lait-entier",
+					uri: "/r/cremerie/lait/lait-entier",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		/*{
+			label: "lait",
+			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/demi-ecreme?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-demi-ecreme/ca-n01010101",
+			rayons: [
+				{
+					code: "R01",
+					label: "Crémerie",
+					slug: "cremerie",
+					uri: "/r/cremerie",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01",
+					label: "Lait",
+					slug: "cremerie/lait",
+					uri: "/r/cremerie/lait",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR01SSR01",
+					label: "Lait demi-écrémé",
+					slug: "cremerie/lait/lait-demi-ecreme",
+					uri: "/r/cremerie/lait/lait-demi-ecreme",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		}*/
+	]
 	//endregion
 
 	//region public functions
@@ -760,12 +356,18 @@ export default class Scraping {
 	 * Create providers
 	 * @return Promise<void>
 	 */
+	Scraping() {
+		puppeteer.use(StealthPlugin())
+
+		this.puppeteer = puppeteer
+	}
+
 	public async createPrismaProvider(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start provider...")
-		for(let provider of this.providers){
+		for (let provider of this.providers) {
 			const resProvider = await this.getPrismaProvider(provider.label)
-			if(!resProvider) {
+			if (!resProvider) {
 				try {
 					await this.ctx.prisma.provider.create({
 						data: {
@@ -788,9 +390,9 @@ export default class Scraping {
 	public async createPrismaMarques(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start marque...")
-		for(let marque of this.marques) {
+		for (let marque of this.marques) {
 			const resMarque = await this.getPrismaMarque(marque)
-			if(!resMarque) {
+			if (!resMarque) {
 				try {
 					await this.ctx.prisma.marque.create({
 						data: {
@@ -812,9 +414,9 @@ export default class Scraping {
 	public async createPrismaFormats(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start format...")
-		for(let format of this.formats) {
+		for (let format of this.formats) {
 			const resFormat = await this.getPrismaFormat(format)
-			if(!resFormat) {
+			if (!resFormat) {
 				try {
 					await this.ctx.prisma.format.create({
 						data: {
@@ -837,9 +439,9 @@ export default class Scraping {
 	public async createPrismaLabelsQualites(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start labels qualites...")
-		for(let labelsQualite of this.labelsQualites) {
+		for (let labelsQualite of this.labelsQualites) {
 			const resLabelsQualite = await this.getPrismaLabelsQualite(labelsQualite)
-			if(!resLabelsQualite) {
+			if (!resLabelsQualite) {
 				try {
 					await this.ctx.prisma.labelsQualite.create({
 						data: {
@@ -861,9 +463,9 @@ export default class Scraping {
 	public async createPrismaPreferencesAlimentaires(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start preferences alimentaires...")
-		for(let preferencesAlimentaire of this.preferencesAlimentaires) {
+		for (let preferencesAlimentaire of this.preferencesAlimentaires) {
 			const resPreferencesAlimentaire = await this.getPrismaPreferencesAlimentaire(preferencesAlimentaire)
-			if(!resPreferencesAlimentaire) {
+			if (!resPreferencesAlimentaire) {
 				try {
 					await this.ctx.prisma.preferencesAlimentaire.create({
 						data: {
@@ -885,9 +487,9 @@ export default class Scraping {
 	public async createPrismaPromotions(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start promotions...")
-		for(let promotion of this.promotions) {
+		for (let promotion of this.promotions) {
 			const resPromotion = await this.getPrismaPromotion(promotion)
-			if(!resPromotion) {
+			if (!resPromotion) {
 				try {
 					await this.ctx.prisma.promotion.create({
 						data: {
@@ -910,9 +512,9 @@ export default class Scraping {
 	public async createPrismaSubstancesControversees(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start substances controversees...")
-		for(let substancesControversee of this.substancesControversees) {
+		for (let substancesControversee of this.substancesControversees) {
 			const resSubstancesControversee = await this.getPrismaSubstancesControversee(substancesControversee)
-			if(!resSubstancesControversee) {
+			if (!resSubstancesControversee) {
 				try {
 					await this.ctx.prisma.substancesControverse.create({
 						data: {
@@ -935,34 +537,24 @@ export default class Scraping {
 	public async createPrismaRayons(): Promise<void> {
 		let start_time = new Date().getTime();
 		console.log("Start rayon...")
-		for(let provider of this.providers){
-			const resProvider = await this.getPrismaProvider(provider.label)
-			if(resProvider) {
-				for(let rayon of this.rayons[`${provider.label}`]) {
-					const resRayon = await this.getPrismaRayon(rayon.label)
-					if(!resRayon) {
-						try {
-							await this.ctx.prisma.rayon.create({
-								data: {
-									label: rayon.label,
-									code: rayon.code,
-									slug: rayon.slug,
-									uri: rayon.uri,
-									level: rayon.level,
-									resultats: rayon.resultats,
-									scraping: rayon.scraping,
-									provider: {
-										connect: {
-											label: provider.label
-										}
-									}
-								}
-							})
-						} catch (e) {
-							console.log(e)
-							CustomError.error("Erreur lors de la création des rayons.")
+		for (let rayon of this.groupeRayons) {
+			const resRayon = await this.getPrismaRayon(rayon.label)
+			if (!resRayon) {
+				try {
+					await this.ctx.prisma.rayon.create({
+						data: {
+							label: rayon.label,
+							code: rayon.code,
+							slug: rayon.slug,
+							uri: rayon.uri,
+							level: rayon.level,
+							resultats: rayon.resultats,
+							scraping: rayon.scraping
 						}
-					}
+					})
+				} catch (e) {
+					console.log(e)
+					CustomError.error("Erreur lors de la création des rayons.")
 				}
 			}
 		}
@@ -1080,5 +672,200 @@ export default class Scraping {
 			}
 		})
 	}
+
+	async launchBrowser(): Promise<void> {
+		this.browser = await puppeteer.launch({headless: true})
+	}
+
+	async newPage(): Promise<void> {
+		this.page = await this.browser.newPage()
+	}
+
+	async getPage(url: string): Promise<any> {
+		return await this.page.goto(url)
+	}
+
+	async closeBrowser(): Promise<void> {
+		await this.browser.close()
+	}
+
+	async startScrapingCarrefour() {
+		/*let start_provider_time = new Date().getTime();
+		console.log("Start provider : Carrefour")
+		let rayon = this.rayons[2]
+		console.log("Start rayon : " + rayon.label)
+		let start_rayon_time = new Date().getTime();
+		console.log(rayon.urlCarrefour)
+		await this.newPage()
+		await this.getPage(rayon.urlCarrefour)
+
+		await this.page.screenshot({ path: "results.png" })
+		console.log(await this.getPageData())
+
+		console.log(`Rayon end ${rayon.label} in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
+		/!*for(let rayon of this.rayons) {
+
+		}*!/
+		console.log(`End provider Carrefour in ${((new Date().getTime() - start_provider_time) / 1000).toFixed(2)}s`)*/
+		let extractMarque = this.extractMarque
+
+		Apify.main(async () => {
+			const browser = await Apify.launchPuppeteer({stealth: true});
+
+			let results = []
+
+			for (let rayon of this.rayons) {
+				const page = await browser.newPage();
+
+				await page.goto(`${rayon.urlCarrefour}&page=1`);
+				let nbProduit = await page.$eval('.pagination__txt', el => {
+					return el.innerText.split(" ")[4]
+				})
+				let nbPage = nbProduit >= 60 ? Math.ceil(nbProduit / 60) : 1
+
+				let result = []
+
+				for (let i = 1; i <= nbPage; i++) {
+					await page.goto(`${rayon.urlCarrefour}&page=${i}`);
+					let datas = await page.$eval('.product-list.product-list .pagination ~ .product-grid', el => {
+						let products = []
+
+						for (let i in el.children) {
+							if (el.children[i].innerHTML && el.children[i].innerHTML.indexOf("<div class=\"ds-product-card--vertical-image\">") !== -1) {
+								let marques = [
+									"LA MARQUE DU CONSOMMATEUR",
+									"AGRILAIT",
+									"BASKALIA",
+									"BEARN LAIT",
+									"C'EST QUI LE PATRON ?!",
+									"CANDIA",
+									"CARREFOUR",
+									"ET ALDIA",
+									"FAIREFRANCE",
+									"GERENTE",
+									"GRANDLAIT",
+									"J'AIME LE LAIT D'ICI",
+									"LACTEL",
+									"LACTEL BIO",
+									"LAITERIE LES FAYES",
+									"LAITIK",
+									"LE GALL",
+									"LE LAIT DE MA REGION",
+									"LE LAIT EQUITABLE SARTHOIS",
+									"LE PETIT VENDEEN",
+									"LES FAYES",
+									"LES LAITIERS RESPONSABLES",
+									"MONT LAIT",
+									"ONETIK",
+									"VERNEUIL"
+								]
+
+								let label = el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].innerText
+								let format = el?.children[i].children[0].children[0].children[3].children[1]
+								let per_unit_label = el?.children[i].children[0].children[0].children[2].children[0].children[2].innerText
+								let marqueLabel = ""
+
+								for(let marque of marques) {
+									if(label.includes("CARREFOUR BIO")) {
+										marqueLabel = "CARREFOUR BIO"
+									}else if(label.includes("CARREFOUR")) {
+										marqueLabel = "CARREFOUR"
+									}else if(label.includes(marque)) {
+										marqueLabel = marque
+									}
+								}
+
+								let image = el?.children[i].children[0].children[0].children[2].children[1].children[0].children[0].getAttribute("src")
+
+								let produit_images = [{
+									largest: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
+									size_1500x1500: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
+									size_540x540: "https://www.carrefour.fr" + image.replace("280x280", "540x540"),
+									size_380x380: "https://www.carrefour.fr" + image.replace("280x280", "380x380"),
+									size_340x340: "https://www.carrefour.fr" + image.replace("280x280", "340x340"),
+									size_340x240: "https://www.carrefour.fr" + image.replace("280x280", "340x240"),
+									size_280x280: "https://www.carrefour.fr" + image.replace("280x280", "280x280"),
+									size_195x195: "https://www.carrefour.fr" + image.replace("280x280", "195x195"),
+									size_150x150: "https://www.carrefour.fr" + image.replace("280x280", "150x150"),
+									size_43x43: "https://www.carrefour.fr" + image.replace("280x280", "43x43")
+								}]
+
+								products.push({
+									label,
+									ean: el?.children[i].children[0].getAttribute("id"),
+									brand: "",
+									slug: slugify(label) + "-" + el?.children[i].children[0].getAttribute("id"),
+									uri: "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].getAttribute("href"),
+									packaging: el?.children[i].children[0].children[0].children[2].children[0].children[1].innerText,
+									origin: "",
+									format: format ? format.innerText : "",
+									price: el?.children[i].children[0].children[1].children[1].children[0].innerText.replace("€", ""),
+									unit_of_measure: per_unit_label.split("/")[1].trim(),
+									per_unit_label,
+									tax_message: "",
+									per_unit: per_unit_label.split("/")[0].replace("€", "").trim(),
+									provider: {
+										connect: {
+											label: "CARREFOUR"
+										}
+									},
+									marque: {
+										connect: {
+											label: marqueLabel
+										}
+									},
+									produit_images: {
+										create: produit_images
+									},
+									produit_rayons: { }
+								})
+							}
+						}
+
+						return products
+					})
+
+					let produit_rayons = []
+
+					for(let r of rayon.rayons) {
+						produit_rayons = [...produit_rayons, {
+							rayon:{
+								connect: {
+									slug: r.slug
+								}
+							}
+						}]
+					}
+
+					let products = []
+					for(let data of datas) {
+						data.produit_rayons = {
+							create: produit_rayons
+						}
+						products = [...products, data]
+					}
+
+					result = result.concat(products)
+				}
+
+				await page.close();
+
+				results = results.concat(result)
+			}
+
+			await this.saveProduits(results)
+
+			await browser.close();
+		});
+	}
+
+	async saveProduits(products) {
+		for(let product of products) {
+			await this.ctx.prisma.produit.create({
+				data: product
+			})
+		}
+	}
+
 	//endregion
 }

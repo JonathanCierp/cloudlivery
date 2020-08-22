@@ -119,7 +119,6 @@ type Rayon {
   id: Int!
   label: String!
   level: Int!
-  provider: Provider!
   resultats: Int!
   scraping: Boolean!
   slug: String!
