@@ -337,7 +337,24 @@ export default class Scraping {
 		"MONSTER",
 		"POWERADE",
 		"AUCHAN",
-		"AUCHAN BIO"
+		"AUCHAN BIO",
+		"C'EST QUI LE PATRON?",
+		"POUCE",
+		"AUCHAN GOURMET",
+		"MADRANGE",
+		"MMM!",
+		"BROCELIANDE",
+		"NATURE DE FRANCE",
+		"POULEHOUSE",
+		"NESTLE",
+		"ST AMAND",
+		"VICHY ST YORRE",
+		"OASIS",
+		"TEISSEIRE",
+		"DR PEPPER",
+		"CANADA DRY",
+		"GINI",
+		"MEGA FORCE"
 	]
 
 	groupeRayons = [
@@ -602,7 +619,7 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		},*/
+		},
 		{
 			label: "lait",
 			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/entier?noRedirect=1",
@@ -637,7 +654,7 @@ export default class Scraping {
 				}
 			]
 		},
-		/*{
+		{
 			label: "lait",
 			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/demi-ecreme?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-demi-ecreme/ca-n01010101",
@@ -670,8 +687,8 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		},
-		{
+		},*/
+		/*{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/boeuf?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/boeuf/ca-n020101",
@@ -704,7 +721,7 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		},
+		},*/
 		{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/veau?noRedirect=1",
@@ -739,7 +756,7 @@ export default class Scraping {
 				}
 			]
 		},
-		{
+		/*{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/porc?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/porc/ca-n020102",
@@ -1576,7 +1593,26 @@ export default class Scraping {
 									"DIUKE",
 									"HEROIC PLUS",
 									"MONSTER",
-									"POWERADE"
+									"POWERADE",
+									"AUCHAN",
+									"AUCHAN BIO",
+									"C'EST QUI LE PATRON?",
+									"POUCE",
+									"AUCHAN GOURMET",
+									"MADRANGE",
+									"MMM!",
+									"BROCELIANDE",
+									"NATURE DE FRANCE",
+									"POULEHOUSE",
+									"NESTLE",
+									"ST AMAND",
+									"VICHY ST YORRE",
+									"OASIS",
+									"TEISSEIRE",
+									"DR PEPPER",
+									"CANADA DRY",
+									"GINI",
+									"MEGA FORCE"
 								]
 
 								let label = el?.children[i].children[0].children[0].children[0].innerHTML
@@ -1692,9 +1728,8 @@ export default class Scraping {
 				results = results.concat(result)
 			}
 
-			await this.saveProduits(results)
-
 			await browser.close();
+			await this.saveProduits(results)
 		});
 	}
 	
@@ -1702,35 +1737,344 @@ export default class Scraping {
 		Apify.main(async () => {
 			const browser = await Apify.launchPuppeteer({stealth: true});
 
+			const page = await browser.newPage()
+			await page.goto("https://www.auchan.fr/courses?storeReference=527&lark-b2cd=1&gclid=Cj0KCQjwg8n5BRCdARIsALxKb96rKyvvgqxQeqFUb5t4JQXV3T30PFNhn9-Su5TDZuT2CRlGRe23_ZIaAvh-EALw_wcB");
+
 			let results = []
 
 			for (let rayon of this.rayons) {
-				const page = await browser.newPage()
 				await page.goto(rayon.urlAuchan)
 
-				let result = []
-
-				let datas = await page.$eval('.product-thumbnail.list__item.shadow--light.product-thumbnail--column', el => {
+				let datas = await page.$eval('.list__container', el => {
 					let products = []
 
-					products.push({
-						label: el.children[0]?.innerHTML,
-						label1: el.children[1]?.innerHTML,
-						label2: el.children[2]?.innerHTML
-					})
+					for (let i in el.children) {
+						if(el?.children[i]?.innerText) {
+							let marques = [
+								"SANS MARQUE",
+								"LA MARQUE DU CONSOMMATEUR",
+								"AGRILAIT",
+								"BASKALIA",
+								"BEARN LAIT",
+								"C'EST QUI LE PATRON ?!",
+								"CANDIA",
+								"CARREFOUR BIO",
+								"CARREFOUR",
+								"ET ALDIA",
+								"FAIREFRANCE",
+								"GERENTE",
+								"GRANDLAIT",
+								"J'AIME LE LAIT D'ICI",
+								"LACTEL",
+								"LACTEL BIO",
+								"LAITERIE LES FAYES",
+								"LAITIK",
+								"LE GALL",
+								"LE LAIT DE MA REGION",
+								"LE LAIT EQUITABLE SARTHOIS",
+								"LE PETIT VENDEEN",
+								"LES FAYES",
+								"LES LAITIERS RESPONSABLES",
+								"MONT LAIT",
+								"ONETIK",
+								"VERNEUIL",
+								"CHARAL",
+								"SOCOPA",
+								"TENDRE ET PLUS",
+								"MAITRE JACQUES",
+								"TENDRIADE",
+								"JEMANGEFRANÇAIS.COM",
+								"BIGARD",
+								"HENAFF",
+								"METRAS TRIPIER EN PROVENCE",
+								"LE MARCHE",
+								"PAILLARD",
+								"LES BONS MORCEAUX",
+								"LES BRASERADES",
+								"JOHNSONVILLE",
+								"LA BRESSE",
+								"NOBLES",
+								"ALDELIS",
+								"DOUCE FRANCE",
+								"MADRANCE",
+								"MORITZ",
+								"PEGASE",
+								"DABIA",
+								"DELICADEZAS IBERICAS",
+								"GRAND CARACTERE",
+								"KLEIN KAROO",
+								"LES OCCITANES",
+								"LIONOR",
+								"SOURIRES DE CAMPAGNE",
+								"CLERMONT",
+								"COOPERL",
+								"DE FAUX FILET",
+								"ELIVIA",
+								"HIRUAK",
+								"INDIANA JERKY",
+								"LE GAULOIS",
+								"LES ELEVEURS DE CHEZ NOUS",
+								"ROYAL HALAL",
+								"TRIPES PAILLARD",
+								"VIAZUR",
+								"refuge_de_marie_louise",
+								"REFS.SANS MARQUE",
+								"BABY COQUE",
+								"COQUY",
+								"L'OEUFS DE NOS VILLA",
+								"COQUEN'OR",
+								"LOUE",
+								"COCORETTE",
+								"LUSTUCRU",
+								"MIELS VILLENEUVE",
+								"OEUF ARRADOY",
+								"COTEAUX PEYRIGNAC",
+								"AVIBRESSE",
+								"BISCUITERIE COMTOISE",
+								"C'EST QUI LE PATRON",
+								"L'OEUF GASCON",
+								"LA NOUVELLE AGRICULTURE",
+								"MATINES",
+								"OEUFS TRADITION",
+								"OVALIS",
+								"PP BLANC",
+								"PP NO NAME",
+								"CRF CDM",
+								"L'OEUF RIESTAHL",
+								"LE CLOS ST JACQUES",
+								"LES CAMPAGNES",
+								"OEUF CHAMPAG.ARDENNE",
+								"OEUF VIEUX PRESSOIR",
+								"POULE HOUSE",
+								"SARL ROUSSILLON OEUF",
+								"SAINT AMAND",
+								"VITTEL",
+								"CRISTALINE",
+								"EVIAN",
+								"ABATILLES",
+								"COURMAYEUR",
+								"HEPAR",
+								"PLANCOET",
+								"VOLVIC",
+								"planet_drinks",
+								"CONTREX",
+								"MONT BLANC",
+								"MONT ROUCOUS",
+								"OGEU",
+								"PIERVAL",
+								"ST GEORGES",
+								"STE ALIX",
+								"THONON",
+								"WATTWILLER",
+								"AURELE",
+								"JOLIVAL",
+								"PERRIER",
+								"SAN PELLEGRINO",
+								"BABOIT",
+								"ROZANA",
+								"VALS",
+								"VICHY CELESTINS",
+								"ARCENS",
+								"QUEZAC",
+								"ST-YORRE",
+								"HIGHTLAND SPRING",
+								"OREZZA",
+								"PAROT",
+								"SALVETAT",
+								"ST ALBAN",
+								"ST YORRE",
+								"VERNIERE",
+								"BADOIT",
+								"CONTREX GREEN",
+								"VOLVICJUICY",
+								"PERRIER & JUICE",
+								"VITTEL UP",
+								"VOLVIC JUICY",
+								"COCA-COLA",
+								"COCA-COLA ZERO",
+								"BREIZH COLA",
+								"MEUH COLA",
+								"COCA COLA",
+								"CORSICA COLA",
+								"GALVANINA",
+								"HAMOUD BOUALEM",
+								"PEPSI",
+								"PEPSI MAX",
+								"QUEBEC",
+								"TETES BRULEES MIX & KIFF",
+								"LORINA",
+								"SCHWEPPES",
+								"7UP",
+								"BOX",
+								"FEVER TREE",
+								"SPRITE",
+								"BREIZH",
+								"BREIZH-LIMO",
+								"LA GOSSE",
+								"LEMONAID",
+								"LIMONETTE",
+								"MARIE DOLIN",
+								"ORIGINAL TONIC",
+								"VOSS",
+								"MONSTER ENERGY",
+								"RED BULL",
+								"CRAZY TIGER",
+								"MME GREEN",
+								"PSYCHIK",
+								"PUMA",
+								"DIUKE",
+								"HEROIC PLUS",
+								"MONSTER",
+								"POWERADE",
+								"AUCHAN",
+								"AUCHAN BIO",
+								"C'EST QUI LE PATRON?",
+								"POUCE",
+								"AUCHAN GOURMET",
+								"MADRANGE",
+								"MMM!",
+								"BROCELIANDE",
+								"NATURE DE FRANCE",
+								"POULEHOUSE",
+								"NESTLE",
+								"ST AMAND",
+								"VICHY ST YORRE",
+								"OASIS",
+								"TEISSEIRE",
+								"DR PEPPER",
+								"CANADA DRY",
+								"GINI",
+								"MEGA FORCE"
+							]
+
+							let label = ""
+							let image = ""
+							let packaging = ""
+							let format = ""
+							let price = ""
+							let unit_of_measure = ""
+							let per_unit_label = ""
+							let per_unit = ""
+							let uri = ""
+
+							if(el?.children[i]?.children[0].innerHTML !== "") {
+								label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[0]?.innerText
+								image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
+								price = el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
+							}else {
+								label = el?.children[i]?.children[2]?.children[0]?.children[1]?.children[0]?.innerText
+								image = el?.children[i]?.children[2]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
+								price = el?.children[i]?.children[2]?.innerHTML//el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
+							}
+
+							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "France") {
+								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[0]?.innerText
+							}else {
+								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[0]?.innerText
+							}
+
+							unit_of_measure = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText?.split("/")[1]?.trim()
+							per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText
+							per_unit = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText?.split("/")[0]?.replace("€", "").trim()
+							uri = "https://www.auchan.fr" + el.children[i]?.children[1]?.children[0]?.getAttribute("href")
+
+							let marqueLabel = "SANS MARQUE"
+
+							for(let marque of marques) {
+								if(label?.includes("AUCHAN BIO")) {
+									marqueLabel = "AUCHAN BIO"
+								}else if(label?.includes("AUCHAN")) {
+									marqueLabel = "AUCHAN"
+								}else if(label?.includes(marque)) {
+									marqueLabel = marque
+								}
+							}
+
+							let produit_images = [{
+								largest: image?.replace("280x280", "1500x1500"),
+								size_1500x1500: image?.replace("280x280", "1500x1500"),
+								size_540x540: image?.replace("280x280", "540x540"),
+								size_380x380: image?.replace("280x280", "380x380"),
+								size_340x340: image?.replace("280x280", "340x340"),
+								size_340x240: image?.replace("280x280", "340x240"),
+								size_280x280: image?.replace("280x280", "280x280"),
+								size_195x195: image?.replace("280x280", "195x195"),
+								size_150x150: image?.replace("280x280", "150x150"),
+								size_43x43: image?.replace("280x280", "43x43")
+							}]
+
+							products.push({
+								label,
+								ean: "",
+								brand: "",
+								slug: label.toString().toLowerCase()
+										.replace(/\s+/g, '-')           // Replace spaces with -
+										.replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+										.replace(/\-\-+/g, '-')         // Replace multiple - with single -
+										.replace(/^-+/, '')             // Trim - from start of text
+										.replace(/-+$/, ''),
+								uri,
+								packaging,
+								origin: "",
+								format,
+								price,
+								unit_of_measure,
+								per_unit_label,
+								tax_message: "",
+								per_unit: per_unit,
+								provider: {
+									connect: {
+										label: "CARREFOUR"
+									}
+								},
+								marque: {
+									connect: {
+										label: marqueLabel
+									}
+								},
+								produit_images: {
+									create: produit_images
+								},
+								produit_rayons: { }
+							})
+						}
+					}
+
 					return products
 				})
-				console.log(datas)
+
+				let produit_rayons = []
+
+				for(let r of rayon.rayons) {
+					produit_rayons = [...produit_rayons, {
+						rayon:{
+							connect: {
+								slug: r.slug
+							}
+						}
+					}]
+				}
+
+				let products = []
+				for(let data of datas) {
+					data.produit_rayons = {
+						create: produit_rayons
+					}
+					products = [...products, data]
+				}
+
+				results = results.concat(products)
 			}
 
-			
+			await this.saveProduits(results)
 			await browser.close();
 		})
 	}
 
 	async saveProduits(products) {
 		for(let product of products) {
-			let p = await this.ctx.prisma.produit.findOne({
+			console.log(product)
+			/*let p = await this.ctx.prisma.produit.findOne({
 				where: {
 					slug: product.slug
 				}
@@ -1740,7 +2084,7 @@ export default class Scraping {
 				await this.ctx.prisma.produit.create({
 					data: product
 				})
-			}
+			}*/
 		}
 	}
 
