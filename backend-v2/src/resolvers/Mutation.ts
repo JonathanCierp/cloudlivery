@@ -283,9 +283,13 @@ export const Mutation = mutationType({
 				await scraping.launchBrowser()
 				await scraping.newPage()
 
-				console.log("Start scraping Carrefour...")
+				/*console.log("Start scraping Carrefour...")
 				await scraping.startScrapingCarrefour()
-				console.log("End scraping Carrefour")
+				console.log("End scraping Carrefour")*/
+
+				console.log("Start scraping Auchan...")
+				await scraping.startScrapingAuchan()
+				console.log("End scraping Auchan")
 
 				/*const scrapingPuppeteerIntermarche = new ScrapingPuppeteerIntermarche()
 				scrapingPuppeteerIntermarche.ctx = ctx

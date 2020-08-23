@@ -31,13 +31,6 @@ export default class Scraping {
 
 	//region Protected parameters
 	/**
-	 * App context
-	 * @type GetGen<any> | undefined
-	 * @default undefined
-	 */
-	ctx: GetGen<any> | undefined
-
-	/**
 	 * Provider
 	 * @type Provider | undefined
 	 * @default provider
@@ -167,8 +160,8 @@ export default class Scraping {
 	 */
 	ctx: GetGen<any> | undefined
 
-
 	marques = [
+		"SANS MARQUE",
 		"LA MARQUE DU CONSOMMATEUR",
 		"AGRILAIT",
 		"BASKALIA",
@@ -194,7 +187,157 @@ export default class Scraping {
 		"LES LAITIERS RESPONSABLES",
 		"MONT LAIT",
 		"ONETIK",
-		"VERNEUIL"
+		"VERNEUIL",
+		"CHARAL",
+		"SOCOPA",
+		"TENDRE ET PLUS",
+		"MAITRE JACQUES",
+		"TENDRIADE",
+		"JEMANGEFRANÇAIS.COM",
+		"BIGARD",
+		"HENAFF",
+		"METRAS TRIPIER EN PROVENCE",
+		"LE MARCHE",
+		"PAILLARD",
+		"LES BONS MORCEAUX",
+		"LES BRASERADES",
+		"JOHNSONVILLE",
+		"LA BRESSE",
+		"NOBLES",
+		"ALDELIS",
+		"DOUCE FRANCE",
+		"MADRANCE",
+		"MORITZ",
+		"PEGASE",
+		"DABIA",
+		"DELICADEZAS IBERICAS",
+		"GRAND CARACTERE",
+		"KLEIN KAROO",
+		"LES OCCITANES",
+		"LIONOR",
+		"SOURIRES DE CAMPAGNE",
+		"CLERMONT",
+		"COOPERL",
+		"DE FAUX FILET",
+		"ELIVIA",
+		"HIRUAK",
+		"INDIANA JERKY",
+		"LE GAULOIS",
+		"LES ELEVEURS DE CHEZ NOUS",
+		"ROYAL HALAL",
+		"TRIPES PAILLARD",
+		"VIAZUR",
+		"refuge_de_marie_louise",
+		"REFS.SANS MARQUE",
+		"BABY COQUE",
+		"COQUY",
+		"L'OEUFS DE NOS VILLA",
+		"COQUEN'OR",
+		"LOUE",
+		"COCORETTE",
+		"LUSTUCRU",
+		"MIELS VILLENEUVE",
+		"OEUF ARRADOY",
+		"COTEAUX PEYRIGNAC",
+		"AVIBRESSE",
+		"BISCUITERIE COMTOISE",
+		"C'EST QUI LE PATRON",
+		"L'OEUF GASCON",
+		"LA NOUVELLE AGRICULTURE",
+		"MATINES",
+		"OEUFS TRADITION",
+		"OVALIS",
+		"PP BLANC",
+		"PP NO NAME",
+		"CRF CDM",
+		"L'OEUF RIESTAHL",
+		"LE CLOS ST JACQUES",
+		"LES CAMPAGNES",
+		"OEUF CHAMPAG.ARDENNE",
+		"OEUF VIEUX PRESSOIR",
+		"POULE HOUSE",
+		"SARL ROUSSILLON OEUF",
+		"SAINT AMAND",
+		"VITTEL",
+		"CRISTALINE",
+		"EVIAN",
+		"ABATILLES",
+		"COURMAYEUR",
+		"HEPAR",
+		"PLANCOET",
+		"VOLVIC",
+		"planet_drinks",
+		"CONTREX",
+		"MONT BLANC",
+		"MONT ROUCOUS",
+		"OGEU",
+		"PIERVAL",
+		"ST GEORGES",
+		"STE ALIX",
+		"THONON",
+		"WATTWILLER",
+		"AURELE",
+		"JOLIVAL",
+		"PERRIER",
+		"SAN PELLEGRINO",
+		"BABOIT",
+		"ROZANA",
+		"VALS",
+		"VICHY CELESTINS",
+		"ARCENS",
+		"QUEZAC",
+		"ST-YORRE",
+		"HIGHTLAND SPRING",
+		"OREZZA",
+		"PAROT",
+		"SALVETAT",
+		"ST ALBAN",
+		"ST YORRE",
+		"VERNIERE",
+		"BADOIT",
+		"CONTREX GREEN",
+		"VOLVICJUICY",
+		"PERRIER & JUICE",
+		"VITTEL UP",
+		"VOLVIC JUICY",
+		"COCA-COLA",
+		"COCA-COLA ZERO",
+		"BREIZH COLA",
+		"MEUH COLA",
+		"COCA COLA",
+		"CORSICA COLA",
+		"GALVANINA",
+		"HAMOUD BOUALEM",
+		"PEPSI",
+		"PEPSI MAX",
+		"QUEBEC",
+		"TETES BRULEES MIX & KIFF",
+		"LORINA",
+		"SCHWEPPES",
+		"7UP",
+		"BOX",
+		"FEVER TREE",
+		"SPRITE",
+		"BREIZH",
+		"BREIZH-LIMO",
+		"LA GOSSE",
+		"LEMONAID",
+		"LIMONETTE",
+		"MARIE DOLIN",
+		"ORIGINAL TONIC",
+		"VOSS",
+		"MONSTER ENERGY",
+		"RED BULL",
+		"CRAZY TIGER",
+		"MME GREEN",
+		"PSYCHIK",
+		"PUMA",
+		"DIUKE",
+		"HEROIC PLUS",
+		"MONSTER",
+		"POWERADE",
+		"AUCHAN",
+		"AUCHAN BIO"
 	]
 
 	groupeRayons = [
@@ -239,6 +382,186 @@ export default class Scraping {
 			label: "Lait entier",
 			slug: "cremerie/lait/lait-entier",
 			uri: "/r/cremerie/lait/lait-entier",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R01SR02",
+			label: "Oeufs",
+			slug: "cremerie/oeufs",
+			uri: "/r/cremerie/oeufs",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02",
+			label: "Viandes et Poissons",
+			slug: "viandes-et-poissons",
+			uri: "/r/viandes-et-poissons",
+			level: 1,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR01",
+			label: "Boucherie",
+			slug: "viandes-et-poissons/boucherie",
+			uri: "/r/viandes-et-poissons/boucherie",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR01SSR01",
+			label: "Boeuf",
+			slug: "viandes-et-poissons/boucherie/boeuf",
+			uri: "/r/viandes-et-poissons/boucherie/boeuf",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR01SSR02",
+			label: "Veau",
+			slug: "viandes-et-poissons/boucherie/veau",
+			uri: "/r/viandes-et-poissons/boucherie/veau",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR01SSR03",
+			label: "Porc",
+			slug: "viandes-et-poissons/boucherie/porc",
+			uri: "/r/viandes-et-poissons/boucherie/porc",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR01SSR04",
+			label: "Saucisses et grillades",
+			slug: "viandes-et-poissons/boucherie/saucisses-et-grillades",
+			uri: "/r/viandes-et-poissons/boucherie/saucisses-et-grillades",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR02",
+			label: "Poissonnerie",
+			slug: "viandes-et-poissons/poissonnerie",
+			uri: "/r/viandes-et-poissons/poissonnerie",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR02SSR01",
+			label: "Saumons et truites",
+			slug: "viandes-et-poissons/poissonnerie/saumons-et-truites",
+			uri: "/r/viandes-et-poissons/poissonnerie/saumons-et-truites",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR02SSR02",
+			label: "Filets et pavés",
+			slug: "viandes-et-poissons/poissonnerie/filets-et-paves",
+			uri: "/r/viandes-et-poissons/poissonnerie/filets-et-paves",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R02SR02SSR03",
+			label: "Crevettes et fruits de mer",
+			slug: "viandes-et-poissons/poissonnerie/crevettes-et-fruits-de-mer",
+			uri: "/r/viandes-et-poissons/poissonnerie/crevettes-et-fruits-de-mer",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03",
+			label: "Boissons sans alcool",
+			slug: "boissons-sans-alcool",
+			uri: "/r/boissons-sans-alcool",
+			level: 1,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR01",
+			label: "Eaux",
+			slug: "boissons-sans-alcool/eaux",
+			uri: "/r/boissons-sans-alcool/eaux",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR01SSR01",
+			label: "Eaux plates",
+			slug: "boissons-sans-alcool/eaux/eaux-plates",
+			uri: "/r/boissons-sans-alcool/eaux/eaux-plates",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR01SSR02",
+			label: "Eaux gazeuses",
+			slug: "boissons-sans-alcool/eaux/eaux-gazeuses",
+			uri: "/r/boissons-sans-alcool/eaux/eaux-gazeuses",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR01SSR03",
+			label: "Eaux aromatisées",
+			slug: "boissons-sans-alcool/eaux/eaux-aromatisees",
+			uri: "/r/boissons-sans-alcool/eaux/eaux-aromatisees",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR02",
+			label: "Colas, Thés glacés et Soft drinks",
+			slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+			uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+			level: 2,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR02SSR01",
+			label: "Colas",
+			slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
+			uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR02SSR02",
+			label: "Limonades, Limes et Tonics",
+			slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics",
+			uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics",
+			level: 3,
+			resultats: 0,
+			scraping: false
+		},
+		{
+			code: "R03SR02SSR03",
+			label: "Boissons sports et Energisantes",
+			slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes",
+			uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes",
 			level: 3,
 			resultats: 0,
 			scraping: false
@@ -342,6 +665,371 @@ export default class Scraping {
 					label: "Lait demi-écrémé",
 					slug: "cremerie/lait/lait-demi-ecreme",
 					uri: "/r/cremerie/lait/lait-demi-ecreme",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "viande",
+			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/boeuf?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/boeuf/ca-n020101",
+			rayons: [
+				{
+					code: "R02",
+					label: "Viandes et Poissons",
+					slug: "viandes-et-poissons",
+					uri: "/r/viandes-et-poissons",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01",
+					label: "Boucherie",
+					slug: "viandes-et-poissons/boucherie",
+					uri: "/r/viandes-et-poissons/boucherie",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01SSR01",
+					label: "Boeuf",
+					slug: "viandes-et-poissons/boucherie/boeuf",
+					uri: "/r/viandes-et-poissons/boucherie/boeuf",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "viande",
+			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/veau?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/veau-agneau/ca-n020103",
+			rayons: [
+				{
+					code: "R02",
+					label: "Viandes et Poissons",
+					slug: "viandes-et-poissons",
+					uri: "/r/viandes-et-poissons",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01",
+					label: "Boucherie",
+					slug: "viandes-et-poissons/boucherie",
+					uri: "/r/viandes-et-poissons/boucherie",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01SSR02",
+					label: "Veau",
+					slug: "viandes-et-poissons/boucherie/veau",
+					uri: "/r/viandes-et-poissons/boucherie/veau",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "viande",
+			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/porc?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/porc/ca-n020102",
+			rayons: [
+				{
+					code: "R02",
+					label: "Viandes et Poissons",
+					slug: "viandes-et-poissons",
+					uri: "/r/viandes-et-poissons",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01",
+					label: "Boucherie",
+					slug: "viandes-et-poissons/boucherie",
+					uri: "/r/viandes-et-poissons/boucherie",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01SSR03",
+					label: "Porc",
+					slug: "viandes-et-poissons/boucherie/porc",
+					uri: "/r/viandes-et-poissons/boucherie/porc",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "viande",
+			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/saucisses-et-grillades?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/saucisses-farces/ca-n020104",
+			rayons: [
+				{
+					code: "R02",
+					label: "Viandes et Poissons",
+					slug: "viandes-et-poissons",
+					uri: "/r/viandes-et-poissons",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01",
+					label: "Boucherie",
+					slug: "viandes-et-poissons/boucherie",
+					uri: "/r/viandes-et-poissons/boucherie",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R02SR01SSR03",
+					label: "Saucisses et grillades",
+					slug: "viandes-et-poissons/boucherie/saucisses-et-grillades",
+					uri: "/r/viandes-et-poissons/boucherie/saucisses-et-grillades",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "oeufs",
+			urlCarrefour: "https://www.carrefour.fr/r/cremerie/oeufs?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/oeufs/ca-n010103",
+			rayons: [
+				{
+					code: "R01",
+					label: "Crémerie",
+					slug: "cremerie",
+					uri: "/r/cremerie",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R01SR02",
+					label: "Oeufs",
+					slug: "cremerie/oeufs",
+					uri: "/r/cremerie/oeufs",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-plates?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-plates-natures/ca-n070101",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01",
+					label: "Eaux",
+					slug: "boissons-sans-alcool/eaux",
+					uri: "/r/boissons-sans-alcool/eaux",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01SSR01",
+					label: "Eaux plates",
+					slug: "boissons-sans-alcool/eaux/eaux-plates",
+					uri: "/r/boissons-sans-alcool/eaux/eaux-plates",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-gazeuses?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-gazeuses-natures/ca-n070102",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01",
+					label: "Eaux",
+					slug: "boissons-sans-alcool/eaux",
+					uri: "/r/boissons-sans-alcool/eaux",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01SSR02",
+					label: "Eaux gazeuses",
+					slug: "boissons-sans-alcool/eaux/eaux-gazeuses",
+					uri: "/r/boissons-sans-alcool/eaux/eaux-gazeuses",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-aromatisees?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-aromatisees-fruitees/ca-n070103",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01",
+					label: "Eaux",
+					slug: "boissons-sans-alcool/eaux",
+					uri: "/r/boissons-sans-alcool/eaux",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR01SSR03",
+					label: "Eaux aromatisées",
+					slug: "boissons-sans-alcool/eaux/eaux-aromatisees",
+					uri: "/r/boissons-sans-alcool/eaux/eaux-aromatisees",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/colas/ca-n070601",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02",
+					label: "Colas, Thés glacés et Soft drinks",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02SSR01",
+					label: "Colas",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/limonades-limes-tonic/ca-n070603",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02",
+					label: "Colas, Thés glacés et Soft drinks",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02SSR02",
+					label: "Limonades, Limes et Tonics",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics",
+					level: 3,
+					resultats: 0,
+					scraping: false
+				}
+			]
+		},
+		{
+			label: "boissons",
+			urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes?noRedirect=1",
+			urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/boissons-energisantes/ca-n070604",
+			rayons: [
+				{
+					code: "R03",
+					label: "Boissons sans alcool",
+					slug: "boissons-sans-alcool",
+					uri: "/r/boissons-sans-alcool",
+					level: 1,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02",
+					label: "Colas, Thés glacés et Soft drinks",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks",
+					level: 2,
+					resultats: 0,
+					scraping: false
+				},
+				{
+					code: "R03SR02SSR03",
+					label: "Boissons sports et Energisantes",
+					slug: "boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes",
+					uri: "/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes",
 					level: 3,
 					resultats: 0,
 					scraping: false
@@ -690,34 +1378,15 @@ export default class Scraping {
 	}
 
 	async startScrapingCarrefour() {
-		/*let start_provider_time = new Date().getTime();
-		console.log("Start provider : Carrefour")
-		let rayon = this.rayons[2]
-		console.log("Start rayon : " + rayon.label)
-		let start_rayon_time = new Date().getTime();
-		console.log(rayon.urlCarrefour)
-		await this.newPage()
-		await this.getPage(rayon.urlCarrefour)
-
-		await this.page.screenshot({ path: "results.png" })
-		console.log(await this.getPageData())
-
-		console.log(`Rayon end ${rayon.label} in ${((new Date().getTime() - start_rayon_time) / 1000).toFixed(2)}s`)
-		/!*for(let rayon of this.rayons) {
-
-		}*!/
-		console.log(`End provider Carrefour in ${((new Date().getTime() - start_provider_time) / 1000).toFixed(2)}s`)*/
-		let extractMarque = this.extractMarque
-
 		Apify.main(async () => {
 			const browser = await Apify.launchPuppeteer({stealth: true});
 
 			let results = []
 
 			for (let rayon of this.rayons) {
-				const page = await browser.newPage();
+				const page = await browser.newPage()
 
-				await page.goto(`${rayon.urlCarrefour}&page=1`);
+				await page.goto(`${rayon.urlCarrefour}&page=1`)
 				let nbProduit = await page.$eval('.pagination__txt', el => {
 					return el.innerText.split(" ")[4]
 				})
@@ -733,12 +1402,14 @@ export default class Scraping {
 						for (let i in el.children) {
 							if (el.children[i].innerHTML && el.children[i].innerHTML.indexOf("<div class=\"ds-product-card--vertical-image\">") !== -1) {
 								let marques = [
+									"SANS MARQUE",
 									"LA MARQUE DU CONSOMMATEUR",
 									"AGRILAIT",
 									"BASKALIA",
 									"BEARN LAIT",
 									"C'EST QUI LE PATRON ?!",
 									"CANDIA",
+									"CARREFOUR BIO",
 									"CARREFOUR",
 									"ET ALDIA",
 									"FAIREFRANCE",
@@ -757,25 +1428,193 @@ export default class Scraping {
 									"LES LAITIERS RESPONSABLES",
 									"MONT LAIT",
 									"ONETIK",
-									"VERNEUIL"
+									"VERNEUIL",
+									"CHARAL",
+									"SOCOPA",
+									"TENDRE ET PLUS",
+									"MAITRE JACQUES",
+									"TENDRIADE",
+									"JEMANGEFRANÇAIS.COM",
+									"BIGARD",
+									"HENAFF",
+									"METRAS TRIPIER EN PROVENCE",
+									"LE MARCHE",
+									"PAILLARD",
+									"LES BONS MORCEAUX",
+									"LES BRASERADES",
+									"JOHNSONVILLE",
+									"LA BRESSE",
+									"NOBLES",
+									"ALDELIS",
+									"DOUCE FRANCE",
+									"MADRANCE",
+									"MORITZ",
+									"PEGASE",
+									"DABIA",
+									"DELICADEZAS IBERICAS",
+									"GRAND CARACTERE",
+									"KLEIN KAROO",
+									"LES OCCITANES",
+									"LIONOR",
+									"SOURIRES DE CAMPAGNE",
+									"CLERMONT",
+									"COOPERL",
+									"DE FAUX FILET",
+									"ELIVIA",
+									"HIRUAK",
+									"INDIANA JERKY",
+									"LE GAULOIS",
+									"LES ELEVEURS DE CHEZ NOUS",
+									"ROYAL HALAL",
+									"TRIPES PAILLARD",
+									"VIAZUR",
+									"refuge_de_marie_louise",
+									"REFS.SANS MARQUE",
+									"BABY COQUE",
+									"COQUY",
+									"L'OEUFS DE NOS VILLA",
+									"COQUEN'OR",
+									"LOUE",
+									"COCORETTE",
+									"LUSTUCRU",
+									"MIELS VILLENEUVE",
+									"OEUF ARRADOY",
+									"COTEAUX PEYRIGNAC",
+									"AVIBRESSE",
+									"BISCUITERIE COMTOISE",
+									"C'EST QUI LE PATRON",
+									"L'OEUF GASCON",
+									"LA NOUVELLE AGRICULTURE",
+									"MATINES",
+									"OEUFS TRADITION",
+									"OVALIS",
+									"PP BLANC",
+									"PP NO NAME",
+									"CRF CDM",
+									"L'OEUF RIESTAHL",
+									"LE CLOS ST JACQUES",
+									"LES CAMPAGNES",
+									"OEUF CHAMPAG.ARDENNE",
+									"OEUF VIEUX PRESSOIR",
+									"POULE HOUSE",
+									"SARL ROUSSILLON OEUF",
+									"SAINT AMAND",
+									"VITTEL",
+									"CRISTALINE",
+									"EVIAN",
+									"ABATILLES",
+									"COURMAYEUR",
+									"HEPAR",
+									"PLANCOET",
+									"VOLVIC",
+									"planet_drinks",
+									"CONTREX",
+									"MONT BLANC",
+									"MONT ROUCOUS",
+									"OGEU",
+									"PIERVAL",
+									"ST GEORGES",
+									"STE ALIX",
+									"THONON",
+									"WATTWILLER",
+									"AURELE",
+									"JOLIVAL",
+									"PERRIER",
+									"SAN PELLEGRINO",
+									"BABOIT",
+									"ROZANA",
+									"VALS",
+									"VICHY CELESTINS",
+									"ARCENS",
+									"QUEZAC",
+									"ST-YORRE",
+									"HIGHTLAND SPRING",
+									"OREZZA",
+									"PAROT",
+									"SALVETAT",
+									"ST ALBAN",
+									"ST YORRE",
+									"VERNIERE",
+									"BADOIT",
+									"CONTREX GREEN",
+									"VOLVICJUICY",
+									"PERRIER & JUICE",
+									"VITTEL UP",
+									"VOLVIC JUICY",
+									"COCA-COLA",
+									"COCA-COLA ZERO",
+									"BREIZH COLA",
+									"MEUH COLA",
+									"COCA COLA",
+									"CORSICA COLA",
+									"GALVANINA",
+									"HAMOUD BOUALEM",
+									"PEPSI",
+									"PEPSI MAX",
+									"QUEBEC",
+									"TETES BRULEES MIX & KIFF",
+									"LORINA",
+									"SCHWEPPES",
+									"7UP",
+									"BOX",
+									"FEVER TREE",
+									"SPRITE",
+									"BREIZH",
+									"BREIZH-LIMO",
+									"LA GOSSE",
+									"LEMONAID",
+									"LIMONETTE",
+									"MARIE DOLIN",
+									"ORIGINAL TONIC",
+									"VOSS",
+									"MONSTER ENERGY",
+									"RED BULL",
+									"CRAZY TIGER",
+									"MME GREEN",
+									"PSYCHIK",
+									"PUMA",
+									"DIUKE",
+									"HEROIC PLUS",
+									"MONSTER",
+									"POWERADE"
 								]
 
-								let label = el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].innerText
-								let format = el?.children[i].children[0].children[0].children[3].children[1]
-								let per_unit_label = el?.children[i].children[0].children[0].children[2].children[0].children[2].innerText
-								let marqueLabel = ""
+								let label = el?.children[i].children[0].children[0].children[0].innerHTML
+								let per_unit_label = ""
+								let image = ""
+								let uri = ""
+								let packaging = ""
+
+								if(label.includes("add-to-shoppinglist")) {
+									label = el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].innerText
+									per_unit_label = el?.children[i].children[0].children[0].children[2].children[0].children[2].innerText
+									image = el?.children[i].children[0].children[0].children[2].children[1].children[0].children[0].getAttribute("src")
+									uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].getAttribute("href")
+									packaging = el?.children[i].children[0].children[0].children[2].children[0].children[1].innerText
+								}else {
+									label = el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].innerText
+									per_unit_label = el?.children[i].children[0].children[0].children[3].children[0].children[2].innerText
+									image = el?.children[i].children[0].children[0].children[3].children[1].children[0].children[0].getAttribute("src")
+									uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].getAttribute("href")
+									packaging = el?.children[i].children[0].children[0].children[3].children[0].children[1].innerText
+								}
+
+								let format = el?.children[i].children[0].children[0].children[3]?.children[1]
+								let marqueLabel = "SANS MARQUE"
 
 								for(let marque of marques) {
 									if(label.includes("CARREFOUR BIO")) {
 										marqueLabel = "CARREFOUR BIO"
 									}else if(label.includes("CARREFOUR")) {
 										marqueLabel = "CARREFOUR"
+									}else if(label.includes("C'EST QUI LE PATRON ?!")) {
+										marqueLabel = "C'EST QUI LE PATRON ?!"
+									}else if(label.includes("C'EST QUI LE PATRON")) {
+										marqueLabel = "C'EST QUI LE PATRON"
 									}else if(label.includes(marque)) {
 										marqueLabel = marque
 									}
 								}
-
-								let image = el?.children[i].children[0].children[0].children[2].children[1].children[0].children[0].getAttribute("src")
 
 								let produit_images = [{
 									largest: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
@@ -794,9 +1633,9 @@ export default class Scraping {
 									label,
 									ean: el?.children[i].children[0].getAttribute("id"),
 									brand: "",
-									slug: slugify(label) + "-" + el?.children[i].children[0].getAttribute("id"),
-									uri: "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].getAttribute("href"),
-									packaging: el?.children[i].children[0].children[0].children[2].children[0].children[1].innerText,
+									slug: slugify(label) + "-" + el?.children[i].children[0].getAttribute("id") + "-" + slugify(packaging),
+									uri,
+									packaging,
 									origin: "",
 									format: format ? format.innerText : "",
 									price: el?.children[i].children[0].children[1].children[1].children[0].innerText.replace("€", ""),
@@ -858,12 +1697,50 @@ export default class Scraping {
 			await browser.close();
 		});
 	}
+	
+	async startScrapingAuchan() {
+		Apify.main(async () => {
+			const browser = await Apify.launchPuppeteer({stealth: true});
+
+			let results = []
+
+			for (let rayon of this.rayons) {
+				const page = await browser.newPage()
+				await page.goto(rayon.urlAuchan)
+
+				let result = []
+
+				let datas = await page.$eval('.product-thumbnail.list__item.shadow--light.product-thumbnail--column', el => {
+					let products = []
+
+					products.push({
+						label: el.children[0]?.innerHTML,
+						label1: el.children[1]?.innerHTML,
+						label2: el.children[2]?.innerHTML
+					})
+					return products
+				})
+				console.log(datas)
+			}
+
+			
+			await browser.close();
+		})
+	}
 
 	async saveProduits(products) {
 		for(let product of products) {
-			await this.ctx.prisma.produit.create({
-				data: product
+			let p = await this.ctx.prisma.produit.findOne({
+				where: {
+					slug: product.slug
+				}
 			})
+
+			if(!p) {
+				await this.ctx.prisma.produit.create({
+					data: product
+				})
+			}
 		}
 	}
 
