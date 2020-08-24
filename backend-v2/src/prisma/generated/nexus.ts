@@ -168,6 +168,7 @@ export interface NexusGenFieldTypes {
     updatedAt: any; // DateTime!
   }
   Mutation: { // field return type
+    algoliaIndexing: NexusGenRootTypes['Default']; // Default!
     googleSignin: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     resetData: NexusGenRootTypes['Default']; // Default!
     resetPassword: NexusGenRootTypes['Default']; // Default!

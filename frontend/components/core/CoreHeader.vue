@@ -7,10 +7,14 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<div class="flex-1 mx-10 relative header__container__middle hidden md:inline-block">
-				<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-				<input class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Oeuf, poisson etc...">
-			</div>
+			<ais-search-box class="flex-1 mx-10 relative header__container__middle hidden md:inline-block">
+				<template slot-scope="{ currentRefinement, isSearchStalled, refine }">
+					<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center"/>
+					<input type="search" v-model="currentRefinement" @input="refine($event.currentTarget.value)"
+								 class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-11/12 py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline"
+								 placeholder="Oeuf, poisson etc...">
+				</template>
+			</ais-search-box>
 			<div class="flex items-center justify-center header__container__right">
 				<nuxt-link v-if="$store.state.auth.isLogged" class="inline-block px-4 hover:opacity-75" to="/">
 					<img class="rounded-full w-10 inline mr-2" src="@/assets/img/user-default.jpg" alt="Image d'utilisateur défaut">
@@ -35,6 +39,11 @@
 </template>
 
 <script>
+	import {
+		AisInstantSearchSsr,
+		AisSearchBox
+	} from "vue-instantsearch"
+
 	import IconCart from "@/components/icons/IconCart"
 	import IconUser from "@/components/icons/IconUser"
 	import IconSearch from "@/components/icons/IconSearch"
@@ -44,6 +53,8 @@
 	export default {
 		name: "CoreHeader",
 		components: {
+			AisInstantSearchSsr,
+			AisSearchBox,
 			IconCart,
 			IconUser,
 			IconSearch
@@ -70,7 +81,7 @@
 				}catch (e) {
 					console.log(e)
 				}
-				
+
 				/*await this.$apolloHelpers.onSignout()*/
 			}
 		}

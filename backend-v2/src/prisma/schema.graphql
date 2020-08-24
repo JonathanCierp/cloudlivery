@@ -40,6 +40,7 @@ type Marque {
 }
 
 type Mutation {
+  algoliaIndexing: Default!
   googleSignin(email: String!, firstname: String, google_id: String, lastname: String, rememberMe: Boolean! = false): AuthPayload!
   resetData: Default!
   resetPassword(email: String!): Default!

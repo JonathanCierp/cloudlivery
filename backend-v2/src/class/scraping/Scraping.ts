@@ -586,7 +586,7 @@ export default class Scraping {
 	]
 
 	rayons = [
-		/*{
+		{
 			label: "lait",
 			urlCarrefour: "https://www.carrefour.fr/r/cremerie/lait-boissons-lactees-et-vegetales/ecreme?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-ecreme/ca-n01010102",
@@ -687,8 +687,8 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		},*/
-		/*{
+		},
+		{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/boeuf?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/boeuf/ca-n020101",
@@ -721,7 +721,7 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		},*/
+		},
 		{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/veau?noRedirect=1",
@@ -756,7 +756,7 @@ export default class Scraping {
 				}
 			]
 		},
-		/*{
+		{
 			label: "viande",
 			urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/porc?noRedirect=1",
 			urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/porc/ca-n020102",
@@ -1052,7 +1052,7 @@ export default class Scraping {
 					scraping: false
 				}
 			]
-		}*/
+		}
 	]
 	//endregion
 
@@ -1096,12 +1096,12 @@ export default class Scraping {
 		let start_time = new Date().getTime();
 		console.log("Start marque...")
 		for (let marque of this.marques) {
-			const resMarque = await this.getPrismaMarque(marque)
+			const resMarque = await this.getPrismaMarque(marque.toLowerCase())
 			if (!resMarque) {
 				try {
 					await this.ctx.prisma.marque.create({
 						data: {
-							label: marque
+							label: marque.toLowerCase()
 						}
 					})
 				} catch (e) {
@@ -1639,15 +1639,15 @@ export default class Scraping {
 								let marqueLabel = "SANS MARQUE"
 
 								for(let marque of marques) {
-									if(label.includes("CARREFOUR BIO")) {
+									if(label.toLowerCase().includes("carrefour bio")) {
 										marqueLabel = "CARREFOUR BIO"
-									}else if(label.includes("CARREFOUR")) {
+									}else if(label.toLowerCase().includes("carrefour")) {
 										marqueLabel = "CARREFOUR"
-									}else if(label.includes("C'EST QUI LE PATRON ?!")) {
+									}else if(label.toLowerCase().includes("c'est qui le patron ?!")) {
 										marqueLabel = "C'EST QUI LE PATRON ?!"
-									}else if(label.includes("C'EST QUI LE PATRON")) {
+									}else if(label.toLowerCase().includes("c'est qui le patron")) {
 										marqueLabel = "C'EST QUI LE PATRON"
-									}else if(label.includes(marque)) {
+									}else if(label.toLowerCase().includes(marque.toLowerCase())) {
 										marqueLabel = marque
 									}
 								}
@@ -1686,7 +1686,7 @@ export default class Scraping {
 									},
 									marque: {
 										connect: {
-											label: marqueLabel
+											label: marqueLabel.toLowerCase()
 										}
 									},
 									produit_images: {
@@ -1957,35 +1957,52 @@ export default class Scraping {
 							let per_unit = ""
 							let uri = ""
 
-							if(el?.children[i]?.children[0].innerHTML !== "") {
+							if(el?.children[i]?.children[0]?.innerHTML !== "") {
 								label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[0]?.innerText
 								image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
-								price = el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
 							}else {
 								label = el?.children[i]?.children[2]?.children[0]?.children[1]?.children[0]?.innerText
 								image = el?.children[i]?.children[2]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
-								price = el?.children[i]?.children[2]?.innerHTML//el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
 							}
 
-							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "France") {
+							if(el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")) {
+								image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")
+							}
+
+							if(el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.includes("€")) {
+								price = el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.replace("€", "")
+							}else {
+								price = el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
+							}
+
+							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "France" || el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "Royaume Uni") {
 								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[0]?.innerText
 							}else {
 								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[0]?.innerText
 							}
 
-							unit_of_measure = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText?.split("/")[1]?.trim()
-							per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText
-							per_unit = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[1]?.innerText?.split("/")[0]?.replace("€", "").trim()
+							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText.includes("€ / ")) {
+								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText
+							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText.includes("€ / ")) {
+								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText
+							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText.includes("€ / ")) {
+								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText
+							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText.includes("€ / ")) {
+								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText
+							}
+
+							unit_of_measure = per_unit_label.split("/")[1]?.trim()
+							per_unit = per_unit_label.split("/")[0]?.replace("€", "").trim()
 							uri = "https://www.auchan.fr" + el.children[i]?.children[1]?.children[0]?.getAttribute("href")
 
 							let marqueLabel = "SANS MARQUE"
 
 							for(let marque of marques) {
-								if(label?.includes("AUCHAN BIO")) {
+								if(label?.toLowerCase().includes("auchan bio")) {
 									marqueLabel = "AUCHAN BIO"
-								}else if(label?.includes("AUCHAN")) {
+								}else if(label?.toLowerCase().includes("auchan")) {
 									marqueLabel = "AUCHAN"
-								}else if(label?.includes(marque)) {
+								}else if(label?.toLowerCase().includes(marque.toLowerCase())) {
 									marqueLabel = marque
 								}
 							}
@@ -2007,7 +2024,7 @@ export default class Scraping {
 								label,
 								ean: "",
 								brand: "",
-								slug: label.toString().toLowerCase()
+								slug: label?.toString().toLowerCase()
 										.replace(/\s+/g, '-')           // Replace spaces with -
 										.replace(/[^\w\-]+/g, '')       // Remove all non-word chars
 										.replace(/\-\-+/g, '-')         // Replace multiple - with single -
@@ -2024,12 +2041,12 @@ export default class Scraping {
 								per_unit: per_unit,
 								provider: {
 									connect: {
-										label: "CARREFOUR"
+										label: "AUCHAN"
 									}
 								},
 								marque: {
 									connect: {
-										label: marqueLabel
+										label: marqueLabel.toLowerCase()
 									}
 								},
 								produit_images: {
@@ -2073,8 +2090,10 @@ export default class Scraping {
 
 	async saveProduits(products) {
 		for(let product of products) {
-			console.log(product)
-			/*let p = await this.ctx.prisma.produit.findOne({
+			//if(product.slug === "cubes-pour-brochette-de-gigot-sans-os-300g") {
+			//	console.log(product)
+			//}
+			let p = await this.ctx.prisma.produit.findOne({
 				where: {
 					slug: product.slug
 				}
@@ -2084,7 +2103,7 @@ export default class Scraping {
 				await this.ctx.prisma.produit.create({
 					data: product
 				})
-			}*/
+			}
 		}
 	}
 

@@ -8,9 +8,11 @@ import ScrapingPuppeteer from "../class/scraping/ScrapingPuppeteer";
 import {mutationType, stringArg, booleanArg} from "@nexus/schema"
 import {hash} from "bcryptjs"
 // Types
-import { ProduitImage } from "../types/scraping";
+import {ProduitImage} from "../types/scraping";
 import ScrapingPuppeteerCarrefour from "../class/scraping/ScrapingPuppeteerCarrefour";
 import ScrapingPuppeteerIntermarche from "../class/scraping/ScrapingPuppeteerIntermarche";
+
+import algoliasearch from "algoliasearch"
 
 export const Mutation = mutationType({
 	definition(t) {
@@ -268,38 +270,19 @@ export const Mutation = mutationType({
 				start: stringArg(),
 				end: stringArg(),
 			},
-			resolve: async (_parent, { start, end }, ctx) => {
-				/*const scrapingPuppeteer = new ScrapingPuppeteer()
-				scrapingPuppeteer.ctx = ctx
-				await scrapingPuppeteer.launchBrowser()
-				await scrapingPuppeteer.newPage()
-
-				console.log("Start scraping...")
-				await scrapingPuppeteer.startScrapingByProvider()
-				console.log("End scraping")*/
-
+			resolve: async (_parent, {start, end}, ctx) => {
 				const scraping = new Scraping()
 				scraping.ctx = ctx
 				await scraping.launchBrowser()
 				await scraping.newPage()
 
-				/*console.log("Start scraping Carrefour...")
+				console.log("Start scraping Carrefour...")
 				await scraping.startScrapingCarrefour()
-				console.log("End scraping Carrefour")*/
+				console.log("End scraping Carrefour")
 
-				console.log("Start scraping Auchan...")
+				/*console.log("Start scraping Auchan...")
 				await scraping.startScrapingAuchan()
-				console.log("End scraping Auchan")
-
-				/*const scrapingPuppeteerIntermarche = new ScrapingPuppeteerIntermarche()
-				scrapingPuppeteerIntermarche.ctx = ctx
-				scrapingPuppeteerIntermarche.start = start
-				scrapingPuppeteerIntermarche.end = end
-				await scrapingPuppeteerIntermarche.launchBrowser()
-
-				console.log("Start scraping...")
-				await scrapingPuppeteerIntermarche.startScrapingByProvider()
-				console.log("End scraping")*/
+				console.log("End scraping Auchan")*/
 
 				return {
 					message: "Modification du mot de passe effectué avec succès."
@@ -308,7 +291,7 @@ export const Mutation = mutationType({
 		})
 		t.field("resetData", {
 			type: "Default",
-			resolve: async (_parent, { }, ctx) => {
+			resolve: async (_parent, {}, ctx) => {
 				console.log("Delete all produits...")
 				await ctx.prisma.produitRayon.deleteMany({
 					where: {
@@ -337,6 +320,87 @@ export const Mutation = mutationType({
 					message: "Modification du mot de passe effectué avec succès."
 				}
 			}
-		})
+		}),
+			t.field("algoliaIndexing", {
+				type: "Default",
+				resolve: async (_parent, {}, ctx) => {
+					const products = await ctx.prisma.produit.findMany({
+						select: {
+							id: true,
+							label: true,
+							brand: true,
+							ean: true,
+							slug: true,
+							uri: true,
+							packaging: true,
+							origin: true,
+							format: true,
+							price: true,
+							unit_of_measure: true,
+							per_unit_label: true,
+							tax_message: true,
+							per_unit: true,
+							updatedAt: true,
+							createdAt: true,
+							provider: {
+								select: {
+									id: true,
+									label: true,
+									prefix_url: true,
+									updatedAt: true,
+									createdAt: true
+								}
+							},
+							marque: {
+								select: {
+									id: true,
+									label: true,
+									updatedAt: true,
+									createdAt: true
+								}
+							},
+							produit_images: {
+								select: {
+									id: true,
+									largest: true,
+									size_1500x1500: true,
+									size_540x540: true,
+									size_380x380: true,
+									size_340x340: true,
+									size_340x240: true,
+									size_280x280: true,
+									size_195x195: true,
+									size_150x150: true,
+									size_43x43: true,
+									updatedAt: true,
+									createdAt: true
+								}
+							},
+							produit_labels_qualites: {
+								select: {
+									labels_qualite: {
+										select: {
+											id: true,
+											label: true,
+											updatedAt: true,
+											createdAt: true
+										}
+									}
+								}
+							}
+						}
+					})
+
+					const client = algoliasearch("2O4QB4BTXT", "2854ce3f66efd5fb73631322653ee44b");
+					const index = client.initIndex("dev_cloudlivery");
+
+					index.clearObjects
+					index.saveObjects(products, { autoGenerateObjectIDIfNotExist: true });
+
+					return {
+						message: "Modification du mot de passe effectué avec succès."
+					}
+				}
+			})
 	}
 })
