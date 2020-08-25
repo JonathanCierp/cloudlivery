@@ -1,8 +1,8 @@
 <template>
 	<ais-instant-search :search-client="searchClient" index-name="dev_cloudlivery">
-		<core-header />
-    <nuxt />
-  </ais-instant-search>
+		<!--<core-header />-->
+		<nuxt />
+	</ais-instant-search>
 </template>
 
 <script>

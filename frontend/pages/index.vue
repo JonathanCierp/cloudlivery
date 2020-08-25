@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto my-5">
+  <div class="my-5">
 		<!--<div v-for="item in produits.data" class="bg-white m-2 shadow w-1/5">
 			<div>
 				<span class="block">{{ item.label }}</span>

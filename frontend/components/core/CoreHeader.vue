@@ -22,7 +22,7 @@
 				</nuxt-link>
 				<nuxt-link v-else class="inline-block px-4 hover:opacity-75" to="/auth/signin">
 					<icon-user class="inline" />
-					<span class="align-middle hidden lg:inline">Mon compte</span>
+					<span class="align-middle hidden lg:inline text-md">Mon compte</span>
 				</nuxt-link>
 				<nuxt-link @click.native="onSignout" class="inline-block px-4 hover:opacity-75" to="#">
 					<icon-cart class="inline" />
@@ -116,5 +116,10 @@
 		.header__container__right svg{
 			width: 30px;
 		}
+	}
+
+	svg {
+		width: 25px;
+		height: 20px;
 	}
 </style>
