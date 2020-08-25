@@ -2008,16 +2008,16 @@ export default class Scraping {
 							}
 
 							let produit_images = [{
-								largest: image?.replace("280x280", "1500x1500"),
-								size_1500x1500: image?.replace("280x280", "1500x1500"),
-								size_540x540: image?.replace("280x280", "540x540"),
-								size_380x380: image?.replace("280x280", "380x380"),
-								size_340x340: image?.replace("280x280", "340x340"),
-								size_340x240: image?.replace("280x280", "340x240"),
-								size_280x280: image?.replace("280x280", "280x280"),
-								size_195x195: image?.replace("280x280", "195x195"),
-								size_150x150: image?.replace("280x280", "150x150"),
-								size_43x43: image?.replace("280x280", "43x43")
+								largest: image,
+								size_1500x1500: image,
+								size_540x540: image,
+								size_380x380: image,
+								size_340x340: image,
+								size_340x240: image,
+								size_280x280: image,
+								size_195x195: image,
+								size_150x150: image,
+								size_43x43: image
 							}]
 
 							products.push({

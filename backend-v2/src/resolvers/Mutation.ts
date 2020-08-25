@@ -394,8 +394,9 @@ export const Mutation = mutationType({
 					const client = algoliasearch("2O4QB4BTXT", "2854ce3f66efd5fb73631322653ee44b");
 					const index = client.initIndex("dev_cloudlivery");
 
-					index.clearObjects
-					index.saveObjects(products, { autoGenerateObjectIDIfNotExist: true });
+					index.clearObjects().then(() => {
+						index.saveObjects(products, { autoGenerateObjectIDIfNotExist: true })
+					})
 
 					return {
 						message: "Modification du mot de passe effectué avec succès."
