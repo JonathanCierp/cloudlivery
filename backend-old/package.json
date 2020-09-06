@@ -1,0 +1,63 @@
+{
+	"name": "graphql-auth",
+	"license": "MIT",
+	"scripts": {
+		"start": "node dist/server",
+		"build": "npm -s run generate && tsc",
+		"generate": "npm -s run generate:prisma && npm -s run generate:nexus",
+		"generate:prisma": "prisma generate",
+		"generate:nexus": "ts-node --transpile-only src/schema",
+		"postinstall": "npm -s run generate",
+		"dev": "ts-node-dev --no-notify --respawn --transpileOnly src/server",
+		"migrate:up": "prisma migrate up --experimental",
+		"migrate:save": "prisma migrate save --experimental",
+		"test": "env-cmd -f ./tests/config/test.env jest --runInBand"
+	},
+	"dependencies": {
+		"@prisma/client": "2.0.0-beta.2",
+		"@types/nodemailer": "^6.4.0",
+		"@types/redis": "^2.8.22",
+		"bcryptjs": "2.4.3",
+		"dotenv": "8.2.0",
+		"ejs": "3.0.2",
+		"graphql-shield": "5.7.3",
+		"graphql-yoga": "1.18.3",
+		"jsonwebtoken": "8.5.1",
+		"nexus": "0.12.0",
+		"nexus-prisma": "0.11.1",
+		"nodemailer": "6.4.6",
+		"puppeteer": "3.1.0",
+		"puppeteer-extra": "^3.1.9",
+		"puppeteer-extra-plugin-stealth": "^2.4.9",
+		"redis": "^3.0.2"
+	},
+	"devDependencies": {
+		"@babel/register": "^7.10.4",
+		"@prisma/cli": "^2.0.0",
+		"@types/bcryptjs": "2.4.2",
+		"@types/jsonwebtoken": "8.3.9",
+		"@types/node": "12.12.35",
+		"@types/ws": "7.2.3",
+		"apollo-boost": "^0.4.9",
+		"cross-fetch": "^3.0.5",
+		"env-cmd": "^10.1.0",
+		"graphql": "^14.6.0",
+		"jest": "^26.1.0",
+		"nodemon": "^2.0.3",
+		"ts-node": "8.8.2",
+		"ts-node-dev": "1.0.0-pre.44",
+		"typescript": "3.8.3"
+	},
+	"prettier": {
+		"singleQuote": true,
+		"semi": false,
+		"trailingComma": "all"
+	},
+	"engines": {
+		"node": ">=10.0.0"
+	},
+	"jest": {
+		"globalSetup": "./tests/config/globalSetup.js",
+		"globalTeardown": "./tests/config/globalTeardown.js"
+	}
+}
