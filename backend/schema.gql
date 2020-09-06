@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ProvidersModel {
+  id: Float
+  label: String!
+  prefix_url: String
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  providers: [ProvidersModel!]!
+  provider(label: String, id: String!): ProvidersModel!
+}
+
+type Mutation {
+  createProvider(input: ProviderInputDto!): ProvidersModel!
+  createAllProvider: [ProvidersModel!]!
+  deleteProvider(id: Float!): ProvidersModel!
+  deleteAllProvider: [ProvidersModel!]!
+  updateProvider(input: ProviderInputDto!): ProvidersModel!
+}
+
+input ProviderInputDto {
+  id: Float
+  label: String!
+  prefix_url: String
+}

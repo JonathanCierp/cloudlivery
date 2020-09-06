@@ -1,13 +1,16 @@
 {
-	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": "src",
-		"lib": [
-			"esnext",
-			"dom"
-		],
-		"strict": true,
-		"allowSyntheticDefaultImports": true
-	},
-	"include": ["src/**/*"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+		"skipLibCheck": true
+	}
 }

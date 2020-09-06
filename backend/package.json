@@ -1,63 +1,78 @@
 {
-	"name": "graphql-auth",
-	"license": "MIT",
-	"scripts": {
-		"start": "node dist/server",
-		"build": "npm -s run generate && tsc",
-		"generate": "npm -s run generate:prisma && npm -s run generate:nexus",
-		"generate:prisma": "prisma generate",
-		"generate:nexus": "ts-node --transpile-only src/schema",
-		"postinstall": "npm -s run generate",
-		"dev": "ts-node-dev --no-notify --respawn --transpileOnly src/server",
-		"migrate:up": "prisma migrate up --experimental",
-		"migrate:save": "prisma migrate save --experimental",
-		"test": "env-cmd -f ./tests/config/test.env jest --runInBand"
-	},
-	"dependencies": {
-		"@prisma/client": "2.0.0-beta.2",
-		"@types/nodemailer": "^6.4.0",
-		"@types/redis": "^2.8.22",
-		"bcryptjs": "2.4.3",
-		"dotenv": "8.2.0",
-		"ejs": "3.0.2",
-		"graphql-shield": "5.7.3",
-		"graphql-yoga": "1.18.3",
-		"jsonwebtoken": "8.5.1",
-		"nexus": "0.12.0",
-		"nexus-prisma": "0.11.1",
-		"nodemailer": "6.4.6",
-		"puppeteer": "3.1.0",
-		"puppeteer-extra": "^3.1.9",
-		"puppeteer-extra-plugin-stealth": "^2.4.9",
-		"redis": "^3.0.2"
-	},
-	"devDependencies": {
-		"@babel/register": "^7.10.4",
-		"@prisma/cli": "^2.0.0",
-		"@types/bcryptjs": "2.4.2",
-		"@types/jsonwebtoken": "8.3.9",
-		"@types/node": "12.12.35",
-		"@types/ws": "7.2.3",
-		"apollo-boost": "^0.4.9",
-		"cross-fetch": "^3.0.5",
-		"env-cmd": "^10.1.0",
-		"graphql": "^14.6.0",
-		"jest": "^26.1.0",
-		"nodemon": "^2.0.3",
-		"ts-node": "8.8.2",
-		"ts-node-dev": "1.0.0-pre.44",
-		"typescript": "3.8.3"
-	},
-	"prettier": {
-		"singleQuote": true,
-		"semi": false,
-		"trailingComma": "all"
-	},
-	"engines": {
-		"node": ">=10.0.0"
-	},
-	"jest": {
-		"globalSetup": "./tests/config/globalSetup.js",
-		"globalTeardown": "./tests/config/globalTeardown.js"
-	}
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^7.0.0",
+    "@nestjs/config": "^0.5.0",
+    "@nestjs/core": "^7.0.0",
+    "@nestjs/graphql": "^7.6.0",
+    "@nestjs/mongoose": "^7.0.2",
+    "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/typeorm": "^7.1.3",
+    "apollo-server-express": "^2.17.0",
+    "graphql": "^15.3.0",
+    "graphql-tools": "^6.2.0",
+    "mongoose": "^5.10.2",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.5.4",
+    "type-graphql": "^1.0.0",
+    "typeorm": "^0.2.25"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^7.0.0",
+    "@nestjs/schematics": "^7.0.0",
+    "@nestjs/testing": "^7.0.0",
+    "@types/express": "^4.17.3",
+    "@types/jest": "26.0.10",
+    "@types/node": "^13.9.1",
+    "@types/supertest": "^2.0.8",
+    "@typescript-eslint/eslint-plugin": "3.9.1",
+    "@typescript-eslint/parser": "3.9.1",
+    "eslint": "7.7.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "26.4.2",
+    "prettier": "^1.19.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "26.2.0",
+    "ts-loader": "^6.2.1",
+    "ts-node": "9.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
 }
