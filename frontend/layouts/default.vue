@@ -1,6 +1,6 @@
 <template>
-	<ais-instant-search :search-client="searchClient" index-name="dev_cloudlivery">
-		<!--<core-header />-->
+	<ais-instant-search v-if="show" :search-client="searchClient" index-name="dev_cloudlivery">
+		<core-header />
 		<nuxt />
 	</ais-instant-search>
 </template>
@@ -18,11 +18,15 @@
 		},
 		data() {
 			return {
+				show: false,
 				searchClient: algoliasearch(
 					"2O4QB4BTXT",
 					"31085070cadb9685828446a0cd99d90b"
 				)
 			}
+		},
+		mounted() {
+			this.show = true
 		}
 	}
 </script>

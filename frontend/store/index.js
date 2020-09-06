@@ -1,5 +1,6 @@
 export const state = () => ({
-	auth: {}
+	auth: {},
+	tab: 1
 })
 
 export const mutations = {
@@ -11,5 +12,8 @@ export const mutations = {
 			state.auth.user = {},
 				state.auth.isLogged = false
 		}
+	},
+	CHANGE_TAB(state, v) {
+		state.tab = v
 	}
 }

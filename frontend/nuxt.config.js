@@ -72,7 +72,7 @@ module.exports = {
 		clientConfigs: {
 			default: {
 				httpEndpoint: process.env.APOLLO_HTTP_ENDPOINT,
-				wsEndpoint: process.env.APOLLO_WS_ENDPOINT
+				//wsEndpoint: process.env.APOLLO_WS_ENDPOINT
 			}
 		}
 	},
