@@ -1,4 +1,4 @@
-import { GraphQLServer  } from "graphql-yoga"
+import { GraphQLServer } from "graphql-yoga"
 import schema from "./schema"
 import { context } from "./prisma/context"
 

@@ -13,8 +13,6 @@ import {
 	Rayon
 } from "../../types/scraping"
 // Utils
-const puppeteer = require('puppeteer-extra')
-const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 const Apify = require('apify')
 
 
@@ -1062,9 +1060,7 @@ export default class Scraping {
 	 * @return Promise<void>
 	 */
 	Scraping() {
-		puppeteer.use(StealthPlugin())
 
-		this.puppeteer = puppeteer
 	}
 
 	public async createPrismaProvider(): Promise<void> {
@@ -1379,45 +1375,383 @@ export default class Scraping {
 	}
 
 	async launchBrowser(): Promise<void> {
-		this.browser = await puppeteer.launch({headless: true})
+		this.browser = await Apify.launchPuppeteer({stealth: true});
 	}
 
 	async newPage(): Promise<void> {
 		this.page = await this.browser.newPage()
 	}
 
-	async getPage(url: string): Promise<any> {
-		return await this.page.goto(url)
+	async closePage(): Promise<void> {
+		await this.page.close()
 	}
 
 	async closeBrowser(): Promise<void> {
 		await this.browser.close()
 	}
 
-	async startScrapingCarrefour() {
-		Apify.main(async () => {
-			const browser = await Apify.launchPuppeteer({stealth: true});
+	async getPage(url: string): Promise<any> {
+		return await this.page.goto(url)
+	}
 
-			let results = []
+	async sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
-			for (let rayon of this.rayons) {
-				const page = await browser.newPage()
+	startScrapingCarrefour() {
+		return new Promise(async (resolve, reject) => {
+			const fn = async () => {
+				const page = await this.page
+				let results = []
 
-				await page.goto(`${rayon.urlCarrefour}&page=1`)
-				let nbProduit = await page.$eval('.pagination__txt', el => {
-					return el.innerText.split(" ")[4]
-				})
-				let nbPage = nbProduit >= 60 ? Math.ceil(nbProduit / 60) : 1
+				for (let rayon of this.rayons) {
+					await page.goto(`${rayon.urlCarrefour}&page=1`)
+					let nbProduit = await page.$eval('.pagination__txt', el => {
+						return el.innerText.split(" ")[4]
+					})
+					let nbPage = nbProduit >= 60 ? Math.ceil(nbProduit / 60) : 1
 
-				let result = []
+					let result = []
 
-				for (let i = 1; i <= nbPage; i++) {
-					await page.goto(`${rayon.urlCarrefour}&page=${i}`);
-					let datas = await page.$eval('.product-list.product-list .pagination ~ .product-grid', el => {
+					/*for (let i = 1; i <= nbPage; i++) {
+						await page.goto(`${rayon.urlCarrefour}&page=${i}`);
+						let datas = await page.$eval('.product-list.product-list .pagination ~ .product-grid', el => {
+							let products = []
+
+							for (let i in el.children) {
+								if (el.children[i].innerHTML && el.children[i].innerHTML.indexOf("<div class=\"ds-product-card--vertical-image\">") !== -1) {
+									let marques = [
+										"SANS MARQUE",
+										"LA MARQUE DU CONSOMMATEUR",
+										"AGRILAIT",
+										"BASKALIA",
+										"BEARN LAIT",
+										"C'EST QUI LE PATRON ?!",
+										"CANDIA",
+										"CARREFOUR BIO",
+										"CARREFOUR",
+										"ET ALDIA",
+										"FAIREFRANCE",
+										"GERENTE",
+										"GRANDLAIT",
+										"J'AIME LE LAIT D'ICI",
+										"LACTEL",
+										"LACTEL BIO",
+										"LAITERIE LES FAYES",
+										"LAITIK",
+										"LE GALL",
+										"LE LAIT DE MA REGION",
+										"LE LAIT EQUITABLE SARTHOIS",
+										"LE PETIT VENDEEN",
+										"LES FAYES",
+										"LES LAITIERS RESPONSABLES",
+										"MONT LAIT",
+										"ONETIK",
+										"VERNEUIL",
+										"CHARAL",
+										"SOCOPA",
+										"TENDRE ET PLUS",
+										"MAITRE JACQUES",
+										"TENDRIADE",
+										"JEMANGEFRANÇAIS.COM",
+										"BIGARD",
+										"HENAFF",
+										"METRAS TRIPIER EN PROVENCE",
+										"LE MARCHE",
+										"PAILLARD",
+										"LES BONS MORCEAUX",
+										"LES BRASERADES",
+										"JOHNSONVILLE",
+										"LA BRESSE",
+										"NOBLES",
+										"ALDELIS",
+										"DOUCE FRANCE",
+										"MADRANCE",
+										"MORITZ",
+										"PEGASE",
+										"DABIA",
+										"DELICADEZAS IBERICAS",
+										"GRAND CARACTERE",
+										"KLEIN KAROO",
+										"LES OCCITANES",
+										"LIONOR",
+										"SOURIRES DE CAMPAGNE",
+										"CLERMONT",
+										"COOPERL",
+										"DE FAUX FILET",
+										"ELIVIA",
+										"HIRUAK",
+										"INDIANA JERKY",
+										"LE GAULOIS",
+										"LES ELEVEURS DE CHEZ NOUS",
+										"ROYAL HALAL",
+										"TRIPES PAILLARD",
+										"VIAZUR",
+										"refuge_de_marie_louise",
+										"REFS.SANS MARQUE",
+										"BABY COQUE",
+										"COQUY",
+										"L'OEUFS DE NOS VILLA",
+										"COQUEN'OR",
+										"LOUE",
+										"COCORETTE",
+										"LUSTUCRU",
+										"MIELS VILLENEUVE",
+										"OEUF ARRADOY",
+										"COTEAUX PEYRIGNAC",
+										"AVIBRESSE",
+										"BISCUITERIE COMTOISE",
+										"C'EST QUI LE PATRON",
+										"L'OEUF GASCON",
+										"LA NOUVELLE AGRICULTURE",
+										"MATINES",
+										"OEUFS TRADITION",
+										"OVALIS",
+										"PP BLANC",
+										"PP NO NAME",
+										"CRF CDM",
+										"L'OEUF RIESTAHL",
+										"LE CLOS ST JACQUES",
+										"LES CAMPAGNES",
+										"OEUF CHAMPAG.ARDENNE",
+										"OEUF VIEUX PRESSOIR",
+										"POULE HOUSE",
+										"SARL ROUSSILLON OEUF",
+										"SAINT AMAND",
+										"VITTEL",
+										"CRISTALINE",
+										"EVIAN",
+										"ABATILLES",
+										"COURMAYEUR",
+										"HEPAR",
+										"PLANCOET",
+										"VOLVIC",
+										"planet_drinks",
+										"CONTREX",
+										"MONT BLANC",
+										"MONT ROUCOUS",
+										"OGEU",
+										"PIERVAL",
+										"ST GEORGES",
+										"STE ALIX",
+										"THONON",
+										"WATTWILLER",
+										"AURELE",
+										"JOLIVAL",
+										"PERRIER",
+										"SAN PELLEGRINO",
+										"BABOIT",
+										"ROZANA",
+										"VALS",
+										"VICHY CELESTINS",
+										"ARCENS",
+										"QUEZAC",
+										"ST-YORRE",
+										"HIGHTLAND SPRING",
+										"OREZZA",
+										"PAROT",
+										"SALVETAT",
+										"ST ALBAN",
+										"ST YORRE",
+										"VERNIERE",
+										"BADOIT",
+										"CONTREX GREEN",
+										"VOLVICJUICY",
+										"PERRIER & JUICE",
+										"VITTEL UP",
+										"VOLVIC JUICY",
+										"COCA-COLA",
+										"COCA-COLA ZERO",
+										"BREIZH COLA",
+										"MEUH COLA",
+										"COCA COLA",
+										"CORSICA COLA",
+										"GALVANINA",
+										"HAMOUD BOUALEM",
+										"PEPSI",
+										"PEPSI MAX",
+										"QUEBEC",
+										"TETES BRULEES MIX & KIFF",
+										"LORINA",
+										"SCHWEPPES",
+										"7UP",
+										"BOX",
+										"FEVER TREE",
+										"SPRITE",
+										"BREIZH",
+										"BREIZH-LIMO",
+										"LA GOSSE",
+										"LEMONAID",
+										"LIMONETTE",
+										"MARIE DOLIN",
+										"ORIGINAL TONIC",
+										"VOSS",
+										"MONSTER ENERGY",
+										"RED BULL",
+										"CRAZY TIGER",
+										"MME GREEN",
+										"PSYCHIK",
+										"PUMA",
+										"DIUKE",
+										"HEROIC PLUS",
+										"MONSTER",
+										"POWERADE",
+										"AUCHAN",
+										"AUCHAN BIO",
+										"C'EST QUI LE PATRON?",
+										"POUCE",
+										"AUCHAN GOURMET",
+										"MADRANGE",
+										"MMM!",
+										"BROCELIANDE",
+										"NATURE DE FRANCE",
+										"POULEHOUSE",
+										"NESTLE",
+										"ST AMAND",
+										"VICHY ST YORRE",
+										"OASIS",
+										"TEISSEIRE",
+										"DR PEPPER",
+										"CANADA DRY",
+										"GINI",
+										"MEGA FORCE"
+									]
+
+									let label = el?.children[i].children[0].children[0].children[0].innerHTML
+									let per_unit_label = ""
+									let image = ""
+									let uri = ""
+									let packaging = ""
+
+									if (label.includes("add-to-shoppinglist")) {
+										label = el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].innerText
+										per_unit_label = el?.children[i].children[0].children[0].children[2].children[0].children[2].innerText
+										image = el?.children[i].children[0].children[0].children[2].children[1].children[0].children[0].getAttribute("src")
+										uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].getAttribute("href")
+										packaging = el?.children[i].children[0].children[0].children[2].children[0].children[1].innerText
+									} else {
+										label = el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].innerText
+										per_unit_label = el?.children[i].children[0].children[0].children[3].children[0].children[2].innerText
+										image = el?.children[i].children[0].children[0].children[3].children[1].children[0].children[0].getAttribute("src")
+										uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].getAttribute("href")
+										packaging = el?.children[i].children[0].children[0].children[3].children[0].children[1].innerText
+									}
+
+									let format = el?.children[i].children[0].children[0].children[3]?.children[1]
+									let marqueLabel = "SANS MARQUE"
+
+									for (let marque of marques) {
+										if (label.toLowerCase().includes("carrefour bio")) {
+											marqueLabel = "CARREFOUR BIO"
+										} else if (label.toLowerCase().includes("carrefour")) {
+											marqueLabel = "CARREFOUR"
+										} else if (label.toLowerCase().includes("c'est qui le patron ?!")) {
+											marqueLabel = "C'EST QUI LE PATRON ?!"
+										} else if (label.toLowerCase().includes("c'est qui le patron")) {
+											marqueLabel = "C'EST QUI LE PATRON"
+										} else if (label.toLowerCase().includes(marque.toLowerCase())) {
+											marqueLabel = marque
+										}
+									}
+
+									let produit_images = [{
+										largest: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
+										size_1500x1500: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
+										size_540x540: "https://www.carrefour.fr" + image.replace("280x280", "540x540"),
+										size_380x380: "https://www.carrefour.fr" + image.replace("280x280", "380x380"),
+										size_340x340: "https://www.carrefour.fr" + image.replace("280x280", "340x340"),
+										size_340x240: "https://www.carrefour.fr" + image.replace("280x280", "340x240"),
+										size_280x280: "https://www.carrefour.fr" + image.replace("280x280", "280x280"),
+										size_195x195: "https://www.carrefour.fr" + image.replace("280x280", "195x195"),
+										size_150x150: "https://www.carrefour.fr" + image.replace("280x280", "150x150"),
+										size_43x43: "https://www.carrefour.fr" + image.replace("280x280", "43x43")
+									}]
+
+									products.push({
+										label,
+										ean: el?.children[i].children[0].getAttribute("id"),
+										brand: "",
+										slug: slugify(label) + "-" + el?.children[i].children[0].getAttribute("id") + "-" + slugify(packaging),
+										uri,
+										packaging,
+										origin: "",
+										format: format ? format.innerText : "",
+										price: el?.children[i].children[0].children[1].children[1].children[0].innerText.replace("€", ""),
+										unit_of_measure: per_unit_label.split("/")[1].trim(),
+										per_unit_label,
+										tax_message: "",
+										per_unit: per_unit_label.split("/")[0].replace("€", "").trim(),
+										provider: {
+											connect: {
+												label: "CARREFOUR"
+											}
+										},
+										marque: {
+											connect: {
+												label: marqueLabel.toLowerCase()
+											}
+										},
+										produit_images: {
+											create: produit_images
+										},
+										produit_rayons: {}
+									})
+								}
+							}
+
+							return products
+						})
+
+						let produit_rayons = []
+
+						for (let r of rayon.rayons) {
+							produit_rayons = [...produit_rayons, {
+								rayon: {
+									connect: {
+										slug: r.slug
+									}
+								}
+							}]
+						}
+
+						let products = []
+						for (let data of datas) {
+							data.produit_rayons = {
+								create: produit_rayons
+							}
+							products = [...products, data]
+						}
+
+						result = result.concat(products)
+					}*/
+
+					results = results.concat(result)
+				}
+
+				await this.saveProduits(results)
+
+				return "OK"
+			}
+			resolve(await fn())
+		})
+	}
+
+	startScrapingAuchan() {
+		return new Promise(async (resolve, reject) => {
+			const fn = async () => {
+				/*const page = await this.page
+				await page.goto("https://www.auchan.fr/courses?storeReference=527&lark-b2cd=1&gclid=Cj0KCQjwg8n5BRCdARIsALxKb96rKyvvgqxQeqFUb5t4JQXV3T30PFNhn9-Su5TDZuT2CRlGRe23_ZIaAvh-EALw_wcB");
+
+				let results = []
+
+				for (let rayon of this.rayons) {
+					await page.goto(rayon.urlAuchan)
+
+					let datas = await page.$eval('.list__container', el => {
 						let products = []
 
 						for (let i in el.children) {
-							if (el.children[i].innerHTML && el.children[i].innerHTML.indexOf("<div class=\"ds-product-card--vertical-image\">") !== -1) {
+							if (el?.children[i]?.innerText) {
 								let marques = [
 									"SANS MARQUE",
 									"LA MARQUE DU CONSOMMATEUR",
@@ -1615,73 +1949,113 @@ export default class Scraping {
 									"MEGA FORCE"
 								]
 
-								let label = el?.children[i].children[0].children[0].children[0].innerHTML
-								let per_unit_label = ""
+								let label = ""
 								let image = ""
-								let uri = ""
 								let packaging = ""
+								let format = ""
+								let price = ""
+								let unit_of_measure = ""
+								let per_unit_label = ""
+								let per_unit = ""
+								let uri = ""
 
-								if(label.includes("add-to-shoppinglist")) {
-									label = el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].innerText
-									per_unit_label = el?.children[i].children[0].children[0].children[2].children[0].children[2].innerText
-									image = el?.children[i].children[0].children[0].children[2].children[1].children[0].children[0].getAttribute("src")
-									uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[2].children[0].children[0].children[0].getAttribute("href")
-									packaging = el?.children[i].children[0].children[0].children[2].children[0].children[1].innerText
-								}else {
-									label = el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].innerText
-									per_unit_label = el?.children[i].children[0].children[0].children[3].children[0].children[2].innerText
-									image = el?.children[i].children[0].children[0].children[3].children[1].children[0].children[0].getAttribute("src")
-									uri = "https://www.carrefour.fr" + el?.children[i].children[0].children[0].children[3].children[0].children[0].children[0].getAttribute("href")
-									packaging = el?.children[i].children[0].children[0].children[3].children[0].children[1].innerText
+								if (el?.children[i]?.children[0]?.innerHTML !== "") {
+									label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[0]?.innerText
+									image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
+								} else {
+									label = el?.children[i]?.children[2]?.children[0]?.children[1]?.children[0]?.innerText
+									image = el?.children[i]?.children[2]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
 								}
 
-								let format = el?.children[i].children[0].children[0].children[3]?.children[1]
+								if (el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")) {
+									image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")
+								}
+
+								if (el?.children[i]?.children[1]?.children[0]?.children[0].children[0]?.children[1]?.children[0]?.getAttribute("data-src")) {
+									image = el?.children[i]?.children[1]?.children[0]?.children[0].children[0]?.children[1]?.children[0]?.getAttribute("data-src")
+								}
+
+								if (el?.children[i]?.children[2]?.children[0]?.children[0].children[0]?.children[1]?.children[0]?.getAttribute("data-src")) {
+									image = el?.children[i]?.children[2]?.children[0]?.children[0].children[0]?.children[1]?.children[0]?.getAttribute("data-src")
+								}
+
+								if (el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("data-src")) {
+									image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("data-src")
+								}
+
+								if (el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.includes("€")) {
+									price = el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.replace("€", "")
+								} else {
+									price = el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
+								}
+
+								if (el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "France" || el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "Royaume Uni") {
+									packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[0]?.innerText
+								} else {
+									packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[0]?.innerText
+								}
+
+								if (el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText.includes("€ / ")) {
+									per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText
+								} else if (el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText.includes("€ / ")) {
+									per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText
+								} else if (el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText.includes("€ / ")) {
+									per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText
+								} else if (el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText.includes("€ / ")) {
+									per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText
+								}
+
+								unit_of_measure = per_unit_label.split("/")[1]?.trim()
+								per_unit = per_unit_label.split("/")[0]?.replace("€", "").trim()
+								uri = "https://www.auchan.fr" + el.children[i]?.children[1]?.children[0]?.getAttribute("href")
+
 								let marqueLabel = "SANS MARQUE"
 
-								for(let marque of marques) {
-									if(label.toLowerCase().includes("carrefour bio")) {
-										marqueLabel = "CARREFOUR BIO"
-									}else if(label.toLowerCase().includes("carrefour")) {
-										marqueLabel = "CARREFOUR"
-									}else if(label.toLowerCase().includes("c'est qui le patron ?!")) {
-										marqueLabel = "C'EST QUI LE PATRON ?!"
-									}else if(label.toLowerCase().includes("c'est qui le patron")) {
-										marqueLabel = "C'EST QUI LE PATRON"
-									}else if(label.toLowerCase().includes(marque.toLowerCase())) {
+								for (let marque of marques) {
+									if (label?.toLowerCase().includes("auchan bio")) {
+										marqueLabel = "AUCHAN BIO"
+									} else if (label?.toLowerCase().includes("auchan")) {
+										marqueLabel = "AUCHAN"
+									} else if (label?.toLowerCase().includes(marque.toLowerCase())) {
 										marqueLabel = marque
 									}
 								}
 
 								let produit_images = [{
-									largest: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
-									size_1500x1500: "https://www.carrefour.fr" + image.replace("280x280", "1500x1500"),
-									size_540x540: "https://www.carrefour.fr" + image.replace("280x280", "540x540"),
-									size_380x380: "https://www.carrefour.fr" + image.replace("280x280", "380x380"),
-									size_340x340: "https://www.carrefour.fr" + image.replace("280x280", "340x340"),
-									size_340x240: "https://www.carrefour.fr" + image.replace("280x280", "340x240"),
-									size_280x280: "https://www.carrefour.fr" + image.replace("280x280", "280x280"),
-									size_195x195: "https://www.carrefour.fr" + image.replace("280x280", "195x195"),
-									size_150x150: "https://www.carrefour.fr" + image.replace("280x280", "150x150"),
-									size_43x43: "https://www.carrefour.fr" + image.replace("280x280", "43x43")
+									largest: image,
+									size_1500x1500: image,
+									size_540x540: image,
+									size_380x380: image,
+									size_340x340: image,
+									size_340x240: image,
+									size_280x280: image,
+									size_195x195: image,
+									size_150x150: image,
+									size_43x43: image
 								}]
 
 								products.push({
 									label,
-									ean: el?.children[i].children[0].getAttribute("id"),
+									ean: "",
 									brand: "",
-									slug: slugify(label) + "-" + el?.children[i].children[0].getAttribute("id") + "-" + slugify(packaging),
+									slug: label?.toString().toLowerCase()
+										.replace(/\s+/g, '-')           // Replace spaces with -
+										.replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+										.replace(/\-\-+/g, '-')         // Replace multiple - with single -
+										.replace(/^-+/, '')             // Trim - from start of text
+										.replace(/-+$/, ''),
 									uri,
 									packaging,
 									origin: "",
-									format: format ? format.innerText : "",
-									price: el?.children[i].children[0].children[1].children[1].children[0].innerText.replace("€", ""),
-									unit_of_measure: per_unit_label.split("/")[1].trim(),
+									format,
+									price,
+									unit_of_measure,
 									per_unit_label,
 									tax_message: "",
-									per_unit: per_unit_label.split("/")[0].replace("€", "").trim(),
+									per_unit: per_unit,
 									provider: {
 										connect: {
-											label: "CARREFOUR"
+											label: "AUCHAN"
 										}
 									},
 									marque: {
@@ -1692,7 +2066,7 @@ export default class Scraping {
 									produit_images: {
 										create: produit_images
 									},
-									produit_rayons: { }
+									produit_rayons: {}
 								})
 							}
 						}
@@ -1702,9 +2076,9 @@ export default class Scraping {
 
 					let produit_rayons = []
 
-					for(let r of rayon.rayons) {
+					for (let r of rayon.rayons) {
 						produit_rayons = [...produit_rayons, {
-							rayon:{
+							rayon: {
 								connect: {
 									slug: r.slug
 								}
@@ -1713,396 +2087,43 @@ export default class Scraping {
 					}
 
 					let products = []
-					for(let data of datas) {
+					for (let data of datas) {
 						data.produit_rayons = {
 							create: produit_rayons
 						}
 						products = [...products, data]
 					}
 
-					result = result.concat(products)
-				}
+					results = results.concat(products)
+				}*/
 
-				await page.close();
+				await this.sleep(300000)
+				/*await this.saveProduits(results)*/
 
-				results = results.concat(result)
+				return "OK"
 			}
-
-			await browser.close();
-			await this.saveProduits(results)
-		});
-	}
-	
-	async startScrapingAuchan() {
-		Apify.main(async () => {
-			const browser = await Apify.launchPuppeteer({stealth: true});
-
-			const page = await browser.newPage()
-			await page.goto("https://www.auchan.fr/courses?storeReference=527&lark-b2cd=1&gclid=Cj0KCQjwg8n5BRCdARIsALxKb96rKyvvgqxQeqFUb5t4JQXV3T30PFNhn9-Su5TDZuT2CRlGRe23_ZIaAvh-EALw_wcB");
-
-			let results = []
-
-			for (let rayon of this.rayons) {
-				await page.goto(rayon.urlAuchan)
-
-				let datas = await page.$eval('.list__container', el => {
-					let products = []
-
-					for (let i in el.children) {
-						if(el?.children[i]?.innerText) {
-							let marques = [
-								"SANS MARQUE",
-								"LA MARQUE DU CONSOMMATEUR",
-								"AGRILAIT",
-								"BASKALIA",
-								"BEARN LAIT",
-								"C'EST QUI LE PATRON ?!",
-								"CANDIA",
-								"CARREFOUR BIO",
-								"CARREFOUR",
-								"ET ALDIA",
-								"FAIREFRANCE",
-								"GERENTE",
-								"GRANDLAIT",
-								"J'AIME LE LAIT D'ICI",
-								"LACTEL",
-								"LACTEL BIO",
-								"LAITERIE LES FAYES",
-								"LAITIK",
-								"LE GALL",
-								"LE LAIT DE MA REGION",
-								"LE LAIT EQUITABLE SARTHOIS",
-								"LE PETIT VENDEEN",
-								"LES FAYES",
-								"LES LAITIERS RESPONSABLES",
-								"MONT LAIT",
-								"ONETIK",
-								"VERNEUIL",
-								"CHARAL",
-								"SOCOPA",
-								"TENDRE ET PLUS",
-								"MAITRE JACQUES",
-								"TENDRIADE",
-								"JEMANGEFRANÇAIS.COM",
-								"BIGARD",
-								"HENAFF",
-								"METRAS TRIPIER EN PROVENCE",
-								"LE MARCHE",
-								"PAILLARD",
-								"LES BONS MORCEAUX",
-								"LES BRASERADES",
-								"JOHNSONVILLE",
-								"LA BRESSE",
-								"NOBLES",
-								"ALDELIS",
-								"DOUCE FRANCE",
-								"MADRANCE",
-								"MORITZ",
-								"PEGASE",
-								"DABIA",
-								"DELICADEZAS IBERICAS",
-								"GRAND CARACTERE",
-								"KLEIN KAROO",
-								"LES OCCITANES",
-								"LIONOR",
-								"SOURIRES DE CAMPAGNE",
-								"CLERMONT",
-								"COOPERL",
-								"DE FAUX FILET",
-								"ELIVIA",
-								"HIRUAK",
-								"INDIANA JERKY",
-								"LE GAULOIS",
-								"LES ELEVEURS DE CHEZ NOUS",
-								"ROYAL HALAL",
-								"TRIPES PAILLARD",
-								"VIAZUR",
-								"refuge_de_marie_louise",
-								"REFS.SANS MARQUE",
-								"BABY COQUE",
-								"COQUY",
-								"L'OEUFS DE NOS VILLA",
-								"COQUEN'OR",
-								"LOUE",
-								"COCORETTE",
-								"LUSTUCRU",
-								"MIELS VILLENEUVE",
-								"OEUF ARRADOY",
-								"COTEAUX PEYRIGNAC",
-								"AVIBRESSE",
-								"BISCUITERIE COMTOISE",
-								"C'EST QUI LE PATRON",
-								"L'OEUF GASCON",
-								"LA NOUVELLE AGRICULTURE",
-								"MATINES",
-								"OEUFS TRADITION",
-								"OVALIS",
-								"PP BLANC",
-								"PP NO NAME",
-								"CRF CDM",
-								"L'OEUF RIESTAHL",
-								"LE CLOS ST JACQUES",
-								"LES CAMPAGNES",
-								"OEUF CHAMPAG.ARDENNE",
-								"OEUF VIEUX PRESSOIR",
-								"POULE HOUSE",
-								"SARL ROUSSILLON OEUF",
-								"SAINT AMAND",
-								"VITTEL",
-								"CRISTALINE",
-								"EVIAN",
-								"ABATILLES",
-								"COURMAYEUR",
-								"HEPAR",
-								"PLANCOET",
-								"VOLVIC",
-								"planet_drinks",
-								"CONTREX",
-								"MONT BLANC",
-								"MONT ROUCOUS",
-								"OGEU",
-								"PIERVAL",
-								"ST GEORGES",
-								"STE ALIX",
-								"THONON",
-								"WATTWILLER",
-								"AURELE",
-								"JOLIVAL",
-								"PERRIER",
-								"SAN PELLEGRINO",
-								"BABOIT",
-								"ROZANA",
-								"VALS",
-								"VICHY CELESTINS",
-								"ARCENS",
-								"QUEZAC",
-								"ST-YORRE",
-								"HIGHTLAND SPRING",
-								"OREZZA",
-								"PAROT",
-								"SALVETAT",
-								"ST ALBAN",
-								"ST YORRE",
-								"VERNIERE",
-								"BADOIT",
-								"CONTREX GREEN",
-								"VOLVICJUICY",
-								"PERRIER & JUICE",
-								"VITTEL UP",
-								"VOLVIC JUICY",
-								"COCA-COLA",
-								"COCA-COLA ZERO",
-								"BREIZH COLA",
-								"MEUH COLA",
-								"COCA COLA",
-								"CORSICA COLA",
-								"GALVANINA",
-								"HAMOUD BOUALEM",
-								"PEPSI",
-								"PEPSI MAX",
-								"QUEBEC",
-								"TETES BRULEES MIX & KIFF",
-								"LORINA",
-								"SCHWEPPES",
-								"7UP",
-								"BOX",
-								"FEVER TREE",
-								"SPRITE",
-								"BREIZH",
-								"BREIZH-LIMO",
-								"LA GOSSE",
-								"LEMONAID",
-								"LIMONETTE",
-								"MARIE DOLIN",
-								"ORIGINAL TONIC",
-								"VOSS",
-								"MONSTER ENERGY",
-								"RED BULL",
-								"CRAZY TIGER",
-								"MME GREEN",
-								"PSYCHIK",
-								"PUMA",
-								"DIUKE",
-								"HEROIC PLUS",
-								"MONSTER",
-								"POWERADE",
-								"AUCHAN",
-								"AUCHAN BIO",
-								"C'EST QUI LE PATRON?",
-								"POUCE",
-								"AUCHAN GOURMET",
-								"MADRANGE",
-								"MMM!",
-								"BROCELIANDE",
-								"NATURE DE FRANCE",
-								"POULEHOUSE",
-								"NESTLE",
-								"ST AMAND",
-								"VICHY ST YORRE",
-								"OASIS",
-								"TEISSEIRE",
-								"DR PEPPER",
-								"CANADA DRY",
-								"GINI",
-								"MEGA FORCE"
-							]
-
-							let label = ""
-							let image = ""
-							let packaging = ""
-							let format = ""
-							let price = ""
-							let unit_of_measure = ""
-							let per_unit_label = ""
-							let per_unit = ""
-							let uri = ""
-
-							if(el?.children[i]?.children[0]?.innerHTML !== "") {
-								label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[0]?.innerText
-								image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
-							}else {
-								label = el?.children[i]?.children[2]?.children[0]?.children[1]?.children[0]?.innerText
-								image = el?.children[i]?.children[2]?.children[0]?.children[0]?.children[0]?.children[1]?.children[0]?.getAttribute("src")
-							}
-
-							if(el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")) {
-								image = el?.children[i]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0]?.children[0]?.getAttribute("src")
-							}
-
-							if(el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.includes("€")) {
-								price = el?.children[i]?.children[2]?.children[1]?.children[1]?.children[0]?.children[1]?.innerText.replace("€", "")
-							}else {
-								price = el?.children[i]?.children[1]?.children[1]?.children[1]?.children[0]?.innerText.replace("€", "")
-							}
-
-							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "France" || el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.innerText === "Royaume Uni") {
-								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[0]?.innerText
-							}else {
-								packaging = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[1]?.children[0]?.innerText
-							}
-
-							if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText.includes("€ / ")) {
-								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[1]?.innerText
-							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText.includes("€ / ")) {
-								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[2]?.innerText
-							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText.includes("€ / ")) {
-								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[3]?.innerText
-							}else if(el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText.includes("€ / ")) {
-								per_unit_label = el?.children[i]?.children[1]?.children[0]?.children[1]?.children[2]?.children[4]?.innerText
-							}
-
-							unit_of_measure = per_unit_label.split("/")[1]?.trim()
-							per_unit = per_unit_label.split("/")[0]?.replace("€", "").trim()
-							uri = "https://www.auchan.fr" + el.children[i]?.children[1]?.children[0]?.getAttribute("href")
-
-							let marqueLabel = "SANS MARQUE"
-
-							for(let marque of marques) {
-								if(label?.toLowerCase().includes("auchan bio")) {
-									marqueLabel = "AUCHAN BIO"
-								}else if(label?.toLowerCase().includes("auchan")) {
-									marqueLabel = "AUCHAN"
-								}else if(label?.toLowerCase().includes(marque.toLowerCase())) {
-									marqueLabel = marque
-								}
-							}
-
-							let produit_images = [{
-								largest: image,
-								size_1500x1500: image,
-								size_540x540: image,
-								size_380x380: image,
-								size_340x340: image,
-								size_340x240: image,
-								size_280x280: image,
-								size_195x195: image,
-								size_150x150: image,
-								size_43x43: image
-							}]
-
-							products.push({
-								label,
-								ean: "",
-								brand: "",
-								slug: label?.toString().toLowerCase()
-										.replace(/\s+/g, '-')           // Replace spaces with -
-										.replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-										.replace(/\-\-+/g, '-')         // Replace multiple - with single -
-										.replace(/^-+/, '')             // Trim - from start of text
-										.replace(/-+$/, ''),
-								uri,
-								packaging,
-								origin: "",
-								format,
-								price,
-								unit_of_measure,
-								per_unit_label,
-								tax_message: "",
-								per_unit: per_unit,
-								provider: {
-									connect: {
-										label: "AUCHAN"
-									}
-								},
-								marque: {
-									connect: {
-										label: marqueLabel.toLowerCase()
-									}
-								},
-								produit_images: {
-									create: produit_images
-								},
-								produit_rayons: { }
-							})
-						}
-					}
-
-					return products
-				})
-
-				let produit_rayons = []
-
-				for(let r of rayon.rayons) {
-					produit_rayons = [...produit_rayons, {
-						rayon:{
-							connect: {
-								slug: r.slug
-							}
-						}
-					}]
-				}
-
-				let products = []
-				for(let data of datas) {
-					data.produit_rayons = {
-						create: produit_rayons
-					}
-					products = [...products, data]
-				}
-
-				results = results.concat(products)
-			}
-
-			await this.saveProduits(results)
-			await browser.close();
+			resolve(await fn())
 		})
 	}
 
 	async saveProduits(products) {
-		for(let product of products) {
-			//if(product.slug === "cubes-pour-brochette-de-gigot-sans-os-300g") {
-			//	console.log(product)
-			//}
-			let p = await this.ctx.prisma.produit.findOne({
-				where: {
-					slug: product.slug
-				}
-			})
-
-			if(!p) {
-				await this.ctx.prisma.produit.create({
-					data: product
+		for (let product of products) {
+			/*if(product.label == "Coca Cola 6x1,25l") {
+			}*/
+			//console.log(product.label)
+			//console.log(product.a)
+			if (product.slug) {
+				let p = await this.ctx.prisma.produit.findOne({
+					where: {
+						slug: product.slug
+					}
 				})
+
+				if (!p) {
+					await this.ctx.prisma.produit.create({
+						data: product
+					})
+				}
 			}
 		}
 	}

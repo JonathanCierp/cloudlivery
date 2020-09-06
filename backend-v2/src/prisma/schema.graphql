@@ -45,7 +45,7 @@ type Mutation {
   resetData: Default!
   resetPassword(email: String!): Default!
   resetPasswordSave(password: String!, token: String!): Default!
-  scrapingPuppeteer(end: String, start: String): Default!
+  scrapingPuppeteer(provider: String!): Default!
   setupDatas: Default!
   signin(email: String!, password: String!, rememberMe: Boolean! = false): AuthPayload!
   signout: Default!
