@@ -4,8 +4,6 @@ import { Repository } from "typeorm"
 import { ProvidersModel } from "./providers.model"
 import { ProviderInputDto } from "./dto/provider-input.dto"
 
-/*import { CreateUserDto } from './dto/create-user.dto';*/
-
 @Injectable()
 export class ProvidersService {
 	private logger = new Logger(ProvidersService.name)
@@ -19,8 +17,6 @@ export class ProvidersService {
 	 */
 	async findAll(): Promise<ProvidersModel[]>{
 		try {
-			const providers = await this.providersModel.find()
-
 			return await this.providersModel.find()
 		} catch (e) {
 			this.logger.error(`Erreur lors de la récupération des providers`, "PROVIDER")

@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql"
-import { RayonTypeDto } from "../../rayons/dto/rayon-type.dto"
+/*import { RayonTypeDto } from "../../rayons/dto/rayon-type.dto"*/
 
 @ObjectType()
 export class GroupRayonTypeDto {
@@ -15,6 +15,6 @@ export class GroupRayonTypeDto {
 	urlCarrefour?: string
 	@Field({ nullable: true })
 	urlAuchan?: string
-	@Field(type => [RayonTypeDto])
-	rayons?: RayonTypeDto[]
+	/*@Field(type => [RayonTypeDto])
+	rayons?: RayonTypeDto[]*/
 }

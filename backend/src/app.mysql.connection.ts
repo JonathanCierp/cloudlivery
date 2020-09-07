@@ -1,5 +1,4 @@
 import { TypeOrmModule } from "@nestjs/typeorm"
-import { ProvidersModel } from "./modules/providers/providers.model"
 
 export default TypeOrmModule.forRoot({
 	type: "mysql",

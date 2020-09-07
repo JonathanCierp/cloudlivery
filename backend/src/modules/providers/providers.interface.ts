@@ -1,6 +1,4 @@
-import { Document } from "mongoose"
-
-export interface ProvidersInterface extends Document {
+export interface ProvidersInterface {
 	id?: number
 	label: string
 	prefix_url?: string
