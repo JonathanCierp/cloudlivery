@@ -1,7 +1,5 @@
-import { Document } from "mongoose"
-
-export interface RayonsInterface extends Document {
-	id?: string
+export interface RayonsInterface {
+	id?: number
 	label: string
 	slug: string
 	uri?: string

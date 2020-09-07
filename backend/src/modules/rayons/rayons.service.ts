@@ -1,23 +1,23 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common"
-import { InjectModel } from "@nestjs/mongoose"
-import { Model } from "mongoose"
-import { RayonsInterface } from "./rayons.interface"
-import { RayonTypeDto } from "./dto/rayon-type.dto"
+import { InjectRepository } from "@nestjs/typeorm"
+import { Repository } from "typeorm"
+import { RayonsModel } from "./rayons.model"
 import { RayonInputDto } from "./dto/rayon-input.dto"
 
 @Injectable()
 export class RayonsService {
 	private logger = new Logger(RayonsService.name);
 
-	constructor(@InjectModel("Rayon") private rayonsInterface: Model<RayonsInterface>){ }
-
+	constructor(@InjectRepository(RayonsModel) private rayonsModel: Repository<RayonsModel>){
+	}
+	
 	/**
 	 * Get all the rayons
-	 * @return Promise<RayonTypeDto[]>
+	 * @return Promise<RayonsModel[]>
 	 */
-	async findAll(): Promise<RayonTypeDto[]>{
+	async findAll(): Promise<RayonsModel[]>{
 		try {
-			return await this.rayonsInterface.find().exec()
+			return await this.rayonsModel.find()
 		} catch (e) {
 			this.logger.error(`Erreur lors de la récupération des rayons`, "RAYON");
 			throw new HttpException(`Erreur lors de la récupération des rayons`, HttpStatus.BAD_REQUEST)
@@ -25,38 +25,35 @@ export class RayonsService {
 	}
 
 	/**
-	 * @param id String --> Get a rayon by id
-	 * @param label String --> Get a rayon by label
+	 * @param id Number --> Get a rayon by id
 	 * Get one rayon
-	 * @return Promise<RayonTypeDto>
+	 * @return Promise<RayonsModel>
 	 */
-	async findOne(id: string, label?: string): Promise<RayonTypeDto>{
+	async findOne(id: number): Promise<RayonsModel>{
 		try {
-			if(label) {
-				return await this.rayonsInterface.findOne({ label })
-			}
-
-			return await this.rayonsInterface.findOne({ _id: id })
+			return await this.rayonsModel.findOne(id)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la récupération du rayon: ${label || id}`, "RAYON");
-			throw new HttpException(`Erreur lors de la récupération du rayon: ${label || id}`, HttpStatus.BAD_REQUEST)
+			this.logger.error(`Erreur lors de la récupération du rayon: ${id}`, "RAYON");
+			throw new HttpException(`Erreur lors de la récupération du rayon: ${id}`, HttpStatus.BAD_REQUEST)
 		}
 	}
 
 	/**
 	 * @param createRayonDto RayonInputDto --> Payload send to create object
 	 * Create one rayon
-	 * @return Promise<RayonTypeDto>
+	 * @return Promise<RayonsModel>
 	 */
-	async create(createRayonDto: RayonInputDto): Promise<RayonTypeDto>{
+	async create(createRayonDto: RayonInputDto): Promise<RayonsModel>{
 		try {
-			const exist = await this.rayonsInterface.findOne({label: createRayonDto.label})
-			if(!exist) {
-				const createdRayon = new this.rayonsInterface(createRayonDto)
-				return await createdRayon.save()
+			const exist = await this.rayonsModel.findOne({where: {label: createRayonDto.label}})
+
+			if (!exist) {
+				return await this.rayonsModel.save(this.rayonsModel.create(createRayonDto))
 			}
+
+			throw new Error(`Erreur lors de la création du rayon: ${createRayonDto.label}`)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la création du rayon: ${createRayonDto.label}`, "RAYON");
+			this.logger.error(e.message, "RAYON")
 			throw new HttpException(`Erreur lors de la création du rayon: ${createRayonDto.label}`, HttpStatus.BAD_REQUEST)
 		}
 	}
@@ -64,81 +61,77 @@ export class RayonsService {
 	/**
 	 * @param createRayonDto RayonInputDto[] --> Contain all rayons
 	 * Create all rayons
-	 * @return Promise<RayonTypeDto[]>
+	 * @return Promise<RayonsModel[]>
 	 */
-	async createAll(createRayonDto: RayonInputDto[]): Promise<RayonTypeDto[]>{
+	async createAll(createRayonDto: RayonInputDto[]): Promise<RayonsModel[]>{
 		try {
-			let createRayonDtos = []
-			for (const createRayonDt of createRayonDto) {
-				const exist = await this.rayonsInterface.findOne({label: createRayonDt.label})
-				if(!exist) {
-					const createdRayon = new this.rayonsInterface(createRayonDt)
-					createRayonDtos = [...createRayonDtos, await createdRayon.save()]
-				}
+			const rayons = await this.rayonsModel.save(this.rayonsModel.create(createRayonDto))
+
+			if(rayons) {
+				return rayons
 			}
 
-			return createRayonDtos
+			throw new Error(`Erreur lors de la création des rayons`)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la création des rayons`, "RAYON");
+			this.logger.error(e.message, "RAYON");
 			throw new HttpException(`Erreur lors de la création des rayons`, HttpStatus.BAD_REQUEST)
 		}
 	}
 
 	/**
-	 * @param id String --> Delete a rayon by id
-	 * @param label String --> Delete a rayon by label
+	 * @param id Number --> Delete a rayon by id
 	 * Delete a rayon
-	 * @return Promise<RayonTypeDto>
+	 * @return Promise<RayonsModel>
 	 */
-	async delete(id: string, label?: string): Promise<RayonTypeDto>{
+	async delete(id: number): Promise<RayonsModel>{
+		let rayon = await this.rayonsModel.findOne(id)
 		try {
-			if(label) {
-				return await this.rayonsInterface.findOneAndDelete({ label })
+			if(await this.rayonsModel.remove(rayon)) {
+				return rayon
 			}
 
-			return await this.rayonsInterface.findOneAndDelete({ _id: id })
+			throw new Error(`Erreur lors de la suppression du rayon: ${rayon.label || id}`)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la suppression du rayon: ${label || id}`, "RAYON");
-			throw new HttpException(`Erreur lors de la suppression du rayon: ${label || id}`, HttpStatus.BAD_REQUEST)
+			this.logger.error(e.message, "RAYON");
+			throw new HttpException(`Erreur lors de la suppression du rayon: ${rayon.label || id}`, HttpStatus.BAD_REQUEST)
 		}
 	}
 
 	/**
 	 * Delete all rayons
-	 * @return Promise<RayonTypeDto[]>
+	 * @return Promise<RayonsModel[]>
 	 */
-	async deleteAll(): Promise<RayonTypeDto[]>{
+	async deleteAll(): Promise<RayonsModel[]>{
 		try {
-			let deleteRayonDtos = []
-			const rayons = await this.findAll()
-			for (let rayon of rayons) {
-				/*deleteRayonDtos = [...deleteRayonDtos, await this.rayonsInterface.findOneAndDelete(rayon.id)]*/
+			const rayons = await this.rayonsModel.find()
+
+			if(await this.rayonsModel.remove(rayons)) {
+				return rayons
 			}
 
-			return deleteRayonDtos
+			throw new Error(`Erreur lors de la suppression des rayons`)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la suppression des rayons`, "RAYON");
+			this.logger.error(e.message, "RAYON");
 			throw new HttpException(`Erreur lors de la suppression des rayons`, HttpStatus.BAD_REQUEST)
 		}
 	}
 
 	/**
-	 * @param id String --> Mofify a rayon by id
 	 * @param item RayonInputDto --> Payload send to modify object
-	 * @param label String --> Mofify a rayon by label
 	 * Update a rayon
-	 * @return Promise<RayonTypeDto>
+	 * @return Promise<RayonsModel>
 	 */
-	async update(id: string, item: RayonInputDto, label?: string): Promise<RayonTypeDto>{
+	async update(item: RayonInputDto): Promise<RayonsModel>{
+		const rayon = await this.rayonsModel.save(this.rayonsModel.create(item))
 		try {
-			if(label) {
-				return await this.rayonsInterface.findOneAndUpdate({ label }, item, {new: true})
+			if(rayon) {
+				return rayon
 			}
 
-			return await this.rayonsInterface.findByIdAndUpdate(id, item, {new: true})
+			throw new Error(`Erreur lors de la modification du rayon: ${rayon.label || rayon.id}`)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la modification du rayon: ${label || id}`, "RAYON");
-			throw new HttpException(`Erreur lors de la modification du rayon: ${label || id}`, HttpStatus.BAD_REQUEST)
+			this.logger.error(e.message, "RAYON");
+			throw new HttpException(`Erreur lors de la modification du rayon: ${rayon.label || rayon.id}`, HttpStatus.BAD_REQUEST)
 		}
 	}
 }

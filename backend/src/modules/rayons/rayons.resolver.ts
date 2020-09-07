@@ -1,81 +1,78 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
+import { Inject } from "@nestjs/common"
 import { RayonsService } from "./rayons.service"
-import { RayonTypeDto } from "./dto/rayon-type.dto"
 import { RayonInputDto } from "./dto/rayon-input.dto"
-/*import { rayons } from "../../sources"*/
+import { RayonsModel } from "./rayons.model"
+import { rayons } from "../../sources"
 
-@Resolver()
+@Resolver(of => RayonsModel)
 export class RayonsResolver {
-	constructor(private rayonsService: RayonsService){ }
-/*
-	/!**
+	constructor(@Inject(RayonsService) private rayonsService: RayonsService){ }
+
+	/**
 	 * Get all the rayons
-	 * @return Promise<RayonTypeDto[]>
-	 *!/
-	@Query(() => [RayonTypeDto])
-	async rayons(): Promise<RayonTypeDto[]>{
+	 * @return Promise<RayonsModel[]>
+	 */
+	@Query(() => [RayonsModel])
+	async rayons(): Promise<RayonsModel[]>{
 		return this.rayonsService.findAll()
 	}
 
-	/!**
-	 * @param id String --> Get a rayon by id
-	 * @param label String --> Get a rayon by label
+	/**
+	 * @param id Number --> Get a rayon by id
 	 * Get one rayon
-	 * @return Promise<RayonTypeDto>
-	 *!/
-	@Query(() => RayonTypeDto)
-	async rayon(@Args("id") id: string, @Args("label", { nullable: true }) label?: string): Promise<RayonTypeDto>{
-		return this.rayonsService.findOne(id, label)
+	 * @return Promise<RayonsModel>
+	 */
+	@Query(() => RayonsModel)
+	async rayon(@Args("id") id: number): Promise<RayonsModel>{
+		return this.rayonsService.findOne(id)
 	}
 
-	/!**
+	/**
 	 * @param input RayonInputDto --> Payload send to create object
 	 * Create one rayon
-	 * @return Promise<RayonTypeDto>
-	 *!/
-	@Mutation(() => RayonTypeDto)
-	async createRayon(@Args("input") input: RayonInputDto): Promise<RayonTypeDto>{
+	 * @return Promise<RayonsModel>
+	 */
+	@Mutation(() => RayonsModel)
+	async createRayon(@Args("input") input: RayonInputDto): Promise<RayonsModel>{
 		return this.rayonsService.create(input)
 	}
 
-	/!**
+	/**
 	 * Create all rayons
-	 * @return Promise<RayonTypeDto[]>
-	 *!/
-	@Mutation(() => [RayonTypeDto])
-	async createAllRayon(): Promise<RayonTypeDto[]>{
+	 * @return Promise<RayonsModel[]>
+	 */
+	@Mutation(() => [RayonsModel])
+	async createAllRayon(): Promise<RayonsModel[]>{
 		return this.rayonsService.createAll(rayons)
 	}
 
-	/!**
-	 * @param id String --> Delete a rayon by id
-	 * @param label String --> Delete a rayon by label
+	/**
+	 * @param id Number --> Delete a rayon by id
 	 * Delete a rayon
 	 * @return Promise<RayonTypeDto>
-	 *!/
-	@Mutation(() => RayonTypeDto)
-	async deleteRayon(@Args("id") id: string, @Args("label", { nullable: true }) label?: string): Promise<RayonTypeDto>{
-		return this.rayonsService.delete(id, label)
+	 */
+	@Mutation(() => RayonsModel)
+	async deleteRayon(@Args("id") id: number): Promise<RayonsModel>{
+		return this.rayonsService.delete(id)
 	}
 
-	/!**
+	/**
 	 * Delete all rayons
-	 * @return Promise<RayonTypeDto[]>
-	 *!/
-	@Mutation(() => [RayonTypeDto])
-	async deleteAllRayon(): Promise<RayonTypeDto[]>{
+	 * @return Promise<RayonsModel[]>
+	 */
+	@Mutation(() => [RayonsModel])
+	async deleteAllRayon(): Promise<RayonsModel[]>{
 		return this.rayonsService.deleteAll()
 	}
 
-	/!**
-	 * @param id String --> Mofify a rayon by id
+	/**
 	 * @param input RayonInputDto --> Payload send to modify object
-	 * @param label String --> Mofify a rayon by label
 	 * Update a rayon
-	 * @return Promise<RayonTypeDto>
-	 *!/
-	@Mutation(() => RayonTypeDto)
-	async updateRayon(@Args("id") id: string, @Args("input") input: RayonInputDto, @Args("label", { nullable: true }) label?: string): Promise<RayonTypeDto>{
-		return this.rayonsService.update(id, input, label)
-	}*/
+	 * @return Promise<RayonsModel>
+	 */
+	@Mutation(() => RayonsModel)
+	async updateRayon(@Args("input") input: RayonInputDto): Promise<RayonsModel>{
+		return this.rayonsService.update(input)
+	}
 }
