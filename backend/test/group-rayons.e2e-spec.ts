@@ -4,7 +4,9 @@ import { GraphQLModule } from "@nestjs/graphql"
 import * as request from "supertest"
 import { GroupRayonsModule } from "../src/modules/group-rayons/group-rayons.module"
 import { GroupRayonsInterface } from "../src/modules/group-rayons/group-rayons.interface"
-import { groupRayons} from "../src/sources"
+import { groupRayons, providers } from "../src/sources"
+import { ProvidersModule } from "../src/modules/providers/providers.module";
+import SqlConnection from "../src/app.mysql.connection";
 
 describe("GroupRayonsController (e2e)", () => {
 	let app
@@ -12,8 +14,8 @@ describe("GroupRayonsController (e2e)", () => {
 	beforeAll(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
-				GroupRayonsModule,
-				MongooseModule.forRoot("mongodb://localhost/cloudlivery"),
+				ProvidersModule,
+				SqlConnection,
 				GraphQLModule.forRoot({
 					autoSchemaFile: "schema.gql",
 				}),
@@ -94,7 +96,10 @@ describe("GroupRayonsController (e2e)", () => {
 		return JSON.stringify(groupRayon).replace(/\"([^(\")"]+)\":/g, "$1:")
 	}
 
-/*	it("deleteAllGroupRayon", () => {
+	it("test", () => {
+		expect(1).toEqual(1)
+	})
+	/*	it("deleteAllGroupRayon", () => {
 		const deleteAllGroupRayonMutation = `
 		mutation {
 			deleteAllGroupRayon {

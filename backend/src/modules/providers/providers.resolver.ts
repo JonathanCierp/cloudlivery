@@ -18,14 +18,13 @@ export class ProvidersResolver {
 		return this.providersService.findAll()
 	}
 		/**
-		 * @param id String --> Get a provider by id
-		 * @param label String --> Get a provider by label
+		 * @param id Number --> Get a provider by id
 		 * Get one provider
 		 * @return Promise<ProvidersModel>
 		 */
 		@Query(() => ProvidersModel)
-		async provider(@Args("id") id: string, @Args("label", { nullable: true }) label?: string): Promise<ProvidersModel>{
-			return this.providersService.findOne(id, label)
+		async provider(@Args("id") id: number): Promise<ProvidersModel>{
+			return this.providersService.findOne(id)
 		}
 
 		/**
@@ -48,7 +47,7 @@ export class ProvidersResolver {
 		}
 
 		/**
-		 * @param id String --> Delete a provider by id
+		 * @param id Number --> Delete a provider by id
 		 * Delete a provider
 		 * @return Promise<ProvidersModel>
 		 */
@@ -67,9 +66,7 @@ export class ProvidersResolver {
 		}
 
 		/**
-		 * @param id String --> Mofify a provider by id
 		 * @param input ProviderInputDto --> Payload send to modify object
-		 * @param label String --> Mofify a provider by label
 		 * Update a provider
 		 * @return Promise<ProvidersModel>
 		 */

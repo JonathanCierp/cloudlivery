@@ -19,7 +19,7 @@ bootstrap();
  **** delete --> OK
  **** deleteAll --> OK
  **** update --> OK
- **** Test unitaires --> NOK
+ **** Test unitaires --> OK
  * RAYONS :
  **** findAll --> NOK
  **** findOne --> NOK

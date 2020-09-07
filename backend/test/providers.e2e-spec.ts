@@ -1,10 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing"
-import { MongooseModule } from "@nestjs/mongoose"
 import { GraphQLModule } from "@nestjs/graphql"
 import * as request from "supertest"
 import { ProvidersModule } from "../src/modules/providers/providers.module"
 import { ProvidersInterface } from "../src/modules/providers/providers.interface"
 import { providers } from "../src/sources"
+import SqlConnection from "../src/app.mysql.connection";
 
 describe("ProvidersController (e2e)", () => {
 	let app
@@ -13,7 +13,7 @@ describe("ProvidersController (e2e)", () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
 				ProvidersModule,
-				MongooseModule.forRoot("mongodb://localhost/cloudlivery"),
+				SqlConnection,
 				GraphQLModule.forRoot({
 					autoSchemaFile: "schema.gql",
 				}),
@@ -28,12 +28,17 @@ describe("ProvidersController (e2e)", () => {
 		await app.close()
 	})
 
+	const FindId: number = 46 // id auchan + 5
+	const UpdateId: number = 46 // id auchan + 5
+	const DeleteId: number = 46 // id auchan + 5
+
 	const provider: ProvidersInterface = {
 		label: "LABEL_TEST_1",
 		prefix_url: "PREFIX_URL_TEST_1"
 	}
 
 	const providerUpdated: ProvidersInterface = {
+		id: UpdateId,
 		label: "LABEL_TEST_2",
 		prefix_url: "PREFIX_URL_TEST_2"
 	}
@@ -46,7 +51,11 @@ describe("ProvidersController (e2e)", () => {
 		const deleteAllProviderMutation = `
 		mutation {
 			deleteAllProvider {
-				label
+					id
+					label
+					prefix_url
+					updatedAt
+					createdAt
 			}
 		}`
 
@@ -75,6 +84,8 @@ describe("ProvidersController (e2e)", () => {
 					id
 					label
 					prefix_url
+					updatedAt
+					createdAt
 				}
 			}`
 
@@ -100,7 +111,11 @@ describe("ProvidersController (e2e)", () => {
 		const findAllProviderQuery = `
 		query {
 			providers {
+				id
 				label
+				prefix_url
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -126,8 +141,11 @@ describe("ProvidersController (e2e)", () => {
 		const createProviderMutation = `
 		mutation {
 			createProvider(input: ${buildArg(provider)}) {
+				id
 				label
 				prefix_url
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -146,34 +164,15 @@ describe("ProvidersController (e2e)", () => {
 			.expect(200)
 	})
 
-	it("findProvider", () => {
-		const findProviderQuery = `
-		query {
-			provider(id: "", label: "AUCHAN") {
-				label
-			}
-		}`
-
-		return request(app.getHttpServer())
-			.post("/graphql")
-			.send({
-				operationName: null,
-				query: findProviderQuery,
-			})
-			.expect(({body}) => {
-				const data: ProvidersInterface = body.data.provider
-
-				expect(data.label).toEqual("AUCHAN")
-			})
-			.expect(200)
-	})
-
 	it("updateProvider", () => {
 		const updateProviderMutation = `
 		mutation {
-			updateProvider(id: "", input: ${buildArg(providerUpdated)}, label: "LABEL_TEST_1") {
+			updateProvider(input: ${buildArg(providerUpdated)}) {
+				id
 				label
 				prefix_url
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -192,11 +191,41 @@ describe("ProvidersController (e2e)", () => {
 			.expect(200)
 	})
 
+	it("findProvider", () => {
+		const findProviderQuery = `
+		query {
+			provider(id: ${FindId}) {
+				id
+				label
+				prefix_url
+				updatedAt
+				createdAt
+			}
+		}`
+
+		return request(app.getHttpServer())
+			.post("/graphql")
+			.send({
+				operationName: null,
+				query: findProviderQuery,
+			})
+			.expect(({body}) => {
+				const data: ProvidersInterface = body.data.provider
+
+				expect(data.label).toEqual("LABEL_TEST_2")
+			})
+			.expect(200)
+	})
+
 	it("deleteProvider", () => {
 		const deleteProviderMutation = `
 		mutation {
-			deleteProvider(id: "", label: "LABEL_TEST_2") {
+			deleteProvider(id: ${DeleteId}) {
+				id
 				label
+				prefix_url
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -209,7 +238,7 @@ describe("ProvidersController (e2e)", () => {
 			.expect(({body}) => {
 				const data: ProvidersInterface = body.data.deleteProvider
 
-				expect(data.label).toEqual("LABEL_TEST_2")
+				expect(data.label).toEqual(providerUpdated.label)
 			})
 			.expect(200)
 	})

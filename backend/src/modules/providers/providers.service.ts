@@ -30,23 +30,16 @@ export class ProvidersService {
 
 
 	/**
-	 * @param id String --> Get a provider by id
-	 * @param label String --> Get a provider by label
+	 * @param id Number --> Get a provider by id
 	 * Get one provider
 	 * @return Promise<ProvidersModel>
 	 */
-	async findOne(id: string, label?: string): Promise<ProvidersModel>{
+	async findOne(id: number): Promise<ProvidersModel>{
 		try {
-			let provider = await this.providersModel.findOne(id)
-
-			if (label) {
-				provider = await this.providersModel.findOne({label})
-			}
-
-			return provider
+			return await this.providersModel.findOne(id)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la récupération du provider: ${label || id}`, "PROVIDER")
-			throw new HttpException(`Erreur lors de la récupération du provider: ${label || id}`, HttpStatus.BAD_REQUEST)
+			this.logger.error(`Erreur lors de la récupération du provider: ${id}`, "PROVIDER")
+			throw new HttpException(`Erreur lors de la récupération du provider: ${id}`, HttpStatus.BAD_REQUEST)
 		}
 	}
 
@@ -91,7 +84,7 @@ export class ProvidersService {
 	}
 
 	/**
-	 * @param id String --> Delete a provider by id
+	 * @param id Number --> Delete a provider by id
 	 * Delete a provider
 	 * @return Promise<ProvidersModel>
 	 */
@@ -129,9 +122,7 @@ export class ProvidersService {
 	}
 
 	/**
-	 * @param id String --> Mofify a provider by id
 	 * @param item providersModel --> Payload send to modify object
-	 * @param label String --> Mofify a provider by label
 	 * Update a provider
 	 * @return Promise<ProvidersModel>
 	 */

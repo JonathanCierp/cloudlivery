@@ -17,7 +17,7 @@ scalar DateTime
 
 type Query {
   providers: [ProvidersModel!]!
-  provider(label: String, id: String!): ProvidersModel!
+  provider(id: Float!): ProvidersModel!
 }
 
 type Mutation {
