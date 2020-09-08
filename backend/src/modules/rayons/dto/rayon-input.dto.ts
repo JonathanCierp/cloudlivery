@@ -2,6 +2,8 @@ import { InputType, Field, Int } from "@nestjs/graphql"
 
 @InputType()
 export class RayonInputDto {
+	@Field({ nullable: true })
+	id?: number
 	@Field()
 	label: string
 	@Field()

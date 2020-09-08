@@ -1,11 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing"
-import { MongooseModule } from "@nestjs/mongoose"
 import { GraphQLModule } from "@nestjs/graphql"
 import * as request from "supertest"
 import { RayonsModule } from "../src/modules/rayons/rayons.module"
 import { RayonsInterface } from "../src/modules/rayons/rayons.interface"
 import { rayons } from "../src/sources"
-import { ProvidersModule } from "../src/modules/providers/providers.module";
 import SqlConnection from "../src/app.mysql.connection";
 
 describe("RayonsController (e2e)", () => {
@@ -14,7 +12,7 @@ describe("RayonsController (e2e)", () => {
 	beforeAll(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
-				ProvidersModule,
+				RayonsModule,
 				SqlConnection,
 				GraphQLModule.forRoot({
 					autoSchemaFile: "schema.gql",
@@ -30,19 +28,24 @@ describe("RayonsController (e2e)", () => {
 		await app.close()
 	})
 
+	const FindId: number = 51
+	const UpdateId: number = 51
+	const DeleteId: number = 51
+
 	const rayon: RayonsInterface = {
-		code: "CODE_TEST_3",
-		label: "LABEL_TEST_3",
-		slug: "SLUG_TEST_3",
-		uri: "URI_TEST_3",
+		code: "CODE_TEST_0",
+		label: "LABEL_TEST_0",
+		slug: "SLUG_TEST_0",
+		uri: "URI_TEST_0",
 		level: 1
 	}
 
 	const rayonUpdated: RayonsInterface = {
-		code: "CODE_TEST_4",
-		label: "LABEL_TEST_4",
-		slug: "SLUG_TEST_4",
-		uri: "URI_TEST_4",
+		id: UpdateId,
+		code: "CODE_TEST_1",
+		label: "LABEL_TEST_1",
+		slug: "SLUG_TEST_1",
+		uri: "URI_TEST_1",
 		level: 1
 	}
 
@@ -50,15 +53,18 @@ describe("RayonsController (e2e)", () => {
 		return JSON.stringify(rayon).replace(/\"([^(\")"]+)\":/g, "$1:")
 	}
 
-	it("testa", () => {
-		expect(1).toEqual(1)
-	})
-/*
 	it("deleteAllRayon", () => {
 		const deleteAllRayonMutation = `
 		mutation {
 			deleteAllRayon {
-				label
+					id
+					code
+					label
+					slug
+					uri
+					level
+					updatedAt
+					createdAt
 			}
 		}`
 
@@ -71,9 +77,9 @@ describe("RayonsController (e2e)", () => {
 			.expect(({body}) => {
 				const data: RayonsInterface[] = body.data.deleteAllRayon
 
-				expect(data.length).toEqual(rayons.length)
+				expect(rayons.length).toEqual(data.length)
 				rayons.forEach((rayon, index) => {
-					expect(data[index].label).toBe(rayon.label)
+					expect(rayon.label).toBe(data[index].label)
 				})
 
 			})
@@ -90,6 +96,8 @@ describe("RayonsController (e2e)", () => {
 					slug
 					uri
 					level
+					updatedAt
+					createdAt
 				}
 			}`
 
@@ -102,9 +110,9 @@ describe("RayonsController (e2e)", () => {
 			.expect(({body}) => {
 				const data: RayonsInterface[] = body.data.createAllRayon
 
-				expect(data.length).toEqual(rayons.length)
+				expect(rayons.length).toEqual(data.length)
 				rayons.forEach((rayon, index) => {
-					expect(data[index].label).toBe(rayon.label)
+					expect(rayon.label).toBe(data[index].label)
 				})
 
 			})
@@ -115,7 +123,14 @@ describe("RayonsController (e2e)", () => {
 		const findAllRayonQuery = `
 		query {
 			rayons {
+				id
+				code
 				label
+				slug
+				uri
+				level
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -128,33 +143,11 @@ describe("RayonsController (e2e)", () => {
 			.expect(({body}) => {
 				const data: RayonsInterface[] = body.data.rayons
 
-				expect(data.length).toEqual(rayons.length)
+				expect(rayons.length).toEqual(data.length)
 				rayons.forEach((rayon, index) => {
-					expect(data[index].label).toBe(rayon.label)
+					expect(rayon.label).toBe(data[index].label)
 				})
 
-			})
-			.expect(200)
-	})
-
-	it("findRayon", () => {
-		const findRayonQuery = `
-		query {
-			rayon(id: "", label: "LABEL_TEST_0") {
-				label
-			}
-		}`
-
-		return request(app.getHttpServer())
-			.post("/graphql")
-			.send({
-				operationName: null,
-				query: findRayonQuery,
-			})
-			.expect(({body}) => {
-				const data: RayonsInterface = body.data.rayon
-
-				expect(data.label).toEqual("LABEL_TEST_0")
 			})
 			.expect(200)
 	})
@@ -164,8 +157,13 @@ describe("RayonsController (e2e)", () => {
 		mutation {
 			createRayon(input: ${buildArg(rayon)}) {
 				id
+				code
 				label
 				slug
+				uri
+				level
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -178,7 +176,7 @@ describe("RayonsController (e2e)", () => {
 			.expect(({body}) => {
 				const data: RayonsInterface = body.data.createRayon
 
-				expect(data.label).toEqual("LABEL_TEST_3")
+				expect(data.label).toEqual("LABEL_TEST_0")
 			})
 			.expect(200)
 	})
@@ -186,9 +184,15 @@ describe("RayonsController (e2e)", () => {
 	it("updateRayon", () => {
 		const updateRayonMutation = `
 		mutation {
-			updateRayon(id: "", input: ${buildArg(rayonUpdated)}, label: "LABEL_TEST_3") {
+			updateRayon(input: ${buildArg(rayonUpdated)}) {
+				id
+				code
 				label
 				slug
+				uri
+				level
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -207,11 +211,49 @@ describe("RayonsController (e2e)", () => {
 			.expect(200)
 	})
 
+	it("findRayon", () => {
+		const findRayonQuery = `
+		query {
+			rayon(id: ${FindId}) {
+				id
+				code
+				label
+				slug
+				uri
+				level
+				updatedAt
+				createdAt
+			}
+		}`
+
+		return request(app.getHttpServer())
+			.post("/graphql")
+			.send({
+				operationName: null,
+				query: findRayonQuery,
+			})
+			.expect(({body}) => {
+				const data: RayonsInterface = body.data.rayon
+
+				expect(data.label).toEqual("LABEL_TEST_1")
+				expect(data.slug).toEqual("SLUG_TEST_1")
+				expect(data.uri).toEqual("URI_TEST_1")
+			})
+			.expect(200)
+	})
+
 	it("deleteRayon", () => {
 		const deleteRayonMutation = `
 		mutation {
-			deleteRayon(id: "", label: "LABEL_TEST_4") {
+			deleteRayon(id: ${DeleteId}) {
+				id
+				code
 				label
+				slug
+				uri
+				level
+				updatedAt
+				createdAt
 			}
 		}`
 
@@ -224,8 +266,10 @@ describe("RayonsController (e2e)", () => {
 			.expect(({body}) => {
 				const data: RayonsInterface = body.data.deleteRayon
 
-				expect(data.label).toEqual("LABEL_TEST_4")
+				expect(data.label).toEqual("LABEL_TEST_1")
+				expect(data.slug).toEqual("SLUG_TEST_1")
+				expect(data.uri).toEqual("URI_TEST_1")
 			})
 			.expect(200)
-	})*/
+	})
 })
