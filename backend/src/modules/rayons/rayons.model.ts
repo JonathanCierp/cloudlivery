@@ -1,12 +1,21 @@
 import { ObjectType, Field, Int } from "@nestjs/graphql"
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from "typeorm"
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+	CreateDateColumn,
+	ManyToMany,
+	JoinTable
+} from "typeorm"
+import { GroupsModel } from "../groups/groups.model";
 
 @ObjectType()
 @Entity("rayons")
 export class RayonsModel {
 	@Field({nullable: true})
 	@PrimaryGeneratedColumn()
-	id: number
+	id?: number
 
 	@Field()
 	@Column({length: 255, unique: true})

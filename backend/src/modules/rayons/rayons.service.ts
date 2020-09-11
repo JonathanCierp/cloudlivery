@@ -3,135 +3,217 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { RayonsModel } from "./rayons.model"
 import { RayonInputDto } from "./dto/rayon-input.dto"
+import { AppService } from "../../app.service";
+import { RayonsInterface } from "./rayons.interface";
+import { RayonResponseDto } from "./dto/rayon-response.dto";
+import { ProviderResponseDto } from "../providers/dto/provider-response.dto";
 
 @Injectable()
-export class RayonsService {
+export class RayonsService extends AppService implements RayonsInterface {
 	private logger = new Logger(RayonsService.name);
+	protected item?: RayonsModel | undefined
+	protected items?: RayonsModel[] | undefined
 
 	constructor(@InjectRepository(RayonsModel) private rayonsModel: Repository<RayonsModel>){
+		super()
 	}
-	
+
+	formattedResponseRayons(): RayonResponseDto {
+		return {
+			...this.formattedResponse(),
+			items: this.items,
+			item: this.item
+		}
+	}
+
 	/**
 	 * Get all the rayons
-	 * @return Promise<RayonsModel[]>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async findAll(): Promise<RayonsModel[]>{
+	async findAll(): Promise<RayonResponseDto>{
 		try {
-			return await this.rayonsModel.find()
+			this.code = HttpStatus.OK
+			this.details = null
+			this.message = "Rayons récupérés avec succès."
+			this.items = await this.rayonsModel.find()
 		} catch (e) {
-			this.logger.error(`Erreur lors de la récupération des rayons`, "RAYON");
-			throw new HttpException(`Erreur lors de la récupération des rayons`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = `Erreur lors de la récupération des rayons.`
+			this.logger.error(this.details, "RAYON");
+			this.message = `Erreur lors de la récupération des rayons.`
+			this.items = null
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
 	 * @param id Number --> Get a rayon by id
 	 * Get one rayon
-	 * @return Promise<RayonsModel>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async findOne(id: number): Promise<RayonsModel>{
+	async findOne(id: number): Promise<RayonResponseDto>{
 		try {
-			return await this.rayonsModel.findOne(id)
+			this.code = HttpStatus.OK
+			this.details = null
+			this.message = "Rayon récupéré avec succès."
+			this.item = await this.rayonsModel.findOne(id)
 		} catch (e) {
-			this.logger.error(`Erreur lors de la récupération du rayon: ${id}`, "RAYON");
-			throw new HttpException(`Erreur lors de la récupération du rayon: ${id}`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = `Erreur lors de la récupération du rayons: ${id}.`
+			this.logger.error(this.details, "RAYON");
+			this.message = `Erreur lors de la récupération du rayons.`
+			this.item = null
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
-	 * @param createRayonDto RayonInputDto --> Payload send to create object
+	 * @param rayonInputDto RayonInputDto --> Payload send to create object
 	 * Create one rayon
-	 * @return Promise<RayonsModel>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async create(createRayonDto: RayonInputDto): Promise<RayonsModel>{
+	async create(rayonInputDto: RayonInputDto): Promise<RayonResponseDto>{
 		try {
-			const exist = await this.rayonsModel.findOne({where: {label: createRayonDto.label}})
+			this.code = HttpStatus.OK
+			this.details = null
 
-			if (!exist) {
-				return await this.rayonsModel.save(this.rayonsModel.create(createRayonDto))
+			const exist = await this.rayonsModel.findOne({where: {label: rayonInputDto.label}})
+
+			if(exist) {
+				this.message = "Erreur un rayon existe déjà avec ce nom."
+				throw new Error(`Erreur lors de la création du rayon: ${rayonInputDto.label}.`)
 			}
 
-			throw new Error(`Erreur lors de la création du rayon: ${createRayonDto.label}`)
+			this.item = await this.rayonsModel.save(this.rayonsModel.create(rayonInputDto))
+			this.message = "Rayon créé avec succès."
 		} catch (e) {
-			this.logger.error(e.message, "RAYON")
-			throw new HttpException(`Erreur lors de la création du rayon: ${createRayonDto.label}`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = e.message
+			this.logger.error(this.details, "RAYON");
+			this.message = this.message || `Erreur lors de la création du rayon: ${rayonInputDto.label}.`
+			this.item = null
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
-	 * @param createRayonDto RayonInputDto[] --> Contain all rayons
+	 * @param rayonInputDto RayonInputDto[] --> Contain all rayons
 	 * Create all rayons
-	 * @return Promise<RayonsModel[]>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async createAll(createRayonDto: RayonInputDto[]): Promise<RayonsModel[]>{
+	async createAll(rayonInputDto: RayonInputDto[]): Promise<RayonResponseDto>{
 		try {
-			const rayons = await this.rayonsModel.save(this.rayonsModel.create(createRayonDto))
+			this.code = HttpStatus.OK
+			this.details = null
 
-			if(rayons) {
-				return rayons
+			this.items = await this.rayonsModel.save(this.rayonsModel.create(rayonInputDto))
+
+			if(!this.items) {
+				throw new Error(`Erreur lors de la création des rayons.`)
 			}
 
-			throw new Error(`Erreur lors de la création des rayons`)
+			this.message = "Rayons créés avec succès."
 		} catch (e) {
-			this.logger.error(e.message, "RAYON");
-			throw new HttpException(`Erreur lors de la création des rayons`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = e.message
+			this.logger.error(this.details, "RAYON");
+			this.message = `Erreur lors de la création des rayons.`
+			this.items = null
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
 	 * @param id Number --> Delete a rayon by id
 	 * Delete a rayon
-	 * @return Promise<RayonsModel>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async delete(id: number): Promise<RayonsModel>{
-		let rayon = await this.rayonsModel.findOne(id)
+	async delete(id: number): Promise<RayonResponseDto>{
 		try {
-			if(await this.rayonsModel.remove(rayon)) {
-				return rayon
+			this.code = HttpStatus.OK
+			this.details = null
+
+			if(!await this.rayonsModel.remove(await this.rayonsModel.findOne(id))) {
+				throw new Error(`Erreur lors de la suppression du rayon: ${id}.`)
 			}
 
-			throw new Error(`Erreur lors de la suppression du rayon: ${rayon.label || id}`)
+			this.message = "Rayon supprimé avec succès."
 		} catch (e) {
-			this.logger.error(e.message, "RAYON");
-			throw new HttpException(`Erreur lors de la suppression du rayon: ${rayon.label || id}`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = e.message
+			this.logger.error(this.details, "RAYON");
+			this.message = `Erreur lors de la suppression de ce rayon.`
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
 	 * Delete all rayons
-	 * @return Promise<RayonsModel[]>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async deleteAll(): Promise<RayonsModel[]>{
+	async deleteAll(): Promise<RayonResponseDto>{
 		try {
-			const rayons = await this.rayonsModel.find()
+			this.code = HttpStatus.OK
+			this.details = null
 
-			if(await this.rayonsModel.remove(rayons)) {
-				return rayons
+			if(!await this.rayonsModel.remove(await this.rayonsModel.find())) {
+				throw new Error(`Erreur lors de la suppression des rayons.`)
 			}
-
-			throw new Error(`Erreur lors de la suppression des rayons`)
+			this.message = "Rayons supprimés avec succès."
 		} catch (e) {
-			this.logger.error(e.message, "RAYON");
-			throw new HttpException(`Erreur lors de la suppression des rayons`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = e.message
+			this.logger.error(this.details, "RAYON");
+			this.message = `Erreur lors de la suppression des rayons.`
 		}
+
+		return this.formattedResponseRayons()
 	}
 
 	/**
-	 * @param item RayonInputDto --> Payload send to modify object
+	 * @param rayonInputDto RayonInputDto --> Payload send to modify object
 	 * Update a rayon
-	 * @return Promise<RayonsModel>
+	 * @return Promise<RayonResponseDto>
 	 */
-	async update(item: RayonInputDto): Promise<RayonsModel>{
-		const rayon = await this.rayonsModel.save(this.rayonsModel.create(item))
+	async update(rayonInputDto: RayonInputDto): Promise<RayonResponseDto>{
 		try {
-			if(rayon) {
-				return rayon
+			this.code = HttpStatus.OK
+			this.details = null
+
+			const exist = await this.rayonsModel.findOne({where: {label: rayonInputDto.label}})
+
+			if(exist) {
+				if(exist.id !== rayonInputDto.id) {
+					this.message = "Erreur un rayon existe déjà avec ce nom."
+					throw new Error(`Erreur lors de la modification du rayon: ${rayonInputDto.label}.`)
+				}
 			}
 
-			throw new Error(`Erreur lors de la modification du rayon: ${rayon.label || rayon.id}`)
+			const existById = await this.rayonsModel.findOne({where: {id: rayonInputDto.id}})
+
+			if(existById) {
+				this.item = await this.rayonsModel.save(this.rayonsModel.create(rayonInputDto))
+			}
+
+			if(!this.item) {
+				this.message = "Erreur ce rayon n'existe pas."
+				throw new Error(`Erreur lors de la modification du rayon: ${rayonInputDto.label}.`)
+			}
+
+			this.message = "Rayon modifié avec succès."
 		} catch (e) {
-			this.logger.error(e.message, "RAYON");
-			throw new HttpException(`Erreur lors de la modification du rayon: ${rayon.label || rayon.id}`, HttpStatus.BAD_REQUEST)
+			this.code = HttpStatus.BAD_REQUEST
+			this.details = e.message
+			this.logger.error(this.details, "RAYON");
+			this.message = this.message || `Erreur lors de la modification du rayon.`
+			this.item = null
 		}
+
+		return this.formattedResponseRayons()
 	}
 }
