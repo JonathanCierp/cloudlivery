@@ -47,7 +47,7 @@ export class AppLogger extends Logger implements LoggerService {
 		const hours = now.getHours() < 10 ? `0${now.getHours()}` : now.getHours()
 		const minutes = now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes()
 		const seconds = now.getSeconds() < 10 ? `0${now.getSeconds()}` : now.getSeconds()
-		const filePath = `${path}/log-${year}-${month}-${day}.txt`
+		const filePath = `${path}/log-${year}-${month}-${day}.log`
 		const date = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 		const fullMessage = `[${type}]  [${scope}]  ${date}  -  ${message}\n`
 

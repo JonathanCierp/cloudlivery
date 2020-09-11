@@ -5,7 +5,7 @@
 type ProvidersModel {
   id: Float
   label: String!
-  prefix_url: String
+  prefixUrl: String
   updatedAt: DateTime
   createdAt: DateTime
 }
@@ -15,21 +15,106 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ProviderResponseDto {
+  message: String
+  details: String
+  code: Float
+  item: ProvidersModel
+  items: [ProvidersModel!]
+}
+
+type RayonsModel {
+  id: Float
+  label: String!
+  slug: String!
+  uri: String!
+  code: String!
+  level: Int!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type RayonResponseDto {
+  message: String
+  details: String
+  code: Float
+  item: RayonsModel
+  items: [RayonsModel!]
+}
+
+type GroupsModel {
+  id: Float
+  label: String!
+  slug: String!
+  type: String!
+  urlCarrefour: String!
+  urlAuchan: String!
+  rayons: [RayonsModel!]
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type GroupResponseDto {
+  message: String
+  details: String
+  code: Float
+  item: GroupsModel
+  items: [GroupsModel!]
+}
+
 type Query {
-  providers: [ProvidersModel!]!
-  provider(id: Float!): ProvidersModel!
+  providers: ProviderResponseDto!
+  provider(id: Float!): ProviderResponseDto!
+  rayons: RayonResponseDto!
+  rayon(id: Float!): RayonResponseDto!
+  groups: GroupResponseDto!
+  group(id: Float!): GroupResponseDto!
 }
 
 type Mutation {
-  createProvider(input: ProviderInputDto!): ProvidersModel!
-  createAllProvider: [ProvidersModel!]!
-  deleteProvider(id: Float!): ProvidersModel!
-  deleteAllProvider: [ProvidersModel!]!
-  updateProvider(input: ProviderInputDto!): ProvidersModel!
+  createProvider(input: ProviderInputDto!): ProviderResponseDto!
+  createAllProvider: ProviderResponseDto!
+  deleteProvider(id: Float!): ProviderResponseDto!
+  deleteAllProvider: ProviderResponseDto!
+  updateProvider(input: ProviderInputDto!): ProviderResponseDto!
+  createRayon(input: RayonInputDto!): RayonResponseDto!
+  createAllRayon: RayonResponseDto!
+  deleteRayon(id: Float!): RayonResponseDto!
+  deleteAllRayon: RayonResponseDto!
+  updateRayon(input: RayonInputDto!): RayonResponseDto!
+  createGroup(input: GroupInputDto!): GroupResponseDto!
+  createAllGroup: GroupResponseDto!
+  deleteGroup(id: Float!): GroupResponseDto!
+  deleteAllGroup: GroupResponseDto!
+  updateGroup(input: GroupInputDto!): GroupResponseDto!
 }
 
 input ProviderInputDto {
   id: Float
   label: String!
-  prefix_url: String
+  prefixUrl: String
+}
+
+input RayonInputDto {
+  id: Float
+  label: String!
+  slug: String!
+  uri: String
+  code: String
+  level: Int
+}
+
+input GroupInputDto {
+  id: Float
+  label: String!
+  slug: String!
+  type: String!
+  urlCarrefour: String!
+  urlAuchan: String!
+  rayons: [RayonRelationDto!]
+}
+
+input RayonRelationDto {
+  id: Float
+  label: String
 }

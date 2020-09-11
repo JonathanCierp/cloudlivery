@@ -19,7 +19,7 @@ bootstrap();
  **** delete --> OK
  **** deleteAll --> OK
  **** update --> OK
- **** Test unitaires --> OK
+ **** Test unitaires --> NOK
  * RAYONS :
  **** findAll --> OK
  **** findOne --> OK
@@ -28,14 +28,14 @@ bootstrap();
  **** delete --> OK
  **** deleteAll --> OK
  **** update --> OK
- **** Test unitaires --> OK
- * GROUPE RAYONS :
- **** findAll --> NOK
- **** findOne --> NOK
- **** create --> NOK
- **** createAll --> NOK
- **** delete --> NOK
- **** deleteAll --> NOK
- **** update --> NOK
+ **** Test unitaires --> NOK
+ * GROUPS :
+ **** findAll --> OK
+ **** findOne --> OK
+ **** create --> OK
+ **** createAll --> OK
+ **** delete --> OK
+ **** deleteAll --> OK
+ **** update --> OK
  **** Test unitaires --> NOK
  */

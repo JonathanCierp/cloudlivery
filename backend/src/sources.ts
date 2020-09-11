@@ -1,19 +1,19 @@
 import { ProviderInputDto } from "./modules/providers/dto/provider-input.dto"
 import { RayonInputDto } from "./modules/rayons/dto/rayon-input.dto"
-import { GroupRayonInputDto } from "./modules/group-rayons/dto/group-rayon-input.dto"
+import { GroupInputDto } from "./modules/groups/dto/group-input.dto";
 
 export const providers: ProviderInputDto[] = [
 	{
 		label: "AUCHAN",
-		prefix_url: "https://www.auchan.com"
+		prefixUrl: "https://www.auchan.com"
 	},
 	{
 		label: "CARREFOUR",
-		prefix_url: "https://www.carrefour.fr"
+		prefixUrl: "https://www.carrefour.fr"
 	},
 	{
 		label: "LABEL_TEST_0 ",
-		prefix_url: "PREFIX_URL_TEST_0 "
+		prefixUrl: "PREFIX_URL_TEST_0 "
 	}
 ]
 
@@ -195,7 +195,7 @@ export const rayons: RayonInputDto[] = [
 	}
 ]
 
-export const groupRayons: GroupRayonInputDto[] = [
+export const groups: GroupInputDto[] = [
 	{
 		label: "Lait demi-écrémé",
 		slug: "lait-demi-ecreme",
@@ -204,25 +204,13 @@ export const groupRayons: GroupRayonInputDto[] = [
 		urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-demi-ecreme/ca-n01010101",
 		rayons: [
 			{
-				code: "R01",
-				label: "Crémerie",
-				slug: "cremerie",
-				uri: "/r/cremerie",
-				level: 1
+				label: "Crémerie"
 			},
 			{
-				code: "R01SR01",
-				label: "Lait",
-				slug: "cremerie/lait",
-				uri: "/r/cremerie/lait",
-				level: 2
+				label: "Lait"
 			},
 			{
-				code: "R01SR01SSR01",
-				label: "Lait demi-écrémé",
-				slug: "cremerie/lait/lait-demi-ecreme",
-				uri: "/r/cremerie/lait/lait-demi-ecreme",
-				level: 3
+				label: "Lait demi-écrémé"
 			}
 		]
 	},
@@ -234,25 +222,13 @@ export const groupRayons: GroupRayonInputDto[] = [
 		urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-ecreme/ca-n01010102",
 		rayons: [
 			{
-				code: "R01",
-				label: "Crémerie",
-				slug: "cremerie",
-				uri: "/r/cremerie",
-				level: 1
+				label: "Crémerie"
 			},
 			{
-				code: "R01SR01",
-				label: "Lait",
-				slug: "cremerie/lait",
-				uri: "/r/cremerie/lait",
-				level: 2
+				label: "Lait"
 			},
 			{
-				code: "R01SR01SSR02",
-				label: "Lait écrémé",
-				slug: "cremerie/lait/lait-ecreme",
-				uri: "/r/cremerie/lait/lait-ecreme",
-				level: 3
+				label: "Lait écrémé"
 			}
 		]
 	},
@@ -264,26 +240,14 @@ export const groupRayons: GroupRayonInputDto[] = [
 		urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/laits/lait-entier/ca-n01010103",
 		rayons: [
 			{
-				code: "R01",
-				label: "Crémerie",
-				slug: "cremerie",
-				uri: "/r/cremerie",
-				level: 1
+				label: "Crémerie"
 			},
 			{
-				code: "R01SR01",
-				label: "Lait",
-				slug: "cremerie/lait",
-				uri: "/r/cremerie/lait",
-				level: 2
+				label: "Lait"
 			},
 			{
-				code: "R01SR01SSR03",
-				label: "Lait entier",
-				slug: "cremerie/lait/lait-entier",
-				uri: "/r/cremerie/lait/lait-entier",
-				level: 3
-			},
+				label: "Lait entier"
+			}
 		]
 	}
 ]

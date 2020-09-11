@@ -9,7 +9,7 @@ import { AppController } from "./app.controller"
 import { AppService } from "./app.service"
 import { ProvidersModule } from "./modules/providers/providers.module"
 import { RayonsModule } from "./modules/rayons/rayons.module"
-/*import { GroupRayonsModule } from "./modules/group-rayons/group-rayons.module"*/
+import { GroupsModule } from "./modules/groups/groups.module"
 
 @Module({
 	imports: [
@@ -23,7 +23,7 @@ import { RayonsModule } from "./modules/rayons/rayons.module"
 		SqlConnection,
 		ProvidersModule,
 		RayonsModule,
-		/*GroupRayonsModule*/
+		GroupsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]

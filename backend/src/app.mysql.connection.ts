@@ -5,7 +5,7 @@ export default TypeOrmModule.forRoot({
 	host: "51.77.211.195",
 	port: 3306,
 	username: "dev",
-	password: "dev",
+	password: "1Ja1meLesDev&",
 	database: "cloudlivery-test",
 	autoLoadEntities: true,
 	synchronize: true
