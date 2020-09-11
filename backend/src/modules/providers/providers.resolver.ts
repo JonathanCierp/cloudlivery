@@ -1,10 +1,11 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
-import { Inject } from "@nestjs/common"
+import { Inject, UseGuards } from "@nestjs/common"
 import { ProvidersService } from "./providers.service"
 import { ProviderInputDto } from "./dto/provider-input.dto"
 import { ProviderResponseDto } from "./dto/provider-response.dto";
 import { ProvidersModel } from "./providers.model";
 import { providers } from "../../sources"
+import { AuthGuard } from "../../guards/auth.guard"
 
 @Resolver(of => ProvidersModel)
 export class ProvidersResolver {
@@ -14,6 +15,7 @@ export class ProvidersResolver {
 	 * Get all the providers
 	 * @return Promise<ProviderResponseDto>
 	 */
+	 @UseGuards(AuthGuard)
 	@Query(() => ProviderResponseDto)
 	async providers(): Promise<ProviderResponseDto>{
 		return this.providersService.findAll()

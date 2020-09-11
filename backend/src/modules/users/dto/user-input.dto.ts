@@ -6,7 +6,7 @@ export class UserInputDto {
 	id?: number
 
 	@Field({nullable: true})
-	google_id: string
+	googleId: string
 
 	@Field()
 	email: string

@@ -43,20 +43,38 @@ export class UsersService {
 	 * Create one rayon
 	 * @return Promise<RayonsModel>
 	 */
-	/*async create(createRayonDto: UserInputDto): Promise<RayonsModel>{
+	async create(createRayonDto: UserInputDto): Promise<UsersModel>{
 		try {
-			const exist = await this.rayonsModel.findOne({where: {label: createRayonDto.label}})
-
-			if (!exist) {
-				return await this.rayonsModel.save(this.rayonsModel.create(createRayonDto))
+			if(createRayonDto.password === "") {
+				throw new Error(`Erreur le mot de passe ne peut pas être vide..`)
 			}
 
-			throw new Error(`Erreur lors de la création du rayon: ${createRayonDto.label}`)
+			if(createRayonDto.email === "") {
+				throw new Error(`Erreur l'email ne peut pas être vide.`)
+			}
+
+			if (!createRayonDto.email.match(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)) {
+				throw new Error("Erreur l'email est invalide.")
+			}
+
+			const exist = await this.usersModel.findOne({ where: { email: createRayonDto.email } })
+
+			if(exist) {
+				throw new Error(`Erreur un compte existe déjà pour ce mail.`)
+			}
+
+			const user = await this.usersModel.save(this.usersModel.create(createRayonDto))
+
+			if(!user) {
+				throw new Error(`Erreur lors de la création du compte: ${createRayonDto.email}`)
+			}
+
+			return user
 		} catch (e) {
-			this.logger.error(e.message, "RAYON")
-			throw new HttpException(`Erreur lors de la création du rayon: ${createRayonDto.label}`, HttpStatus.BAD_REQUEST)
+			this.logger.error(e.name + ": " + e.message, "USER")
+			throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
 		}
-	}*/
+	}
 
 	/**
 	 * @param createRayonDto RayonInputDto[] --> Contain all rayons

@@ -39,3 +39,7 @@ bootstrap();
  **** update --> OK
  **** Test unitaires --> NOK
  */
+/**
+ * DELETE public dans les fichier model
+ * DELETE les interfaces
+ */

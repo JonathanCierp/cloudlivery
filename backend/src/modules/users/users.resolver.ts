@@ -1,18 +1,17 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
 import { Inject } from "@nestjs/common"
 import { UsersService } from "./users.service"
-//import { UserInputDto } from "./dto/user.input.dto"
 import { UsersModel } from "./users.model"
-/*import { rayons } from "../../sources"*/
+import { UserInputDto } from "./dto/user-input.dto"
 
 @Resolver(of => UsersModel)
 export class UsersResolver {
 	constructor(@Inject(UsersService) private usersService: UsersService){ }
 
-	@Query(() => String)
+	/*@Query(() => String)
 	async hello(): Promise<String>{
 		return "hello"
-	}
+	}*/
 
 	/**
 	 * Get all the rayons
@@ -34,14 +33,14 @@ export class UsersResolver {
 	}*/
 
 	/**
-	 * @param input RayonInputDto --> Payload send to create object
-	 * Create one rayon
-	 * @return Promise<RayonsModel>
+	 * @param input UserInputDto --> Payload send to create object
+	 * Create one user
+	 * @return Promise<UsersModel>
 	 */
-	/*@Mutation(() => RayonsModel)
-	async createRayon(@Args("input") input: RayonInputDto): Promise<RayonsModel>{
-		return this.rayonsService.create(input)
-	}*/
+	@Mutation(() => UsersModel, { name: "signup" })
+	async createUser(@Args("input") input: UserInputDto): Promise<UsersModel>{
+		return this.usersService.create(input)
+	}
 
 	/**
 	 * Create all rayons

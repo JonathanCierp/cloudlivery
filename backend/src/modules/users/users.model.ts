@@ -10,7 +10,7 @@ export class UsersModel {
 
 	@Field({nullable: true})
 	@Column({length: 1000, unique: true, nullable: true})
-	google_id: string
+	googleId: string
 
 	@Field()
 	@Column({length: 255, unique: true})
