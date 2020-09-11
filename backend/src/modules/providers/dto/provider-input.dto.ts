@@ -7,5 +7,5 @@ export class ProviderInputDto {
 	@Field()
 	label: string
 	@Field({ nullable: true })
-	prefix_url?: string
+	prefixUrl?: string
 }

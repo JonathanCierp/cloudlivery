@@ -2,7 +2,8 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
 import { Inject } from "@nestjs/common"
 import { ProvidersService } from "./providers.service"
 import { ProviderInputDto } from "./dto/provider-input.dto"
-import { ProvidersModel } from "./providers.model"
+import { ProviderResponseDto } from "./dto/provider-response.dto";
+import { ProvidersModel } from "./providers.model";
 import { providers } from "../../sources"
 
 @Resolver(of => ProvidersModel)
@@ -11,29 +12,29 @@ export class ProvidersResolver {
 
 	/**
 	 * Get all the providers
-	 * @return Promise<ProvidersModel[]>
+	 * @return Promise<ProviderResponseDto>
 	 */
-	@Query(() => [ProvidersModel])
-	async providers(): Promise<ProvidersModel[]>{
+	@Query(() => ProviderResponseDto)
+	async providers(): Promise<ProviderResponseDto>{
 		return this.providersService.findAll()
 	}
 		/**
 		 * @param id Number --> Get a provider by id
 		 * Get one provider
-		 * @return Promise<ProvidersModel>
+		 * @return Promise<ProviderResponseDto>
 		 */
-		@Query(() => ProvidersModel)
-		async provider(@Args("id") id: number): Promise<ProvidersModel>{
+		@Query(() => ProviderResponseDto)
+		async provider(@Args("id") id: number): Promise<ProviderResponseDto>{
 			return this.providersService.findOne(id)
 		}
 
 		/**
 		 * @param input ProviderInputDto --> Payload send to create object
 		 * Create one provider
-		 * @return Promise<ProvidersModel>
+		 * @return Promise<ProviderResponseDto>
 		 */
-		@Mutation(() => ProvidersModel)
-		async createProvider(@Args("input") input: ProviderInputDto): Promise<ProvidersModel>{
+		@Mutation(() => ProviderResponseDto)
+		async createProvider(@Args("input") input: ProviderInputDto): Promise<ProviderResponseDto>{
 			return await this.providersService.create(input)
 		}
 
@@ -41,37 +42,37 @@ export class ProvidersResolver {
 		 * Create all providers
 		 * @return Promise<ProviderTypeDto[]>
 		 */
-		@Mutation(() => [ProvidersModel])
-		async createAllProvider(): Promise<ProvidersModel[]>{
+		@Mutation(() => ProviderResponseDto)
+		async createAllProvider(): Promise<ProviderResponseDto>{
 			return this.providersService.createAll(providers)
 		}
 
 		/**
 		 * @param id Number --> Delete a provider by id
 		 * Delete a provider
-		 * @return Promise<ProvidersModel>
+		 * @return Promise<ProviderResponseDto>
 		 */
-		@Mutation(() => ProvidersModel)
-		async deleteProvider(@Args("id") id: number): Promise<ProvidersModel>{
+		@Mutation(() => ProviderResponseDto)
+		async deleteProvider(@Args("id") id: number): Promise<ProviderResponseDto>{
 			return this.providersService.delete(id)
 		}
 
 		/**
 		 * Delete all provider
-		 * @return Promise<ProvidersModel[]>
+		 * @return Promise<ProviderResponseDto>
 		 */
-		@Mutation(() => [ProvidersModel])
-		async deleteAllProvider(): Promise<ProvidersModel[]>{
+		@Mutation(() => ProviderResponseDto)
+		async deleteAllProvider(): Promise<ProviderResponseDto>{
 			return this.providersService.deleteAll()
 		}
 
 		/**
 		 * @param input ProviderInputDto --> Payload send to modify object
 		 * Update a provider
-		 * @return Promise<ProvidersModel>
+		 * @return Promise<ProviderResponseDto>
 		 */
-		@Mutation(() => ProvidersModel)
-		async updateProvider( @Args("input") input: ProviderInputDto): Promise<ProvidersModel>{
+		@Mutation(() => ProviderResponseDto)
+		async updateProvider( @Args("input") input: ProviderInputDto): Promise<ProviderResponseDto>{
 			return this.providersService.update(input)
 		}
 }

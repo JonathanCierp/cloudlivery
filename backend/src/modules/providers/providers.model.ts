@@ -14,7 +14,7 @@ export class ProvidersModel {
 
 	@Field({nullable: true})
 	@Column({length: 255, nullable: true})
-	prefix_url: string
+	prefixUrl: string
 
 	@Field({nullable: true})
 	@Column()
