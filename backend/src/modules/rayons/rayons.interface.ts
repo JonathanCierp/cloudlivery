@@ -1,8 +1,8 @@
-import { AppInterface } from "../../app.interface";
-import { RayonResponseDto } from "./dto/rayon-response.dto";
-import { RayonInputDto } from "./dto/rayon-input.dto";
+import { AppInterface } from "../../app.interface"
+import { RayonResponseDto } from "./dto/rayon-response.dto"
+import { RayonInputDto } from "./dto/rayon-input.dto"
 
-export interface RayonsInterface extends AppInterface{
+export interface RayonsInterface extends AppInterface {
 
 	formattedResponseRayons(): RayonResponseDto
 
@@ -18,5 +18,5 @@ export interface RayonsInterface extends AppInterface{
 
 	deleteAll(): Promise<RayonResponseDto>
 
-	update(item: RayonInputDto): Promise<RayonResponseDto>
+	update(rayonInputDto: RayonInputDto): Promise<RayonResponseDto>
 }

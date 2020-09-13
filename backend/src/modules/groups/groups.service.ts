@@ -3,18 +3,18 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { GroupInputDto } from "./dto/group-input.dto"
 import { GroupsModel } from "./groups.model"
-import { RayonsModel } from "../rayons/rayons.model";
-import { AppService } from "../../app.service";
-import { GroupResponseDto } from "./dto/group-response.dto";
-import { GroupsInterface } from "./groups.interface";
+import { RayonsModel } from "../rayons/rayons.model"
+import { AppService } from "../../app.service"
+import { GroupResponseDto } from "./dto/group-response.dto"
+import { GroupsInterface } from "./groups.interface"
 
 @Injectable()
 export class GroupsService extends AppService implements GroupsInterface {
-	private logger = new Logger(GroupsService.name);
+	private logger = new Logger(GroupsService.name)
 	protected item?: GroupsModel | undefined
 	protected items?: GroupsModel[] | undefined
 
-	constructor(@InjectRepository(GroupsModel) private groupsModel: Repository<GroupsModel>, @InjectRepository(RayonsModel) private rayonsModel: Repository<RayonsModel>){
+	constructor(@InjectRepository(GroupsModel) private groupsModel: Repository<GroupsModel>, @InjectRepository(RayonsModel) private rayonsModel: Repository<RayonsModel>) {
 		super()
 	}
 
@@ -30,7 +30,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Get all the groupes
 	 * @return Promise<GroupResponseDto[]>
 	 */
-	async findAll(): Promise<GroupResponseDto>{
+	async findAll(): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
@@ -38,8 +38,8 @@ export class GroupsService extends AppService implements GroupsInterface {
 			this.items = await this.groupsModel.find({ relations: ["rayons"] })
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
-			this.details = `Erreur lors de la récupération des groupes.`
-			this.logger.error(this.details, "GROUP");
+			this.details = e.message
+			this.logger.error(this.details, "GROUP")
 			this.message = `Erreur lors de la récupération des groupes.`
 			this.items = null
 		}
@@ -52,7 +52,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Get one groupe
 	 * @return Promise<GroupResponseDto>
 	 */
-	async findOne(id: number): Promise<GroupResponseDto>{
+	async findOne(id: number): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
@@ -60,8 +60,8 @@ export class GroupsService extends AppService implements GroupsInterface {
 			this.item = await this.groupsModel.findOne(id, { relations: ["rayons"] })
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
-			this.details = `Erreur lors de la récupération du groupe: ${id}.`
-			this.logger.error(this.details, "GROUP");
+			this.details = e.message
+			this.logger.error(this.details, "GROUP")
 			this.message = `Erreur lors de la récupération du groupe: ${id}.`
 			this.item = null
 		}
@@ -74,14 +74,14 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Create one groupe
 	 * @return Promise<GroupResponseDto>
 	 */
-	async create(groupInputDto: GroupInputDto): Promise<GroupResponseDto>{
+	async create(groupInputDto: GroupInputDto): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
 			this.item = await this.createItem(groupInputDto)
 
-			if(!this.item) {
+			if (!this.item) {
 				this.message = "Erreur un groupe existe déjà avec ce nom."
 				throw new Error(`Erreur lors de la création du groupe: ${groupInputDto.label}.`)
 			}
@@ -90,7 +90,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "GROUP");
+			this.logger.error(this.details, "GROUP")
 			this.message = this.message || `Erreur lors de la création du groupe: ${groupInputDto.label}.`
 			this.item = null
 		}
@@ -103,22 +103,22 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Create all groupes
 	 * @return Promise<GroupResponseDto>
 	 */
-	async createAll(groupInputDto: GroupInputDto[]): Promise<GroupResponseDto>{
+	async createAll(groupInputDto: GroupInputDto[]): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
 			let groups = []
 
-			for(let groupInputDt of groupInputDto) {
+			for (let groupInputDt of groupInputDto) {
 				let group = await this.createItem(groupInputDt)
 
-				if(group) {
+				if (group) {
 					groups = [...groups, group]
 				}
 			}
 
-			if(!groups.length) {
+			if (!groups.length) {
 				throw new Error(`Erreur lors de la création des groupes.`)
 			}
 
@@ -127,7 +127,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "GROUP");
+			this.logger.error(this.details, "GROUP")
 			this.message = `Erreur lors de la création des groupes.`
 			this.items = null
 		}
@@ -140,12 +140,12 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Delete a groupe
 	 * @return Promise<GroupResponseDto>
 	 */
-	async delete(id: number): Promise<GroupResponseDto>{
+	async delete(id: number): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			if(!await this.groupsModel.remove(await this.groupsModel.findOne(id))) {
+			if (!await this.groupsModel.remove(await this.groupsModel.findOne(id))) {
 				throw new Error(`Erreur lors de la suppression du group: ${id}.`)
 			}
 
@@ -153,7 +153,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "GROUP");
+			this.logger.error(this.details, "GROUP")
 			this.message = `Erreur lors de la suppression de ce groupe.`
 		}
 
@@ -164,12 +164,12 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Delete all groupes
 	 * @return Promise<GroupResponseDto>
 	 */
-	async deleteAll(): Promise<GroupResponseDto>{
+	async deleteAll(): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			if(!await this.groupsModel.remove(await this.groupsModel.find())) {
+			if (!await this.groupsModel.remove(await this.groupsModel.find())) {
 				throw new Error(`Erreur lors de la suppression des groupes.`)
 			}
 
@@ -177,7 +177,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "GROUP");
+			this.logger.error(this.details, "GROUP")
 			this.message = `Erreur lors de la suppression des groupes.`
 		}
 
@@ -189,15 +189,15 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * Update a groupe
 	 * @return Promise<GroupResponseDto>
 	 */
-	async update(groupInputDto: GroupInputDto): Promise<GroupResponseDto>{
+	async update(groupInputDto: GroupInputDto): Promise<GroupResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			const exist = await this.groupsModel.findOne({where: {label: groupInputDto.label}})
+			const exist = await this.groupsModel.findOne({ label: groupInputDto.label })
 
-			if(exist) {
-				if(exist.id !== groupInputDto.id) {
+			if (exist) {
+				if (exist.id !== groupInputDto.id) {
 					this.message = "Erreur un groupe existe déjà avec ce nom."
 					throw new Error(`Erreur lors de la modification du groupe: ${groupInputDto.label}.`)
 				}
@@ -205,13 +205,13 @@ export class GroupsService extends AppService implements GroupsInterface {
 				this.item = await this.createItem(groupInputDto)
 			}
 
-			const existById = await this.groupsModel.findOne({where: {id: groupInputDto.id}})
+			const existById = await this.groupsModel.findOne({ id: groupInputDto.id })
 
-			if(existById) {
+			if (existById) {
 				this.item = await this.createItem(groupInputDto)
 			}
 
-			if(!this.item) {
+			if (!this.item) {
 				this.message = "Erreur ce groupe n'existe pas."
 				throw new Error(`Erreur lors de la modification du groupe: ${groupInputDto.label}.`)
 			}
@@ -220,7 +220,7 @@ export class GroupsService extends AppService implements GroupsInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "GROUP");
+			this.logger.error(this.details, "GROUP")
 			this.message = this.message || `Erreur lors de la modification du groupe.`
 			this.item = null
 		}
@@ -234,13 +234,13 @@ export class GroupsService extends AppService implements GroupsInterface {
 	 * @return Promise<GroupsModel | undefined>
 	 */
 	async createItem(groupInputDto: GroupInputDto): Promise<GroupsModel | undefined> {
-		const exist = await this.groupsModel.findOne({where: {label: groupInputDto.label}})
+		const exist = await this.groupsModel.findOne({ label: groupInputDto.label })
 
 		if (!exist) {
 			let group = this.groupsModel.create(groupInputDto)
 
-			if(group.rayons) {
-				group.rayons = await this.rayonsModel.find({where: groupInputDto.rayons})
+			if (group.rayons) {
+				group.rayons = await this.rayonsModel.find({ where: groupInputDto.rayons })
 			}
 
 			return await this.groupsModel.save(group)

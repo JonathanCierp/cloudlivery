@@ -1,8 +1,8 @@
-import { AppInterface } from "../../app.interface";
-import { GroupResponseDto } from "./dto/group-response.dto";
-import { GroupInputDto } from "./dto/group-input.dto";
+import { AppInterface } from "../../app.interface"
+import { GroupResponseDto } from "./dto/group-response.dto"
+import { GroupInputDto } from "./dto/group-input.dto"
 
-export interface GroupsInterface extends AppInterface{
+export interface GroupsInterface extends AppInterface {
 
 	formattedResponseGroups(): GroupResponseDto
 
@@ -18,5 +18,5 @@ export interface GroupsInterface extends AppInterface{
 
 	deleteAll(): Promise<GroupResponseDto>
 
-	update(item: GroupInputDto): Promise<GroupResponseDto>
+	update(groupInputDto: GroupInputDto): Promise<GroupResponseDto>
 }

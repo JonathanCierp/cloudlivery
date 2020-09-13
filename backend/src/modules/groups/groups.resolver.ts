@@ -3,19 +3,20 @@ import { Inject } from "@nestjs/common"
 import { GroupsService } from "./groups.service"
 import { GroupInputDto } from "./dto/group-input.dto"
 import { GroupsModel } from "./groups.model"
-import { GroupResponseDto } from "./dto/group-response.dto";
-import { groups } from "../../sources";
+import { GroupResponseDto } from "./dto/group-response.dto"
+import { groups } from "../../sources"
 
 @Resolver(of => GroupsModel)
 export class GroupsResolver {
-	constructor(@Inject(GroupsService) private groupsService: GroupsService){ }
+	constructor(@Inject(GroupsService) private groupsService: GroupsService) {
+	}
 
 	/**
 	 * Get all the groups
 	 * @return Promise<GroupResponseDto[]>
 	 */
 	@Query(() => GroupResponseDto)
-	async groups(): Promise<GroupResponseDto>{
+	async groups(): Promise<GroupResponseDto> {
 		return this.groupsService.findAll()
 	}
 
@@ -25,7 +26,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Query(() => GroupResponseDto)
-	async group(@Args("id") id: number): Promise<GroupResponseDto>{
+	async group(@Args("id") id: number): Promise<GroupResponseDto> {
 		return this.groupsService.findOne(id)
 	}
 
@@ -35,7 +36,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Mutation(() => GroupResponseDto)
-	async createGroup(@Args("input") input: GroupInputDto): Promise<GroupResponseDto>{
+	async createGroup(@Args("input") input: GroupInputDto): Promise<GroupResponseDto> {
 		return this.groupsService.create(input)
 	}
 
@@ -44,7 +45,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Mutation(() => GroupResponseDto)
-	async createAllGroup(): Promise<GroupResponseDto>{
+	async createAllGroup(): Promise<GroupResponseDto> {
 		return this.groupsService.createAll(groups)
 	}
 
@@ -54,7 +55,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Mutation(() => GroupResponseDto)
-	async deleteGroup(@Args("id") id: number): Promise<GroupResponseDto>{
+	async deleteGroup(@Args("id") id: number): Promise<GroupResponseDto> {
 		return this.groupsService.delete(id)
 	}
 
@@ -63,7 +64,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Mutation(() => GroupResponseDto)
-	async deleteAllGroup(): Promise<GroupResponseDto>{
+	async deleteAllGroup(): Promise<GroupResponseDto> {
 		return this.groupsService.deleteAll()
 	}
 
@@ -73,7 +74,7 @@ export class GroupsResolver {
 	 * @return Promise<GroupResponseDto>
 	 */
 	@Mutation(() => GroupResponseDto)
-	async updateGroup(@Args("input") input: GroupInputDto): Promise<GroupResponseDto>{
+	async updateGroup(@Args("input") input: GroupInputDto): Promise<GroupResponseDto> {
 		return this.groupsService.update(input)
 	}
 }

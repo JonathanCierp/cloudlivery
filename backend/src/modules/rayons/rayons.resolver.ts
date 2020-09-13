@@ -2,20 +2,21 @@ import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
 import { Inject } from "@nestjs/common"
 import { RayonsService } from "./rayons.service"
 import { RayonInputDto } from "./dto/rayon-input.dto"
-import { RayonsModel } from "./rayons.model";
+import { RayonsModel } from "./rayons.model"
 import { rayons } from "../../sources"
-import { RayonResponseDto } from "./dto/rayon-response.dto";
+import { RayonResponseDto } from "./dto/rayon-response.dto"
 
 @Resolver(of => RayonsModel)
 export class RayonsResolver {
-	constructor(@Inject(RayonsService) private rayonsService: RayonsService){ }
+	constructor(@Inject(RayonsService) private rayonsService: RayonsService) {
+	}
 
 	/**
 	 * Get all the rayons
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Query(() => RayonResponseDto)
-	async rayons(): Promise<RayonResponseDto>{
+	async rayons(): Promise<RayonResponseDto> {
 		return this.rayonsService.findAll()
 	}
 
@@ -25,7 +26,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Query(() => RayonResponseDto)
-	async rayon(@Args("id") id: number): Promise<RayonResponseDto>{
+	async rayon(@Args("id") id: number): Promise<RayonResponseDto> {
 		return this.rayonsService.findOne(id)
 	}
 
@@ -35,7 +36,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Mutation(() => RayonResponseDto)
-	async createRayon(@Args("input") input: RayonInputDto): Promise<RayonResponseDto>{
+	async createRayon(@Args("input") input: RayonInputDto): Promise<RayonResponseDto> {
 		return this.rayonsService.create(input)
 	}
 
@@ -44,7 +45,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Mutation(() => RayonResponseDto)
-	async createAllRayon(): Promise<RayonResponseDto>{
+	async createAllRayon(): Promise<RayonResponseDto> {
 		return this.rayonsService.createAll(rayons)
 	}
 
@@ -54,7 +55,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Mutation(() => RayonResponseDto)
-	async deleteRayon(@Args("id") id: number): Promise<RayonResponseDto>{
+	async deleteRayon(@Args("id") id: number): Promise<RayonResponseDto> {
 		return this.rayonsService.delete(id)
 	}
 
@@ -63,7 +64,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Mutation(() => RayonResponseDto)
-	async deleteAllRayon(): Promise<RayonResponseDto>{
+	async deleteAllRayon(): Promise<RayonResponseDto> {
 		return this.rayonsService.deleteAll()
 	}
 
@@ -73,7 +74,7 @@ export class RayonsResolver {
 	 * @return Promise<RayonResponseDto>
 	 */
 	@Mutation(() => RayonResponseDto)
-	async updateRayon(@Args("input") input: RayonInputDto): Promise<RayonResponseDto>{
+	async updateRayon(@Args("input") input: RayonInputDto): Promise<RayonResponseDto> {
 		return this.rayonsService.update(input)
 	}
 }

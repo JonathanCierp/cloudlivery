@@ -4,19 +4,19 @@ import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateCol
 @ObjectType()
 @Entity("providers")
 export class ProvidersModel {
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@PrimaryGeneratedColumn()
 	id: number
 
 	@Field()
-	@Column({length: 255, unique: true})
+	@Column({ length: 255, unique: true })
 	label: string
 
-	@Field({nullable: true})
-	@Column({length: 255, nullable: true})
+	@Field({ nullable: true })
+	@Column({ length: 255, nullable: true })
 	prefixUrl: string
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
 	@UpdateDateColumn({
 		type: "timestamp",
@@ -26,8 +26,8 @@ export class ProvidersModel {
 	})
 	public updatedAt?: Date
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
-	@CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true})
+	@CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true })
 	public createdAt?: Date
 }

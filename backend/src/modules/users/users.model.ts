@@ -4,35 +4,35 @@ import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateCol
 @ObjectType()
 @Entity("users")
 export class UsersModel {
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@PrimaryGeneratedColumn()
-	id: number
+	id?: number
 
-	@Field({nullable: true})
-	@Column({length: 1000, unique: true, nullable: true})
-	googleId: string
+	@Field({ nullable: true })
+	@Column({ length: 1000, unique: true, nullable: true })
+	googleId?: string
 
 	@Field()
-	@Column({length: 255, unique: true})
+	@Column({ length: 255, unique: true })
 	email: string
 
 	@Field()
-	@Column({length: 255})
+	@Column({ length: 255 })
 	civilite: string
 
 	@Field()
-	@Column({length: 255})
+	@Column({ length: 255 })
 	firstname: string
 
 	@Field()
-	@Column({length: 255})
+	@Column({ length: 255 })
 	lastname: string
 
-	@Field({nullable: true})
-	@Column("text", {nullable: true})
-	password: string
+	@Field({ nullable: true })
+	@Column("text", { nullable: true })
+	password?: string
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
 	@UpdateDateColumn({
 		type: "timestamp",
@@ -42,8 +42,8 @@ export class UsersModel {
 	})
 	updatedAt?: Date
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
-	@CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true})
+	@CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true })
 	createdAt?: Date
 }

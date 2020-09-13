@@ -5,7 +5,7 @@ export class UserInputDto {
 	@Field({ nullable: true })
 	id?: number
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	googleId: string
 
 	@Field()
@@ -20,6 +20,6 @@ export class UserInputDto {
 	@Field()
 	lastname: string
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	password: string
 }

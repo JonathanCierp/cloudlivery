@@ -2,7 +2,7 @@ const fs = require("fs")
 import { Logger, LoggerService } from "@nestjs/common"
 
 export class AppLogger extends Logger implements LoggerService {
-	constructor(logLevel: number = 0){
+	constructor(logLevel: number = 0) {
 		super()
 		this.logLevel = logLevel
 	}
@@ -14,32 +14,32 @@ export class AppLogger extends Logger implements LoggerService {
 	 */
 	logLevel: number = 0
 
-	log(message: string, scope: string = "APP"){
+	log(message: string, scope: string = "APP") {
 		super.log(message)
 		this.writeLogInFile(message, scope, "LOG")
 	}
 
-	error(message: string, scope: string = "APP"){
+	error(message: string, scope: string = "APP") {
 		super.error(message)
 		this.writeLogInFile(message, scope, "ERROR")
 	}
 
-	warn(message: string, scope: string = "APP"){
+	warn(message: string, scope: string = "APP") {
 		super.warn(message)
 		this.writeLogInFile(message, scope, "WARN")
 	}
 
-	debug(message: string, scope: string = "APP"){
+	debug(message: string, scope: string = "APP") {
 		super.debug(message)
 		this.writeLogInFile(message, scope, "DEBUG")
 	}
 
-	verbose(message: string, scope: string = "APP"){
+	verbose(message: string, scope: string = "APP") {
 		super.verbose(message)
 		this.writeLogInFile(message, scope, "VERBOSE")
 	}
 
-	writeLogInFile(message: string, scope: string = "APP", type: string = "LOG", path: string = "storage/logs"){
+	writeLogInFile(message: string, scope: string = "APP", type: string = "LOG", path: string = "storage/logs") {
 		const now: Date = new Date()
 		const year = now.getFullYear()
 		const month = now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}` : now.getMonth() + 1
@@ -60,8 +60,8 @@ export class AppLogger extends Logger implements LoggerService {
 		}
 	}
 
-	writeFile(filePath: string, fullMessage: string){
-		fs.appendFile(filePath, fullMessage, function (err){
+	writeFile(filePath: string, fullMessage: string) {
+		fs.appendFile(filePath, fullMessage, function (err) {
 			if (err) throw err
 		})
 	}

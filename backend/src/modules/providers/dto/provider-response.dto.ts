@@ -1,6 +1,6 @@
 import { ObjectType, Field } from "@nestjs/graphql"
-import { AppResponseDto } from "../../../dto/app-response.dto";
-import { ProvidersModel } from "../providers.model";
+import { AppResponseDto } from "../../../dto/app-response.dto"
+import { ProvidersModel } from "../providers.model"
 
 @ObjectType()
 export class ProviderResponseDto extends AppResponseDto {

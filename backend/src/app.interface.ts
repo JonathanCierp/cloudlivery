@@ -1,5 +1,5 @@
 export interface AppInterface {
-
+/*
 	findAll(): Promise<any>
 
 	findOne(id: number): Promise<any>
@@ -12,5 +12,5 @@ export interface AppInterface {
 
 	deleteAll(): Promise<any>
 
-	update(item: any): Promise<any>
+	update(item: any): Promise<any>*/
 }

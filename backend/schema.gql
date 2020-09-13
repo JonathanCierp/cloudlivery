@@ -16,9 +16,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type ProviderResponseDto {
-  message: String
-  details: String
+  token: String
   code: Float
+  details: String
+  message: String
   item: ProvidersModel
   items: [ProvidersModel!]
 }
@@ -35,9 +36,10 @@ type RayonsModel {
 }
 
 type RayonResponseDto {
-  message: String
-  details: String
+  token: String
   code: Float
+  details: String
+  message: String
   item: RayonsModel
   items: [RayonsModel!]
 }
@@ -55,11 +57,33 @@ type GroupsModel {
 }
 
 type GroupResponseDto {
-  message: String
-  details: String
+  token: String
   code: Float
+  details: String
+  message: String
   item: GroupsModel
   items: [GroupsModel!]
+}
+
+type UsersModel {
+  id: Float
+  googleId: String
+  email: String!
+  civilite: String!
+  firstname: String!
+  lastname: String!
+  password: String
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type UserResponseDto {
+  token: String
+  code: Float
+  details: String
+  message: String
+  item: UsersModel
+  items: [UsersModel!]
 }
 
 type Query {
@@ -69,6 +93,7 @@ type Query {
   rayon(id: Float!): RayonResponseDto!
   groups: GroupResponseDto!
   group(id: Float!): GroupResponseDto!
+  me: UserResponseDto!
 }
 
 type Mutation {
@@ -87,6 +112,9 @@ type Mutation {
   deleteGroup(id: Float!): GroupResponseDto!
   deleteAllGroup: GroupResponseDto!
   updateGroup(input: GroupInputDto!): GroupResponseDto!
+  signup(input: UserInputDto!): UserResponseDto!
+  signin(input: UserSigninInputDto!): UserResponseDto!
+  signout: UserResponseDto!
 }
 
 input ProviderInputDto {
@@ -117,4 +145,19 @@ input GroupInputDto {
 input RayonRelationDto {
   id: Float
   label: String
+}
+
+input UserInputDto {
+  id: Float
+  googleId: String
+  email: String!
+  civilite: String!
+  firstname: String!
+  lastname: String!
+  password: String
+}
+
+input UserSigninInputDto {
+  email: String!
+  password: String!
 }

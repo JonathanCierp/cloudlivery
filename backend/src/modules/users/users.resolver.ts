@@ -1,82 +1,141 @@
-import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
-import { Inject } from "@nestjs/common"
+import { Resolver, Query, Mutation, Args, Context } from "@nestjs/graphql"
+import { Inject, UseGuards } from "@nestjs/common"
 import { UsersService } from "./users.service"
 import { UsersModel } from "./users.model"
 import { UserInputDto } from "./dto/user-input.dto"
+import { UserResponseDto } from "./dto/user-response.dto"
+import { UserSigninInputDto } from "./dto/user-signin-input.dto"
+import { AuthGuard } from "../../guards/auth.guard"
+import { UserPayloadDto } from "./dto/user-payload.dto"
+import Auth from "../../../../backend-v2/src/class/auth/Auth"
+import Mail from "../../../../backend-v2/src/class/mail/Mail"
+import CustomError from "../../../../backend-v2/src/class/error/CustomError"
 
 @Resolver(of => UsersModel)
 export class UsersResolver {
-	constructor(@Inject(UsersService) private usersService: UsersService){ }
-
-	/*@Query(() => String)
-	async hello(): Promise<String>{
-		return "hello"
-	}*/
-
-	/**
-	 * Get all the rayons
-	 * @return Promise<RayonsModel[]>
-	 */
-	/*@Query(() => [RayonsModel])
-	async rayons(): Promise<RayonsModel[]>{
-		return this.rayonsService.findAll()
-	}*/
-
-	/**
-	 * @param id Number --> Get a rayon by id
-	 * Get one rayon
-	 * @return Promise<RayonsModel>
-	 */
-	/*@Query(() => RayonsModel)
-	async rayon(@Args("id") id: number): Promise<RayonsModel>{
-		return this.rayonsService.findOne(id)
-	}*/
+	constructor(@Inject(UsersService) private usersService: UsersService) {
+	}
 
 	/**
 	 * @param input UserInputDto --> Payload send to create object
 	 * Create one user
-	 * @return Promise<UsersModel>
+	 * @return Promise<UserResponseDto>
 	 */
-	@Mutation(() => UsersModel, { name: "signup" })
-	async createUser(@Args("input") input: UserInputDto): Promise<UsersModel>{
+	@Mutation(() => UserResponseDto)
+	async signup(@Args("input") input: UserInputDto): Promise<UserResponseDto> {
 		return this.usersService.create(input)
 	}
 
 	/**
-	 * Create all rayons
-	 * @return Promise<RayonsModel[]>
+	 * @param input UserSigninInputDto --> Payload send to create object
+	 * Create one user
+	 * @return Promise<UserResponseDto>
 	 */
-	/*@Mutation(() => [RayonsModel])
-	async createAllRayon(): Promise<RayonsModel[]>{
-		return this.rayonsService.createAll(rayons)
-	}*/
+	@Mutation(() => UserResponseDto)
+	async signin(@Args("input") input: UserSigninInputDto): Promise<UserResponseDto> {
+		return this.usersService.signin(input)
+	}
 
 	/**
-	 * @param id Number --> Delete a rayon by id
-	 * Delete a rayon
-	 * @return Promise<RayonTypeDto>
+	 * @param user UserPayloadDto --> Payload send to create object
+	 * @param token String --> Payload send to create object
+	 * Create one user
+	 * @return Promise<UserResponseDto>
 	 */
-	/*@Mutation(() => RayonsModel)
-	async deleteRayon(@Args("id") id: number): Promise<RayonsModel>{
-		return this.rayonsService.delete(id)
-	}*/
+	@Query(() => UserResponseDto)
+	@UseGuards(new AuthGuard())
+	async me(@Context("user") user: UserPayloadDto, @Context("token") token: string): Promise<UserResponseDto> {
+		return this.usersService.findOne(user.userId, token)
+	}
 
 	/**
-	 * Delete all rayons
-	 * @return Promise<RayonsModel[]>
+	 * Create one user
+	 * @return Promise<UserResponseDto>
 	 */
-	/*@Mutation(() => [RayonsModel])
-	async deleteAllRayon(): Promise<RayonsModel[]>{
-		return this.rayonsService.deleteAll()
-	}*/
+	@Mutation(() => UserResponseDto)
+	@UseGuards(new AuthGuard())
+	async signout(@Context("user") user: UserPayloadDto, @Context("token") token: string): Promise<UserResponseDto> {
+		return this.usersService.signout(user.userId, token)
+	}
 
 	/**
-	 * @param input RayonInputDto --> Payload send to modify object
-	 * Update a rayon
-	 * @return Promise<RayonsModel>
+	 * Allow reset password
+	 * @return Promise<UserResponseDto>
 	 */
-	/*@Mutation(() => RayonsModel)
-	async updateRayon(@Args("input") input: RayonInputDto): Promise<RayonsModel>{
-		return this.rayonsService.update(input)
-	}*/
+	@Mutation(() => UserResponseDto)
+	async resetPassword(email: string): Promise<UserResponseDto> {
+		return this.usersService.resetPassword(email)
+	}
+
+	/**
+	 * Reset password
+	 * @return Promise<UserResponseDto>
+	 */
+	@Mutation(() => UserResponseDto)
+	async resetPasswordSave(token: string, password: string): Promise<UserResponseDto> {
+		return this.usersService.resetPasswordSave(token, password)
+	}
+
+
+	/*t.field("resetPassword", {
+	type: "Default",
+	args: {
+		email: stringArg({nullable: false})
+	},
+	// @ts-ignore
+	resolve: async (_parent, {email}, ctx) => {
+	const auth = new Auth()
+
+	// Set params info
+	auth.ctx = ctx
+	auth.data = {email}
+
+	// If user exist
+	auth.user = await auth.getPrismaUser()
+	if (auth.user) {
+		const url = auth.generateResetPasswordUrl("reset_password_")
+		const mail = new Mail()
+		mail.to = email
+		mail.subject = "Création d'un compte sur cloudlivery.fr"
+		mail.createTransport()
+		mail.send("signup.ejs")
+	}
+
+	return {
+		message: "Si votre email est connue, afin de réinitialiser votre mot de passe, un e-mail va vous être envoyé. Cela peut prendre quelques minutes."
+	}
+}
+})
+t.field("resetPasswordSave", {
+	type: "Default",
+	args: {
+		token: stringArg({nullable: false}),
+		password: stringArg({nullable: false})
+	},
+	// @ts-ignore
+	resolve: async (_parent, {token, password}, ctx) => {
+		const auth = new Auth()
+
+		// Set params info
+		auth.ctx = ctx
+		auth.token = token
+		auth.id = auth.extractIdFromJwt()
+		auth.data = {id: auth.extractIdFromJwt()}
+		auth.user = await auth.getPrismaUser()
+
+		if (!await auth.existInRedis("reset_password_")) {
+			CustomError.invalidToken()
+		}
+
+		if (auth.user) {
+			auth.user.password = await hash(password, 10)
+			await auth.updateUser()
+			await auth.deleteToken("reset_password_", "Erreur lors de la modification du mot de passe.")
+		}
+
+		return {
+			message: "Modification du mot de passe effectué avec succès."
+		}
+	}
+})*/
 }

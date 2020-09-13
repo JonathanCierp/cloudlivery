@@ -1,11 +1,11 @@
 import { HttpStatus, Injectable, Logger } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
-import { AppService } from "../../app.service";
-import { ProvidersModel } from "./providers.model";
-import { ProviderResponseDto } from "./dto/provider-response.dto";
-import { ProvidersInterface } from "./providers.interface";
-import { ProviderInputDto } from "./dto/provider-input.dto";
+import { AppService } from "../../app.service"
+import { ProvidersModel } from "./providers.model"
+import { ProviderResponseDto } from "./dto/provider-response.dto"
+import { ProvidersInterface } from "./providers.interface"
+import { ProviderInputDto } from "./dto/provider-input.dto"
 
 @Injectable()
 export class ProvidersService extends AppService implements ProvidersInterface {
@@ -13,7 +13,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	protected item?: ProvidersModel | undefined
 	protected items?: ProvidersModel[] | undefined
 
-	constructor(@InjectRepository(ProvidersModel) private providersModel: Repository<ProvidersModel>){
+	constructor(@InjectRepository(ProvidersModel) private providersModel: Repository<ProvidersModel>) {
 		super()
 	}
 
@@ -29,7 +29,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Get all the providers
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async findAll(): Promise<ProviderResponseDto>{
+	async findAll(): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
@@ -37,8 +37,8 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 			this.items = await this.providersModel.find()
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
-			this.details = `Erreur lors de la récupération des providers.`
-			this.logger.error(this.details, "PROVIDER");
+			this.details = e.message
+			this.logger.error(this.details, "PROVIDER")
 			this.message = `Erreur lors de la récupération des providers.`
 			this.items = null
 		}
@@ -51,7 +51,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Get one provider
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async findOne(id: number): Promise<ProviderResponseDto>{
+	async findOne(id: number): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
@@ -59,8 +59,8 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 			this.item = await this.providersModel.findOne(id)
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
-			this.details = `Erreur lors de la récupération du provider: ${id}.`
-			this.logger.error(this.details, "PROVIDER");
+			this.details = e.message
+			this.logger.error(this.details, "PROVIDER")
 			this.message = `Erreur lors de la récupération du provider.`
 			this.item = null
 		}
@@ -73,14 +73,14 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Create one provider
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async create(providerInputDto: ProviderInputDto): Promise<ProviderResponseDto>{
+	async create(providerInputDto: ProviderInputDto): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			const exist = await this.providersModel.findOne({where: {label: providerInputDto.label}})
+			const exist = await this.providersModel.findOne({ label: providerInputDto.label })
 
-			if(exist) {
+			if (exist) {
 				this.message = "Erreur un provider existe déjà avec ce nom."
 				throw new Error(`Erreur lors de la création du provider: ${providerInputDto.label}.`)
 			}
@@ -90,7 +90,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "PROVIDER");
+			this.logger.error(this.details, "PROVIDER")
 			this.message = this.message || `Erreur lors de la création du provider: ${providerInputDto.label}.`
 			this.item = null
 		}
@@ -103,14 +103,14 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Create all providers
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async createAll(providerInputDto: ProviderInputDto[]): Promise<ProviderResponseDto>{
+	async createAll(providerInputDto: ProviderInputDto[]): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
 			this.items = await this.providersModel.save(this.providersModel.create(providerInputDto))
 
-			if(!this.items) {
+			if (!this.items) {
 				throw new Error(`Erreur lors de la création des providers.`)
 			}
 
@@ -118,7 +118,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "PROVIDER");
+			this.logger.error(this.details, "PROVIDER")
 			this.message = `Erreur lors de la création des providers.`
 			this.items = null
 		}
@@ -131,12 +131,12 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Delete a provider
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async delete(id: number): Promise<ProviderResponseDto>{
+	async delete(id: number): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			if(!await this.providersModel.remove(await this.providersModel.findOne(id))) {
+			if (!await this.providersModel.remove(await this.providersModel.findOne(id))) {
 				throw new Error(`Erreur lors de la suppression du provider: ${id}.`)
 			}
 
@@ -144,7 +144,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "PROVIDER");
+			this.logger.error(this.details, "PROVIDER")
 			this.message = `Erreur lors de la suppression de ce provider.`
 		}
 
@@ -155,19 +155,19 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Delete all provider
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async deleteAll(): Promise<ProviderResponseDto>{
+	async deleteAll(): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			if(!await this.providersModel.remove(await this.providersModel.find())) {
+			if (!await this.providersModel.remove(await this.providersModel.find())) {
 				throw new Error(`Erreur lors de la suppression des providers.`)
 			}
 			this.message = "Providers supprimés avec succès."
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "PROVIDER");
+			this.logger.error(this.details, "PROVIDER")
 			this.message = `Erreur lors de la suppression des providers.`
 		}
 
@@ -179,15 +179,15 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 	 * Update a provider
 	 * @return Promise<ProviderResponseDto>
 	 */
-	async update(providerInputDto: ProviderInputDto): Promise<ProviderResponseDto>{
+	async update(providerInputDto: ProviderInputDto): Promise<ProviderResponseDto> {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			const exist = await this.providersModel.findOne({where: {label: providerInputDto.label}})
+			const exist = await this.providersModel.findOne({ label: providerInputDto.label })
 
-			if(exist) {
-				if(exist.id !== providerInputDto.id) {
+			if (exist) {
+				if (exist.id !== providerInputDto.id) {
 					this.message = "Erreur un provider existe déjà avec ce nom."
 					throw new Error(`Erreur lors de la modification du provider: ${providerInputDto.label}.`)
 				}
@@ -195,13 +195,13 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 				this.item = await this.providersModel.save(this.providersModel.create(providerInputDto))
 			}
 
-			const existById = await this.providersModel.findOne({where: {id: providerInputDto.id}})
+			const existById = await this.providersModel.findOne({ id: providerInputDto.id })
 
-			if(existById) {
+			if (existById) {
 				this.item = await this.providersModel.save(this.providersModel.create(providerInputDto))
 			}
 
-			if(!this.item) {
+			if (!this.item) {
 				this.message = "Erreur ce provider n'existe pas."
 				throw new Error(`Erreur lors de la modification du provider: ${providerInputDto.label}.`)
 			}
@@ -210,7 +210,7 @@ export class ProvidersService extends AppService implements ProvidersInterface {
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
-			this.logger.error(this.details, "PROVIDER");
+			this.logger.error(this.details, "PROVIDER")
 			this.message = this.message || `Erreur lors de la modification du provider.`
 			this.item = null
 		}

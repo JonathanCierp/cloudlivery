@@ -8,36 +8,36 @@ import {
 	ManyToMany,
 	JoinTable
 } from "typeorm"
-import { GroupsModel } from "../groups/groups.model";
+import { GroupsModel } from "../groups/groups.model"
 
 @ObjectType()
 @Entity("rayons")
 export class RayonsModel {
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@PrimaryGeneratedColumn()
 	id?: number
 
 	@Field()
-	@Column({length: 255, unique: true})
+	@Column({ length: 255, unique: true })
 	label: string
 
 	@Field()
-	@Column({length: 255, unique: true})
+	@Column({ length: 255, unique: true })
 	slug: string
 
 	@Field()
-	@Column({length: 255})
+	@Column({ length: 255 })
 	uri: string
 
 	@Field()
-	@Column({length: 255})
+	@Column({ length: 255 })
 	code: string
 
 	@Field(type => Int)
 	@Column()
 	level: number
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
 	@UpdateDateColumn({
 		type: "timestamp",
@@ -47,8 +47,8 @@ export class RayonsModel {
 	})
 	public updatedAt?: Date
 
-	@Field({nullable: true})
+	@Field({ nullable: true })
 	@Column()
-	@CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true})
+	@CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", nullable: true })
 	public createdAt?: Date
 }

@@ -1,8 +1,8 @@
-import { AppInterface } from "../../app.interface";
-import { ProviderResponseDto } from "./dto/provider-response.dto";
-import { ProviderInputDto } from "./dto/provider-input.dto";
+import { AppInterface } from "../../app.interface"
+import { ProviderResponseDto } from "./dto/provider-response.dto"
+import { ProviderInputDto } from "./dto/provider-input.dto"
 
-export interface ProvidersInterface extends AppInterface{
+export interface ProvidersInterface extends AppInterface {
 
 	formattedResponseProviders(): ProviderResponseDto
 
@@ -18,5 +18,5 @@ export interface ProvidersInterface extends AppInterface{
 
 	deleteAll(): Promise<ProviderResponseDto>
 
-	update(item: ProviderInputDto): Promise<ProviderResponseDto>
+	update(providerInputDto: ProviderInputDto): Promise<ProviderResponseDto>
 }

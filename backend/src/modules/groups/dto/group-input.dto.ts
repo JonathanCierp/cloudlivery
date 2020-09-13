@@ -1,5 +1,5 @@
 import { InputType, Field } from "@nestjs/graphql"
-import { RayonRelationDto } from "../../rayons/dto/rayon-relation.dto";
+import { RayonRelationDto } from "../../rayons/dto/rayon-relation.dto"
 
 @InputType()
 export class GroupInputDto {
@@ -22,5 +22,5 @@ export class GroupInputDto {
 	urlAuchan: string
 
 	@Field(type => [RayonRelationDto], { nullable: true })
-	rayons?: RayonRelationDto[];
+	rayons?: RayonRelationDto[]
 }
