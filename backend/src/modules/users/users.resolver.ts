@@ -7,9 +7,6 @@ import { UserResponseDto } from "./dto/user-response.dto"
 import { UserSigninInputDto } from "./dto/user-signin-input.dto"
 import { AuthGuard } from "../../guards/auth.guard"
 import { UserPayloadDto } from "./dto/user-payload.dto"
-import Auth from "../../../../backend-v2/src/class/auth/Auth"
-import Mail from "../../../../backend-v2/src/class/mail/Mail"
-import CustomError from "../../../../backend-v2/src/class/error/CustomError"
 
 @Resolver(of => UsersModel)
 export class UsersResolver {
@@ -63,7 +60,7 @@ export class UsersResolver {
 	 * @return Promise<UserResponseDto>
 	 */
 	@Mutation(() => UserResponseDto)
-	async resetPassword(email: string): Promise<UserResponseDto> {
+	async resetPassword(@Args("email") email: string): Promise<UserResponseDto> {
 		return this.usersService.resetPassword(email)
 	}
 
@@ -72,70 +69,7 @@ export class UsersResolver {
 	 * @return Promise<UserResponseDto>
 	 */
 	@Mutation(() => UserResponseDto)
-	async resetPasswordSave(token: string, password: string): Promise<UserResponseDto> {
+	async resetPasswordSave(@Args("token") token: string, @Args("password") password: string): Promise<UserResponseDto> {
 		return this.usersService.resetPasswordSave(token, password)
 	}
-
-
-	/*t.field("resetPassword", {
-	type: "Default",
-	args: {
-		email: stringArg({nullable: false})
-	},
-	// @ts-ignore
-	resolve: async (_parent, {email}, ctx) => {
-	const auth = new Auth()
-
-	// Set params info
-	auth.ctx = ctx
-	auth.data = {email}
-
-	// If user exist
-	auth.user = await auth.getPrismaUser()
-	if (auth.user) {
-		const url = auth.generateResetPasswordUrl("reset_password_")
-		const mail = new Mail()
-		mail.to = email
-		mail.subject = "Création d'un compte sur cloudlivery.fr"
-		mail.createTransport()
-		mail.send("signup.ejs")
-	}
-
-	return {
-		message: "Si votre email est connue, afin de réinitialiser votre mot de passe, un e-mail va vous être envoyé. Cela peut prendre quelques minutes."
-	}
-}
-})
-t.field("resetPasswordSave", {
-	type: "Default",
-	args: {
-		token: stringArg({nullable: false}),
-		password: stringArg({nullable: false})
-	},
-	// @ts-ignore
-	resolve: async (_parent, {token, password}, ctx) => {
-		const auth = new Auth()
-
-		// Set params info
-		auth.ctx = ctx
-		auth.token = token
-		auth.id = auth.extractIdFromJwt()
-		auth.data = {id: auth.extractIdFromJwt()}
-		auth.user = await auth.getPrismaUser()
-
-		if (!await auth.existInRedis("reset_password_")) {
-			CustomError.invalidToken()
-		}
-
-		if (auth.user) {
-			auth.user.password = await hash(password, 10)
-			await auth.updateUser()
-			await auth.deleteToken("reset_password_", "Erreur lors de la modification du mot de passe.")
-		}
-
-		return {
-			message: "Modification du mot de passe effectué avec succès."
-		}
-	}
-})*/
 }

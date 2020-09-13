@@ -228,7 +228,7 @@ export class UsersService extends AppService implements UsersInterface {
 
 			const user = await this.usersModel.findOne({ email })
 
-			if (user) {
+			if (!user) {
 				this.message = `Erreur aucun compte n'est associé à ce mail.`
 				throw new Error(`Erreur aucun compte n'est associé à ce mail : ${email}`)
 			}

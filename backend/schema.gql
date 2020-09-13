@@ -115,6 +115,8 @@ type Mutation {
   signup(input: UserInputDto!): UserResponseDto!
   signin(input: UserSigninInputDto!): UserResponseDto!
   signout: UserResponseDto!
+  resetPassword(email: String!): UserResponseDto!
+  resetPasswordSave(password: String!, token: String!): UserResponseDto!
 }
 
 input ProviderInputDto {
