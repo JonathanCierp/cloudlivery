@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common"
 import { GqlExecutionContext } from "@nestjs/graphql"
-import * as jwt from "jsonwebtoken"
+import { verify } from "jsonwebtoken"
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 		const token = auth.split(" ")[1]
 
 		try {
-			return await jwt.verify(token, process.env.AUTH_SECRET)
+			return await verify(token, process.env.AUTH_SECRET)
 		} catch (e) {
 			this.logger.error(e.name + ": " + e.message, "AUTH_GUARD")
 			throw new HttpException(`Erreur le jeton d'authentification est invalide`, HttpStatus.BAD_REQUEST)

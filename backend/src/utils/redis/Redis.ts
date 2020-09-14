@@ -113,5 +113,6 @@ export default class Redis {
 	 */
 	close(): void {
 		this.client.quit()
+		console.log("------------ REDIS CONNECTION CLOSED ------------")
 	}
 }

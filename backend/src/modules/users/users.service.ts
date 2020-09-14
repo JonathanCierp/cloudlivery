@@ -7,7 +7,7 @@ import { AppService } from "../../app.service"
 import { UsersInterface } from "./users.interface"
 import { UserResponseDto } from "./dto/user-response.dto"
 import { UserSigninInputDto } from "./dto/user-signin-input.dto"
-import { sign } from "jsonwebtoken"
+import { verify, sign } from "jsonwebtoken"
 import { compare, hash } from "bcrypt"
 import Redis from "../../utils/redis/Redis"
 
@@ -58,6 +58,7 @@ export class UsersService extends AppService implements UsersInterface {
 			this.details = e.message
 			this.logger.error(this.details, "USER")
 			this.message = this.message || `Erreur lors de la récupération de l'utilisateur.`
+			this.token = null
 			this.item = null
 		}
 
@@ -147,7 +148,7 @@ export class UsersService extends AppService implements UsersInterface {
 			this.item = await this.usersModel.findOne( { email: userSigninInputDto.email })
 			
 			if (!await compare(userSigninInputDto.password, this.item.password)) {
-				this.message = `Erreur mauvais mot de passe.`
+				this.message = `Erreur mauvais identifiant / mot de passe.`
 				throw new Error(`Erreur lors de la connexion: ${userSigninInputDto.email}`)
 			}
 
@@ -172,6 +173,7 @@ export class UsersService extends AppService implements UsersInterface {
 			this.details = e.message
 			this.logger.error(this.details, "USER")
 			this.message = this.message || `Erreur lors de la connexion.`
+			this.token = null
 			this.item = null
 		}
 
@@ -213,6 +215,7 @@ export class UsersService extends AppService implements UsersInterface {
 			this.item = null
 		}
 
+		this.token = null
 		return this.formattedResponseUsers()
 	}
 
@@ -244,6 +247,10 @@ export class UsersService extends AppService implements UsersInterface {
 				expiresIn: "1h"
 			})
 
+			const redis = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST)
+			redis.set(`reset_password_${user.id}`, this.token)
+			redis.close()
+
 			/* TODO envoi de mail */
 
 			this.item = null
@@ -253,6 +260,7 @@ export class UsersService extends AppService implements UsersInterface {
 			this.details = e.message
 			this.logger.error(this.details, "USER")
 			this.message = this.message || `Erreur lors de la demande de réinitialisation de mot de passe.`
+			this.token = null
 			this.item = null
 		}
 
@@ -267,15 +275,45 @@ export class UsersService extends AppService implements UsersInterface {
 	 */
 	async resetPasswordSave(token: string, password: string): Promise<UserResponseDto> {
 		try {
+			const jwt = await verify(token, process.env.JWT_SECRET_RESET)
+
 			this.code = HttpStatus.OK
 			this.details = null
 
-			this.message = `Déconnecté avec succès.`
+			const redis = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST)
+			const redisToken = await redis.get(`reset_password_${jwt.userId}`)
+
+			if(redisToken !== token) {
+				this.message = `Erreur le lien n'est plus valide.`
+				throw new Error(`Erreur le jwt n'est plus dans le redis.`)
+			}
+
+			const user = await this.usersModel.findOne(jwt.userId)
+
+			if(!user) {
+				this.message = `Erreur le lien n'est plus valide.`
+				throw new Error(`Erreur l'id du jwt ne correspond à aucun utilisateur.`)
+			}
+
+			user.password = await hash(password, 10)
+
+			if(!await this.usersModel.save(user)) {
+				this.message = `Erreur lors de la modification du mot de passe.`
+				throw new Error(`Erreur le mot de passe ne s'est pas modifié.`)
+			}
+
+			if(!await redis.delete(`reset_password_${jwt.userId}`)) {
+				this.message = `Erreur lors de la modification du mot de passe.`
+				throw new Error(`Erreur la clé : reset_password_${jwt.userId} ne s'est pas supprimé dans le redis.`)
+			}
+			redis.close()
+
+			this.message = `Mot de passe modifié avec succès`
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
 			this.logger.error(this.details, "USER")
-			this.message = this.message || `Erreur lors de la déconnexion.`
+			this.message = this.message || `Erreur le lien n'est plus valide.`
 			this.item = null
 		}
 
