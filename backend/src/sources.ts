@@ -1,6 +1,7 @@
 import { ProviderInputDto } from "./modules/providers/dto/provider-input.dto"
 import { RayonInputDto } from "./modules/rayons/dto/rayon-input.dto"
 import { GroupInputDto } from "./modules/groups/dto/group-input.dto"
+import { BrandInputDto } from "./modules/brands/dto/brand-input.dto";
 
 export const providers: ProviderInputDto[] = [
 	{
@@ -14,6 +15,591 @@ export const providers: ProviderInputDto[] = [
 	{
 		label: "LABEL_TEST_0 ",
 		prefixUrl: "PREFIX_URL_TEST_0 "
+	}
+]
+
+export const brands: BrandInputDto[] = [
+	{
+		label: "SANS MARQUE"
+	},
+	{
+		label: "LA MARQUE DU CONSOMMATEUR"
+	},
+	{
+		label: "AGRILAIT"
+	},
+	{
+		label: "BASKALIA"
+	},
+	{
+		label: "BEARN LAIT"
+	},
+	{
+		label: "C'EST QUI LE PATRON ?!"
+	},
+	{
+		label: "CANDIA"
+	},
+	{
+		label: "CARREFOUR BIO"
+	},
+	{
+		label: "CARREFOUR"
+	},
+	{
+		label: "ET ALDIA"
+	},
+	{
+		label: "FAIREFRANCE"
+	},
+	{
+		label: "GERENTE"
+	},
+	{
+		label: "GRANDLAIT"
+	},
+	{
+		label: "J'AIME LE LAIT D'ICI"
+	},
+	{
+		label: "LACTEL"
+	},
+	{
+		label: "LACTEL BIO"
+	},
+	{
+		label: "LAITERIE LES FAYES"
+	},
+	{
+		label: "LAITIK"
+	},
+	{
+		label: "LE GALL"
+	},
+	{
+		label: "LE LAIT DE MA REGION"
+	},
+	{
+		label: "LE LAIT EQUITABLE SARTHOIS"
+	},
+	{
+		label: "LE PETIT VENDEEN"
+	},
+	{
+		label: "LES FAYES"
+	},
+	{
+		label: "LES LAITIERS RESPONSABLES"
+	},
+	{
+		label: "MONT LAIT"
+	},
+	{
+		label: "ONETIK"
+	},
+	{
+		label: "VERNEUIL"
+	},
+	{
+		label: "CHARAL"
+	},
+	{
+		label: "SOCOPA"
+	},
+	{
+		label: "TENDRE ET PLUS"
+	},
+	{
+		label: "MAITRE JACQUES"
+	},
+	{
+		label: "TENDRIADE"
+	},
+	{
+		label: "JEMANGEFRANÇAIS.COM"
+	},
+	{
+		label: "BIGARD"
+	},
+	{
+		label: "HENAFF"
+	},
+	{
+		label: "METRAS TRIPIER EN PROVENCE"
+	},
+	{
+		label: "LE MARCHE"
+	},
+	{
+		label: "PAILLARD"
+	},
+	{
+		label: "LES BONS MORCEAUX"
+	},
+	{
+		label: "LES BRASERADES"
+	},
+	{
+		label: "JOHNSONVILLE"
+	},
+	{
+		label: "LA BRESSE"
+	},
+	{
+		label: "NOBLES"
+	},
+	{
+		label: "ALDELIS"
+	},
+	{
+		label: "DOUCE FRANCE"
+	},
+	{
+		label: "MADRANCE"
+	},
+	{
+		label: "MORITZ"
+	},
+	{
+		label: "PEGASE"
+	},
+	{
+		label: "DABIA"
+	},
+	{
+		label: "DELICADEZAS IBERICAS"
+	},
+	{
+		label: "GRAND CARACTERE"
+	},
+	{
+		label: "KLEIN KAROO"
+	},
+	{
+		label: "LES OCCITANES"
+	},
+	{
+		label: "LIONOR"
+	},
+	{
+		label: "SOURIRES DE CAMPAGNE"
+	},
+	{
+		label: "CLERMONT"
+	},
+	{
+		label: "COOPERL"
+	},
+	{
+		label: "DE FAUX FILET"
+	},
+	{
+		label: "ELIVIA"
+	},
+	{
+		label: "HIRUAK"
+	},
+	{
+		label: "INDIANA JERKY"
+	},
+	{
+		label: "LE GAULOIS"
+	},
+	{
+		label: "LES ELEVEURS DE CHEZ NOUS"
+	},
+	{
+		label: "ROYAL HALAL"
+	},
+	{
+		label: "TRIPES PAILLARD"
+	},
+	{
+		label: "VIAZUR"
+	},
+	{
+		label: "refuge_de_marie_louise"
+	},
+	{
+		label: "REFS.SANS MARQUE"
+	},
+	{
+		label: "BABY COQUE"
+	},
+	{
+		label: "COQUY"
+	},
+	{
+		label: "L'OEUFS DE NOS VILLA"
+	},
+	{
+		label: "COQUEN'OR"
+	},
+	{
+		label: "LOUE"
+	},
+	{
+		label: "COCORETTE"
+	},
+	{
+		label: "LUSTUCRU"
+	},
+	{
+		label: "MIELS VILLENEUVE"
+	},
+	{
+		label: "OEUF ARRADOY"
+	},
+	{
+		label: "COTEAUX PEYRIGNAC"
+	},
+	{
+		label: "AVIBRESSE"
+	},
+	{
+		label: "BISCUITERIE COMTOISE"
+	},
+	{
+		label: "C'EST QUI LE PATRON"
+	},
+	{
+		label: "L'OEUF GASCON"
+	},
+	{
+		label: "LA NOUVELLE AGRICULTURE"
+	},
+	{
+		label: "MATINES"
+	},
+	{
+		label: "OEUFS TRADITION"
+	},
+	{
+		label: "OVALIS"
+	},
+	{
+		label: "PP BLANC"
+	},
+	{
+		label: "PP NO NAME"
+	},
+	{
+		label: "CRF CDM"
+	},
+	{
+		label: "L'OEUF RIESTAHL"
+	},
+	{
+		label: "LE CLOS ST JACQUES"
+	},
+	{
+		label: "LES CAMPAGNES"
+	},
+	{
+		label: "OEUF CHAMPAG.ARDENNE"
+	},
+	{
+		label: "OEUF VIEUX PRESSOIR"
+	},
+	{
+		label: "POULE HOUSE"
+	},
+	{
+		label: "SARL ROUSSILLON OEUF"
+	},
+	{
+		label: "SAINT AMAND"
+	},
+	{
+		label: "VITTEL"
+	},
+	{
+		label: "CRISTALINE"
+	},
+	{
+		label: "EVIAN"
+	},
+	{
+		label: "ABATILLES"
+	},
+	{
+		label: "COURMAYEUR"
+	},
+	{
+		label: "HEPAR"
+	},
+	{
+		label: "PLANCOET"
+	},
+	{
+		label: "VOLVIC"
+	},
+	{
+		label: "planet_drinks"
+	},
+	{
+		label: "CONTREX"
+	},
+	{
+		label: "MONT BLANC"
+	},
+	{
+		label: "MONT ROUCOUS"
+	},
+	{
+		label: "OGEU"
+	},
+	{
+		label: "PIERVAL"
+	},
+	{
+		label: "ST GEORGES"
+	},
+	{
+		label: "STE ALIX"
+	},
+	{
+		label: "THONON"
+	},
+	{
+		label: "WATTWILLER"
+	},
+	{
+		label: "AURELE"
+	},
+	{
+		label: "JOLIVAL"
+	},
+	{
+		label: "PERRIER"
+	},
+	{
+		label: "SAN PELLEGRINO"
+	},
+	{
+		label: "BABOIT"
+	},
+	{
+		label: "ROZANA"
+	},
+	{
+		label: "VALS"
+	},
+	{
+		label: "VICHY CELESTINS"
+	},
+	{
+		label: "ARCENS"
+	},
+	{
+		label: "QUEZAC"
+	},
+	{
+		label: "ST-YORRE"
+	},
+	{
+		label: "HIGHTLAND SPRING"
+	},
+	{
+		label: "OREZZA"
+	},
+	{
+		label: "PAROT"
+	},
+	{
+		label: "SALVETAT"
+	},
+	{
+		label: "ST ALBAN"
+	},
+	{
+		label: "ST YORRE"
+	},
+	{
+		label: "VERNIERE"
+	},
+	{
+		label: "BADOIT"
+	},
+	{
+		label: "CONTREX GREEN"
+	},
+	{
+		label: "VOLVICJUICY"
+	},
+	{
+		label: "PERRIER & JUICE"
+	},
+	{
+		label: "VITTEL UP"
+	},
+	{
+		label: "VOLVIC JUICY"
+	},
+	{
+		label: "COCA-COLA"
+	},
+	{
+		label: "COCA-COLA ZERO"
+	},
+	{
+		label: "BREIZH COLA"
+	},
+	{
+		label: "MEUH COLA"
+	},
+	{
+		label: "COCA COLA"
+	},
+	{
+		label: "CORSICA COLA"
+	},
+	{
+		label: "GALVANINA"
+	},
+	{
+		label: "HAMOUD BOUALEM"
+	},
+	{
+		label: "PEPSI"
+	},
+	{
+		label: "PEPSI MAX"
+	},
+	{
+		label: "QUEBEC"
+	},
+	{
+		label: "TETES BRULEES MIX & KIFF"
+	},
+	{
+		label: "LORINA"
+	},
+	{
+		label: "SCHWEPPES"
+	},
+	{
+		label: "7UP"
+	},
+	{
+		label: "BOX"
+	},
+	{
+		label: "FEVER TREE"
+	},
+	{
+		label: "SPRITE"
+	},
+	{
+		label: "BREIZH"
+	},
+	{
+		label: "BREIZH-LIMO"
+	},
+	{
+		label: "LA GOSSE"
+	},
+	{
+		label: "LEMONAID"
+	},
+	{
+		label: "LIMONETTE"
+	},
+	{
+		label: "MARIE DOLIN"
+	},
+	{
+		label: "ORIGINAL TONIC"
+	},
+	{
+		label: "VOSS"
+	},
+	{
+		label: "MONSTER ENERGY"
+	},
+	{
+		label: "RED BULL"
+	},
+	{
+		label: "CRAZY TIGER"
+	},
+	{
+		label: "MME GREEN"
+	},
+	{
+		label: "PSYCHIK"
+	},
+	{
+		label: "PUMA"
+	},
+	{
+		label: "DIUKE"
+	},
+	{
+		label: "HEROIC PLUS"
+	},
+	{
+		label: "MONSTER"
+	},
+	{
+		label: "POWERADE"
+	},
+	{
+		label: "AUCHAN"
+	},
+	{
+		label: "AUCHAN BIO"
+	},
+	{
+		label: "C'EST QUI LE PATRON?"
+	},
+	{
+		label: "POUCE"
+	},
+	{
+		label: "AUCHAN GOURMET"
+	},
+	{
+		label: "MADRANGE"
+	},
+	{
+		label: "MMM!"
+	},
+	{
+		label: "BROCELIANDE"
+	},
+	{
+		label: "NATURE DE FRANCE"
+	},
+	{
+		label: "POULEHOUSE"
+	},
+	{
+		label: "NESTLE"
+	},
+	{
+		label: "ST AMAND"
+	},
+	{
+		label: "VICHY ST YORRE"
+	},
+	{
+		label: "OASIS"
+	},
+	{
+		label: "TEISSEIRE"
+	},
+	{
+		label: "DR PEPPER"
+	},
+	{
+		label: "CANADA DRY"
+	},
+	{
+		label: "GINI"
+	},
+	{
+		label: "MEGA FORCE"
 	}
 ]
 

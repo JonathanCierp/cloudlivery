@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common"
 import { GqlExecutionContext } from "@nestjs/graphql"
 import { verify } from "jsonwebtoken"
+import Redis from "../utils/redis/Redis";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +27,17 @@ export class AuthGuard implements CanActivate {
 		const token = auth.split(" ")[1]
 
 		try {
-			return await verify(token, process.env.AUTH_SECRET)
+			const verifyToken = await verify(token, process.env.AUTH_SECRET)
+
+			const redis = new Redis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST)
+			const redisToken = await redis.get(`signin_${verifyToken.userId}`)
+			redis.close()
+
+			if(redisToken !== token) {
+				throw new Error(`Erreur le jwt est invalide.`)
+			}
+
+			return verifyToken
 		} catch (e) {
 			this.logger.error(e.name + ": " + e.message, "AUTH_GUARD")
 			throw new HttpException(`Erreur le jeton d'authentification est invalide`, HttpStatus.BAD_REQUEST)

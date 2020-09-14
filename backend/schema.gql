@@ -86,6 +86,50 @@ type UserResponseDto {
   items: [UsersModel!]
 }
 
+type ProductsModel {
+  id: Float
+  label: String!
+  brand: String!
+  ean: String!
+  slug: String!
+  uri: String
+  packaging: String
+  origin: String
+  format: String
+  price: String
+  unitOfMeasure: String
+  perUnitLabel: String
+  taxMessage: String
+  perUnit: String
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type ProductResponseDto {
+  token: String
+  code: Float
+  details: String
+  message: String
+  item: ProductsModel
+  items: [ProductsModel!]
+}
+
+type BrandsModel {
+  id: Float
+  label: String!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type BrandResponseDto {
+  token: String
+  code: Float
+  details: String
+  message: String
+  item: BrandsModel
+  items: [BrandsModel!]
+}
+
 type Query {
   providers: ProviderResponseDto!
   provider(id: Float!): ProviderResponseDto!
@@ -94,6 +138,10 @@ type Query {
   groups: GroupResponseDto!
   group(id: Float!): GroupResponseDto!
   me: UserResponseDto!
+  products: ProductResponseDto!
+  product(id: Float!): ProductResponseDto!
+  brands: BrandResponseDto!
+  brand(id: Float!): BrandResponseDto!
 }
 
 type Mutation {
@@ -117,6 +165,16 @@ type Mutation {
   signout: UserResponseDto!
   resetPassword(email: String!): UserResponseDto!
   resetPasswordSave(password: String!, token: String!): UserResponseDto!
+  createProduct(input: ProductInputDto!): ProductResponseDto!
+  createAllProduct: ProductResponseDto!
+  deleteProduct(id: Float!): ProductResponseDto!
+  deleteAllProduct: ProductResponseDto!
+  updateProduct(input: ProductInputDto!): ProductResponseDto!
+  createBrand(input: BrandInputDto!): BrandResponseDto!
+  createAllBrand: BrandResponseDto!
+  deleteBrand(id: Float!): BrandResponseDto!
+  deleteAllBrand: BrandResponseDto!
+  updateBrand(input: BrandInputDto!): BrandResponseDto!
 }
 
 input ProviderInputDto {
@@ -162,4 +220,15 @@ input UserInputDto {
 input UserSigninInputDto {
   email: String!
   password: String!
+}
+
+input ProductInputDto {
+  id: Float
+  label: String!
+  prefixUrl: String
+}
+
+input BrandInputDto {
+  id: Float
+  label: String!
 }

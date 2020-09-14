@@ -16,7 +16,6 @@ export class ProvidersResolver {
 	 * Get all the providers
 	 * @return Promise<ProviderResponseDto>
 	 */
-	@UseGuards(AuthGuard)
 	@Query(() => ProviderResponseDto)
 	async providers(): Promise<ProviderResponseDto> {
 		return this.providersService.findAll()

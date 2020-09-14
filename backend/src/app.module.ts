@@ -12,6 +12,8 @@ import { RayonsModule } from "./modules/rayons/rayons.module"
 import { GroupsModule } from "./modules/groups/groups.module"
 import { UsersModule } from "./modules/users/users.module"
 import { TypeOrmModule } from "@nestjs/typeorm"
+import { ProductsModule } from "./modules/products/products.module";
+import { BrandsModule } from "./modules/brands/brands.module";
 
 /*import { GroupRayonsModule } from "./modules/group-rayons/group-rayons.module"*/
 
@@ -38,7 +40,9 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 		ProvidersModule,
 		RayonsModule,
 		GroupsModule,
-		UsersModule
+		UsersModule,
+		BrandsModule,
+		ProductsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]
