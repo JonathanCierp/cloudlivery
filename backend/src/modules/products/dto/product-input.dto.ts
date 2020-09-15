@@ -1,22 +1,21 @@
 import { InputType, Field } from "@nestjs/graphql"
-import { Column, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ProvidersModel } from "../../providers/providers.model";
-import { BrandsModel } from "../../brands/brands.model";
-import { ProductsImagesModel } from "../models/products-images.model";
+import { ProviderInputDto } from "../../providers/dto/provider-input.dto"
+import { BrandInputDto } from "../../brands/dto/brand-input.dto"
+import { ProductImageInputDto } from "./product-image-input.dto"
 
 @InputType()
 export class ProductInputDto {
 	@Field({ nullable: true })
 	id?: number
 
-	@Field(type => ProvidersModel)
-	provider: ProvidersModel;
+	@Field(type => ProviderInputDto)
+	provider: ProviderInputDto;
 
-	@Field(type => BrandsModel)
-	brand: BrandsModel;
+	@Field(type => BrandInputDto)
+	brand: BrandInputDto;
 
-	@Field(type => [ProductsImagesModel], { nullable: true })
-	productImages: ProductsImagesModel[];
+	@Field(type => [ProductImageInputDto], { nullable: true })
+	productImages?: ProductImageInputDto[];
 
 	@Field()
 	label: string

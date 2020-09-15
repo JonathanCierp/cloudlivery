@@ -2,9 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type BrandsModel {
+type ProductsImagesModel {
   id: Float
-  label: String!
+  largest: String!
+  size_1500x1500: String
+  size_540x540: String
+  size_380x380: String
+  size_340x340: String
+  size_340x240: String
+  size_280x280: String
+  size_195x195: String
+  size_150x150: String
+  size_43x43: String
   updatedAt: DateTime
   createdAt: DateTime
 }
@@ -14,8 +23,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type BrandsModel {
+  id: Float
+  label: String!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
 type ProductsModel {
   id: Float
+  provider: ProvidersModel!
+  brand: BrandsModel!
+  productImages: [ProductsImagesModel!]
   label: String!
   ean: String!
   slug: String!
@@ -71,12 +90,12 @@ type RayonResponseDto {
 
 type GroupsModel {
   id: Float
+  rayons: [RayonsModel!]
   label: String!
   slug: String!
   type: String!
   urlCarrefour: String!
   urlAuchan: String!
-  rayons: [RayonsModel!]
   updatedAt: DateTime
   createdAt: DateTime
 }
@@ -223,11 +242,38 @@ input UserSigninInputDto {
 
 input ProductInputDto {
   id: Float
+  provider: ProviderInputDto!
+  brand: BrandInputDto!
+  productImages: [ProductImageInputDto!]
   label: String!
-  prefixUrl: String
+  ean: String!
+  slug: String!
+  uri: String
+  packaging: String
+  origin: String
+  format: String
+  price: String
+  unitOfMeasure: String
+  perUnitLabel: String
+  taxMessage: String
+  perUnit: String
 }
 
 input BrandInputDto {
   id: Float
   label: String!
+}
+
+input ProductImageInputDto {
+  id: Float
+  largest: String!
+  size_1500x1500: String
+  size_540x540: String
+  size_380x380: String
+  size_340x340: String
+  size_340x240: String
+  size_280x280: String
+  size_195x195: String
+  size_150x150: String
+  size_43x43: String
 }

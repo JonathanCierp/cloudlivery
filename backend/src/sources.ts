@@ -841,6 +841,58 @@ export const groups: GroupInputDto[] = [
 
 export const products: ProductInputDto[] = [
 	{
-
+		provider: {
+			label: "CARREFOUR"
+		},
+		brand: {
+			label: "SANS MARQUES"
+		},
+		label: "TEST_LABEL_0",
+		ean: "TEST_EAN_0",
+		slug: "TEST_SLUG_0"
+	},
+	{
+		provider: {
+			label: "CARREFOUR"
+		},
+		brand: {
+			label: "AGRILAIT"
+		},
+		label: "TEST_LABEL_1",
+		ean: "TEST_EAN_1",
+		slug: "TEST_SLUG_1"
+	},
+	{
+		provider: {
+			label: "AUCHAN"
+		},
+		brand: {
+			label: "SANS MARQUES"
+		},
+		label: "TEST_LABEL_2",
+		ean: "TEST_EAN_2",
+		slug: "TEST_SLUG_2"
+	},
+	{
+		provider: {
+			label: "CARREFOUR"
+		},
+		brand: {
+			label: "SANS MARQUES"
+		},
+		label: "TEST_LABEL_3",
+		ean: "TEST_EAN_3",
+		slug: "TEST_SLUG_3"
+	},
+	{
+		provider: {
+			label: "AUCHAN"
+		},
+		brand: {
+			label: "BASKALIA"
+		},
+		label: "TEST_LABEL_4",
+		ean: "TEST_EAN_4",
+		slug: "TEST_SLUG_4"
 	}
 ]
