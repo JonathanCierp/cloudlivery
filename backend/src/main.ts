@@ -39,6 +39,24 @@ bootstrap()
  **** deleteAll --> OK
  **** update --> OK
  **** Test unitaires --> NOK
+ * BRANDS :
+ **** findAll --> NOK
+ **** findOne --> NOK
+ **** create --> NOK
+ **** createAll --> NOK
+ **** delete --> NOK
+ **** deleteAll --> NOK
+ **** update --> NOK
+ **** Test unitaires --> NOK
+ * PRODUCTS :
+ **** findAll --> NOK
+ **** findOne --> NOK
+ **** create --> NOK
+ **** createAll --> NOK
+ **** delete --> NOK
+ **** deleteAll --> NOK
+ **** update --> NOK
+ **** Test unitaires --> NOK
  */
 /**
  * DELETE public dans les fichier model

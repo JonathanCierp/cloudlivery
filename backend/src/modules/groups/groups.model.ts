@@ -17,6 +17,11 @@ export class GroupsModel {
 	@PrimaryGeneratedColumn()
 	id: number
 
+	@Field(type => [RayonsModel], { nullable: true })
+	@ManyToMany(type => RayonsModel, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
+	@JoinTable()
+	rayons?: RayonsModel[]
+
 	@Field()
 	@Column({ length: 255, unique: true })
 	label: string
@@ -36,11 +41,6 @@ export class GroupsModel {
 	@Field()
 	@Column({ length: 255 })
 	urlAuchan: string
-
-	@Field(type => [RayonsModel], { nullable: true })
-	@ManyToMany(type => RayonsModel, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
-	@JoinTable()
-	rayons?: RayonsModel[]
 
 	@Field({ nullable: true })
 	@Column()

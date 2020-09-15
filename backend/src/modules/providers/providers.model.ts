@@ -1,5 +1,6 @@
 import { ObjectType, Field } from "@nestjs/graphql"
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, OneToMany } from "typeorm"
+import { ProductsModel } from "../products/models/products.model";
 
 @ObjectType()
 @Entity("providers")
@@ -7,6 +8,9 @@ export class ProvidersModel {
 	@Field({ nullable: true })
 	@PrimaryGeneratedColumn()
 	id: number
+
+	@OneToMany(type => ProductsModel, product => product.provider)
+	products: ProductsModel[];
 
 	@Field()
 	@Column({ length: 255, unique: true })

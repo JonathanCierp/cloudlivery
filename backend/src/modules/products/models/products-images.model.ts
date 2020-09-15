@@ -9,6 +9,9 @@ export class ProductsImagesModel {
 	@PrimaryGeneratedColumn()
 	id: number
 
+	@ManyToOne(type => ProductsModel, product => product.productImages)
+	product: ProductsModel;
+
 	@Field()
 	@Column({ length: 255 })
 	largest: string
@@ -48,9 +51,6 @@ export class ProductsImagesModel {
 	@Field({ nullable: true })
 	@Column({ length: 255 , nullable: true})
 	size_43x43?: string
-
-	@ManyToOne(type => ProductsModel, product => product.productImages)
-	product: ProductsModel;
 
 	@Field({ nullable: true })
 	@Column()

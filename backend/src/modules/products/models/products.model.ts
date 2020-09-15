@@ -9,6 +9,8 @@ import {
 	ManyToOne
 } from "typeorm"
 import { ProductsImagesModel } from "./products-images.model";
+import { ProvidersModel } from "../../providers/providers.model";
+import { BrandsModel } from "../../brands/brands.model";
 
 @ObjectType()
 @Entity("products")
@@ -17,22 +19,21 @@ export class ProductsModel {
 	@PrimaryGeneratedColumn()
 	id: number
 
-	/*@ManyToOne(type => ProductsModel, product => product.productImages)
-	provider: ProductsModel;
+	@Field(type => ProvidersModel)
+	@ManyToOne(type => ProvidersModel, provider => provider.products)
+	provider: ProvidersModel;
 
-	@ManyToOne(type => ProductsModel, product => product.productImages)
-	product: ProductsModel;*/
+	@Field(type => BrandsModel)
+	@ManyToOne(type => BrandsModel, brand => brand.products)
+	brand: BrandsModel;
 
-	@OneToMany(type => ProductsImagesModel, productImage => productImage.product)
+	@Field(type => [ProductsImagesModel], { nullable: true })
+	@OneToMany(type => ProductsImagesModel, productImage => productImage.product, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
 	productImages: ProductsImagesModel[];
 
 	@Field()
 	@Column({ length: 255 })
 	label: string
-
-	@Field()
-	@Column({ length: 255 })
-	brand: string
 
 	@Field()
 	@Column({ length: 255, unique: true })

@@ -2,6 +2,7 @@ import { ProviderInputDto } from "./modules/providers/dto/provider-input.dto"
 import { RayonInputDto } from "./modules/rayons/dto/rayon-input.dto"
 import { GroupInputDto } from "./modules/groups/dto/group-input.dto"
 import { BrandInputDto } from "./modules/brands/dto/brand-input.dto";
+import { ProductInputDto } from "./modules/products/dto/product-input.dto";
 
 export const providers: ProviderInputDto[] = [
 	{
@@ -835,5 +836,11 @@ export const groups: GroupInputDto[] = [
 				label: "Lait entier"
 			}
 		]
+	}
+]
+
+export const products: ProductInputDto[] = [
+	{
+
 	}
 ]

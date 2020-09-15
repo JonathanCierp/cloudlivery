@@ -4,7 +4,7 @@ import { ProductsService } from "./products.service"
 import { ProductInputDto } from "./dto/product-input.dto"
 import { ProductResponseDto } from "./dto/product-response.dto"
 import { ProductsModel } from "./models/products.model"
-import { providers } from "../../sources"
+import { products, providers } from "../../sources"
 import { AuthGuard } from "../../guards/auth.guard"
 
 @Resolver(of => ProductsModel)
@@ -47,7 +47,7 @@ export class ProductsResolver {
 	 */
 	@Mutation(() => ProductResponseDto)
 	async createAllProduct(): Promise<ProductResponseDto> {
-		return this.productsService.createAll(providers)
+		return this.productsService.createAll(products)
 	}
 
 	/**
