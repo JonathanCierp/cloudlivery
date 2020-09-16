@@ -20,15 +20,15 @@ export class ProductsModel {
 	id: number
 
 	@Field(type => ProvidersModel)
-	@ManyToOne(type => ProvidersModel, provider => provider.products)
+	@ManyToOne(type => ProvidersModel, provider => provider.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
 	provider: ProvidersModel;
 
 	@Field(type => BrandsModel)
-	@ManyToOne(type => BrandsModel, brand => brand.products)
+	@ManyToOne(type => BrandsModel, brand => brand.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
 	brand: BrandsModel;
 
 	@Field(type => [ProductsImagesModel], { nullable: true })
-	@OneToMany(type => ProductsImagesModel, productImage => productImage.product, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
+	@OneToMany(type => ProductsImagesModel, productImage => productImage.product, { cascade: true })
 	productImages: ProductsImagesModel[];
 
 	@Field()

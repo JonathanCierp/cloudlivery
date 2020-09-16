@@ -1,11 +1,10 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql"
-import { Inject, UseGuards } from "@nestjs/common"
+import { Inject } from "@nestjs/common"
 import { ProductsService } from "./products.service"
 import { ProductInputDto } from "./dto/product-input.dto"
 import { ProductResponseDto } from "./dto/product-response.dto"
 import { ProductsModel } from "./models/products.model"
-import { products, providers } from "../../sources"
-import { AuthGuard } from "../../guards/auth.guard"
+import { products } from "../../sources"
 
 @Resolver(of => ProductsModel)
 export class ProductsResolver {

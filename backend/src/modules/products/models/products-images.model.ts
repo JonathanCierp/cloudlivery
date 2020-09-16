@@ -9,7 +9,7 @@ export class ProductsImagesModel {
 	@PrimaryGeneratedColumn()
 	id: number
 
-	@ManyToOne(type => ProductsModel, product => product.productImages)
+	@ManyToOne(type => ProductsModel, product => product.productImages, { onDelete: "CASCADE", onUpdate: "CASCADE" })
 	product: ProductsModel;
 
 	@Field()

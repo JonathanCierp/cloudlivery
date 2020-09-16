@@ -6,6 +6,9 @@ import { ProductsModel } from "./models/products.model"
 import { ProductResponseDto } from "./dto/product-response.dto"
 import { ProductsInterface } from "./products.interface"
 import { ProductInputDto } from "./dto/product-input.dto"
+import { ProvidersModel } from "../providers/providers.model";
+import { BrandsModel } from "../brands/brands.model";
+import { ProductsImagesModel } from "./models/products-images.model";
 
 @Injectable()
 export class ProductsService extends AppService implements ProductsInterface {
@@ -13,7 +16,10 @@ export class ProductsService extends AppService implements ProductsInterface {
 	protected item?: ProductsModel | undefined
 	protected items?: ProductsModel[] | undefined
 
-	constructor(@InjectRepository(ProductsModel) private productsModel: Repository<ProductsModel>) {
+	constructor(@InjectRepository(ProductsModel) private productsModel: Repository<ProductsModel>,
+							@InjectRepository(ProductsImagesModel) private productsImages: Repository<ProductsImagesModel>,
+							@InjectRepository(ProvidersModel) private providersModel: Repository<ProvidersModel>,
+							@InjectRepository(BrandsModel) private brandsModel: Repository<BrandsModel>) {
 		super()
 	}
 
@@ -34,7 +40,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 			this.message = "Produits récupérés avec succès."
-			this.items = await this.productsModel.find()
+			this.items = await this.productsModel.find( { relations: ["provider", "brand", "productImages"] } )
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
@@ -56,7 +62,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 			this.message = "Produit récupéré avec succès."
-			this.item = await this.productsModel.findOne(id)
+			this.item = await this.productsModel.findOne(id, { relations: ["provider", "brand", "productImages"] } )
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
@@ -77,15 +83,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
-
-			const exist = await this.productsModel.findOne({ label: productInputDto.label })
-
-			if (exist) {
-				this.message = "Erreur un produit existe déjà avec ce nom."
-				throw new Error(`Erreur lors de la création du produit: ${productInputDto.label}.`)
-			}
-
-			this.item = await this.productsModel.save(this.productsModel.create(productInputDto))
+			this.item = await this.createItem(productInputDto)
 			this.message = "Produit créé avec succès."
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
@@ -108,7 +106,11 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			this.items = await this.productsModel.save(this.productsModel.create(productInputDto))
+			this.items = []
+
+			for(let productInputDt of productInputDto) {
+				this.items = [...this.items, await this.createItem(productInputDt)]
+			}
 
 			if (!this.items) {
 				throw new Error(`Erreur lors de la création des produits.`)
@@ -184,21 +186,10 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 
-			const exist = await this.productsModel.findOne({ label: productInputDto.label })
-
-			if (exist) {
-				if (exist.id !== productInputDto.id) {
-					this.message = "Erreur un produit existe déjà avec ce nom."
-					throw new Error(`Erreur lors de la modification du produit: ${productInputDto.label}.`)
-				}
-
-				this.item = await this.productsModel.save(this.productsModel.create(productInputDto))
-			}
-
 			const existById = await this.productsModel.findOne({ id: productInputDto.id })
 
 			if (existById) {
-				this.item = await this.productsModel.save(this.productsModel.create(productInputDto))
+				this.item = await this.productsModel.save(await this.createItem(productInputDto))
 			}
 
 			if (!this.item) {
@@ -216,5 +207,35 @@ export class ProductsService extends AppService implements ProductsInterface {
 		}
 
 		return this.formattedResponseProducts()
+	}
+
+	/**
+	 * @param productInputDto ProductInputDto --> Payload send to create object
+	 * Create one product
+	 * @return Promise<ProductsModel | undefined>
+	 */
+	async createItem(productInputDto: ProductInputDto): Promise<ProductsModel | undefined> {
+		const exist = await this.productsModel.findOne({ label: productInputDto.label })
+
+		if (exist) {
+			this.message = "Erreur un produit existe déjà avec ce nom."
+			throw new Error(`Erreur lors de la création du produit: ${productInputDto.label}.`)
+		}
+
+		let product = this.productsModel.create(productInputDto)
+
+		if (productInputDto.provider) {
+			product.provider = await this.providersModel.findOne({ label: productInputDto.provider.label })
+		}
+
+		if (productInputDto.brand) {
+			product.brand = await this.brandsModel.findOne({ label: productInputDto.brand.label })
+		}
+
+		if (productInputDto.productImages) {
+			product.productImages = this.productsImages.create(productInputDto.productImages)
+		}
+
+		return await this.productsModel.save(product)
 	}
 }

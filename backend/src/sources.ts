@@ -12,10 +12,6 @@ export const providers: ProviderInputDto[] = [
 	{
 		label: "CARREFOUR",
 		prefixUrl: "https://www.carrefour.fr"
-	},
-	{
-		label: "LABEL_TEST_0 ",
-		prefixUrl: "PREFIX_URL_TEST_0 "
 	}
 ]
 
@@ -845,7 +841,7 @@ export const products: ProductInputDto[] = [
 			label: "CARREFOUR"
 		},
 		brand: {
-			label: "SANS MARQUES"
+			label: "SANS MARQUE"
 		},
 		label: "TEST_LABEL_0",
 		ean: "TEST_EAN_0",
@@ -867,7 +863,7 @@ export const products: ProductInputDto[] = [
 			label: "AUCHAN"
 		},
 		brand: {
-			label: "SANS MARQUES"
+			label: "SANS MARQUE"
 		},
 		label: "TEST_LABEL_2",
 		ean: "TEST_EAN_2",
@@ -878,7 +874,7 @@ export const products: ProductInputDto[] = [
 			label: "CARREFOUR"
 		},
 		brand: {
-			label: "SANS MARQUES"
+			label: "SANS MARQUE"
 		},
 		label: "TEST_LABEL_3",
 		ean: "TEST_EAN_3",
@@ -893,6 +889,17 @@ export const products: ProductInputDto[] = [
 		},
 		label: "TEST_LABEL_4",
 		ean: "TEST_EAN_4",
-		slug: "TEST_SLUG_4"
+		slug: "TEST_SLUG_4",
+		productImages: [
+			{
+				largest: "1"
+			},
+			{
+				largest: "2"
+			},
+			{
+				largest: "3"
+			}
+		]
 	}
 ]
