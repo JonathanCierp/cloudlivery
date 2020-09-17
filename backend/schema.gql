@@ -148,6 +148,13 @@ type BrandResponseDto {
   items: [BrandsModel!]
 }
 
+type ScrapingResponseDto {
+  token: String
+  code: Float
+  details: String
+  message: String
+}
+
 type Query {
   providers: ProviderResponseDto!
   provider(id: Float!): ProviderResponseDto!
@@ -193,6 +200,7 @@ type Mutation {
   deleteBrand(id: Float!): BrandResponseDto!
   deleteAllBrand: BrandResponseDto!
   updateBrand(input: BrandInputDto!): BrandResponseDto!
+  scraping: ScrapingResponseDto!
 }
 
 input ProviderInputDto {

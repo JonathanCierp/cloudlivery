@@ -14,6 +14,7 @@ import { UsersModule } from "./modules/users/users.module"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { ProductsModule } from "./modules/products/products.module";
 import { BrandsModule } from "./modules/brands/brands.module";
+import { ScrapingsModule } from "./modules/scrapings/scrapings.module";
 
 /*import { GroupRayonsModule } from "./modules/group-rayons/group-rayons.module"*/
 
@@ -42,7 +43,8 @@ import { BrandsModule } from "./modules/brands/brands.module";
 		GroupsModule,
 		UsersModule,
 		BrandsModule,
-		ProductsModule
+		ProductsModule,
+		ScrapingsModule
 	],
 	controllers: [AppController],
 	providers: [AppService]
