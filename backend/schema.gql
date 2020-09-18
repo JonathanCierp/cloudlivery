@@ -153,6 +153,8 @@ type ScrapingResponseDto {
   code: Float
   details: String
   message: String
+  item: ProductsModel
+  items: [ProductsModel!]
 }
 
 type Query {

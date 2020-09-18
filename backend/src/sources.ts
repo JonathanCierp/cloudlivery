@@ -797,7 +797,7 @@ export const groups: GroupInputDto[] = [
 			}
 		]
 	},
-	{
+	/*{
 		label: "Lait écrémé",
 		slug: "lait-ecreme",
 		type: "lait",
@@ -832,7 +832,202 @@ export const groups: GroupInputDto[] = [
 				label: "Lait entier"
 			}
 		]
-	}
+	},
+	{
+		label: "Boeuf",
+		slug: "boeuf",
+		type: "viande",
+		urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/boeuf?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/boeuf/ca-n020101",
+		rayons: [
+			{
+				label: "Viandes et Poissons",
+			},
+			{
+				label: "Boucherie",
+			},
+			{
+				label: "Boeuf",
+			}
+		]
+	},
+	{
+		label: "Veau",
+		slug: "veau",
+		type: "viande",
+		urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/veau?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/veau-agneau/ca-n020103",
+		rayons: [
+			{
+				label: "Viandes et Poissons",
+			},
+			{
+				label: "Boucherie",
+			},
+			{
+				label: "Veau",
+			}
+		]
+	},
+	{
+		label: "Porc",
+		slug: "porc",
+		type: "viande",
+		urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/porc?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/porc/ca-n020102",
+		rayons: [
+			{
+				label: "Viandes et Poissons",
+			},
+			{
+				label: "Boucherie",
+			},
+			{
+				label: "Porc",
+			}
+		]
+	},
+	{
+		label: "Saucisses et grillades",
+		slug: "saucisses-et-grillades",
+		type: "viande",
+		urlCarrefour: "https://www.carrefour.fr/r/viandes-et-poissons/boucherie/saucisses-et-grillades?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boucherie-volaille-poissonnerie/boucherie/saucisses-farces/ca-n020104",
+		rayons: [
+			{
+				label: "Viandes et Poissons",
+			},
+			{
+				label: "Boucherie",
+			},
+			{
+				label: "Saucisses et grillades",
+			}
+		]
+	},
+	{
+		label: "Oeufs",
+		slug: "oeufs",
+		type: "oeufs",
+		urlCarrefour: "https://www.carrefour.fr/r/cremerie/oeufs?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/produits-laitiers-oeufs-fromages/cremerie-oeufs-laits/oeufs/ca-n010103",
+		rayons: [
+			{
+				label: "Crémerie",
+			},
+			{
+				label: "Oeufs",
+			}
+		]
+	},
+	{
+		label: "Eaux plates",
+		slug: "eaux-plates",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-plates?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-plates-natures/ca-n070101",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Eaux",
+			},
+			{
+				label: "Eaux plates",
+			}
+		]
+	},
+	{
+		label: "Eaux gazeuses",
+		slug: "eaux-gazeuses",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-gazeuses?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-gazeuses-natures/ca-n070102",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Eaux",
+			},
+			{
+				label: "Eaux gazeuses",
+			}
+		]
+	},
+	{
+		label: "Eaux aromatisées",
+		slug: "eaux-aromatisees",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/eaux/eaux-aromatisees?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/eaux-laits/eaux-aromatisees-fruitees/ca-n070103",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Eaux",
+			},
+			{
+				label: "Eaux aromatisées",
+			}
+		]
+	},
+	{
+		label: "Colas",
+		slug: "colas",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/colas?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/colas/ca-n070601",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Colas, Thés glacés et Soft drinks",
+			},
+			{
+				label: "Colas",
+			}
+		]
+	},
+	{
+		label: "Limonades limes et tonics",
+		slug: "limonades-limes-et-tonics",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/limonades-limes-et-tonics?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/limonades-limes-tonic/ca-n070603",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Colas, Thés glacés et Soft drinks",
+			},
+			{
+				label: "Limonades, Limes et Tonics",
+			}
+		]
+	},
+	{
+		label: "Boissons sports et energisantes",
+		slug: "boissons-sports-et-energisantes",
+		type: "boissons",
+		urlCarrefour: "https://www.carrefour.fr/r/boissons-sans-alcool/colas-thes-glaces-et-soft-drinks/boissons-sports-et-energisantes?noRedirect=1",
+		urlAuchan: "https://www.auchan.fr/boissons/soda-boissons-jus-de-fruits-sirops/colas-boissons-gazeuses-energisants/boissons-energisantes/ca-n070604",
+		rayons: [
+			{
+				label: "Boissons sans alcool",
+			},
+			{
+				label: "Colas, Thés glacés et Soft drinks",
+			},
+			{
+				label: "Boissons sports et Energisantes",
+			}
+		]
+	}*/
 ]
 
 export const products: ProductInputDto[] = [

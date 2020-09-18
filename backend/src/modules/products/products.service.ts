@@ -217,25 +217,22 @@ export class ProductsService extends AppService implements ProductsInterface {
 	async createItem(productInputDto: ProductInputDto): Promise<ProductsModel | undefined> {
 		const exist = await this.productsModel.findOne({ label: productInputDto.label })
 
-		if (exist) {
-			this.message = "Erreur un produit existe déjà avec ce nom."
-			throw new Error(`Erreur lors de la création du produit: ${productInputDto.label}.`)
+		if (!exist) {
+			let product = this.productsModel.create(productInputDto)
+
+			if (productInputDto.provider) {
+				product.provider = await this.providersModel.findOne({ label: productInputDto.provider.label })
+			}
+
+			if (productInputDto.brand) {
+				product.brand = await this.brandsModel.findOne({ label: productInputDto.brand.label })
+			}
+
+			if (productInputDto.productImages) {
+				product.productImages = this.productsImages.create(productInputDto.productImages)
+			}
+
+			return await this.productsModel.save(product)
 		}
-
-		let product = this.productsModel.create(productInputDto)
-
-		if (productInputDto.provider) {
-			product.provider = await this.providersModel.findOne({ label: productInputDto.provider.label })
-		}
-
-		if (productInputDto.brand) {
-			product.brand = await this.brandsModel.findOne({ label: productInputDto.brand.label })
-		}
-
-		if (productInputDto.productImages) {
-			product.productImages = this.productsImages.create(productInputDto.productImages)
-		}
-
-		return await this.productsModel.save(product)
 	}
 }
