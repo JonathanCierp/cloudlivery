@@ -45,12 +45,14 @@
 				</nuxt-link>
 			</div>
 			<div class="header__container__menu flex-1 px-16 font-bold text-sm">
-				<ui-tabs v-model="tab">
-					<ui-tab>Comparateur</ui-tab>
-					<ui-tab>Tous les produits</ui-tab>
-					<ui-tab>Carrefour</ui-tab>
-					<ui-tab>Auchan</ui-tab>
-				</ui-tabs>
+				<ui-desktop :breakpoint="1000">
+					<ui-tabs v-model="tab">
+						<ui-tab>Comparateur</ui-tab>
+						<ui-tab>Tous les produits</ui-tab>
+						<ui-tab>Carrefour</ui-tab>
+						<ui-tab>Auchan</ui-tab>
+					</ui-tabs>
+				</ui-desktop>
 				<!--<ul class="header__container__items flex items-center">
 					<li class="header__container__item header__container__item&#45;&#45;active mr-5 flex items-center relative">
 						<nuxt-link class="flex items-center h-full" to="#all">

@@ -1,5 +1,5 @@
 <template>
-	<ais-instant-search v-if="show" :search-client="searchClient" index-name="dev_cloudlivery">
+	<ais-instant-search v-if="show" :search-client="searchClient" index-name="ALL">
 		<core-header />
 		<nuxt />
 	</ais-instant-search>

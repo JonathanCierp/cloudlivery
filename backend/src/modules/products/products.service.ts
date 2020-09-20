@@ -6,9 +6,9 @@ import { ProductsModel } from "./models/products.model"
 import { ProductResponseDto } from "./dto/product-response.dto"
 import { ProductsInterface } from "./products.interface"
 import { ProductInputDto } from "./dto/product-input.dto"
-import { ProvidersModel } from "../providers/providers.model";
-import { BrandsModel } from "../brands/brands.model";
-import { ProductsImagesModel } from "./models/products-images.model";
+import { ProvidersModel } from "../providers/providers.model"
+import { BrandsModel } from "../brands/brands.model"
+import { ProductsImagesModel } from "./models/products-images.model"
 
 @Injectable()
 export class ProductsService extends AppService implements ProductsInterface {
@@ -40,7 +40,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 			this.message = "Produits récupérés avec succès."
-			this.items = await this.productsModel.find( { relations: ["provider", "brand", "productImages"] } )
+			this.items = await this.productsModel.find({ relations: ["provider", "brand", "productImages"] })
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
@@ -62,7 +62,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 			this.code = HttpStatus.OK
 			this.details = null
 			this.message = "Produit récupéré avec succès."
-			this.item = await this.productsModel.findOne(id, { relations: ["provider", "brand", "productImages"] } )
+			this.item = await this.productsModel.findOne(id, { relations: ["provider", "brand", "productImages"] })
 		} catch (e) {
 			this.code = HttpStatus.BAD_REQUEST
 			this.details = e.message
@@ -108,7 +108,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 
 			this.items = []
 
-			for(let productInputDt of productInputDto) {
+			for (let productInputDt of productInputDto) {
 				this.items = [...this.items, await this.createItem(productInputDt)]
 			}
 
@@ -210,12 +210,52 @@ export class ProductsService extends AppService implements ProductsInterface {
 	}
 
 	/**
+	 * @param productInputDto ProductInputDto[] --> Contain all providers
+	 * Create all products for scraping
+	 * @return Promise<ProductResponseDto>
+	 */
+	async createAllFromScraping(productInputDto: ProductInputDto[]): Promise<ProductsModel[]> {
+		let items = []
+
+		for (let productInputDt of productInputDto) {
+			const exist = await this.productsModel.findOne({
+				label: productInputDt.label,
+				slug: productInputDt.slug
+			})
+
+			if (!exist) {
+				let product = this.productsModel.create(productInputDt)
+
+				if (productInputDt.provider) {
+					product.provider = await this.providersModel.findOne({ label: productInputDt.provider.label })
+				}
+
+				if (productInputDt.brand) {
+					product.brand = await this.brandsModel.findOne({ label: productInputDt.brand.label })
+				}
+
+				if (productInputDt.productImages) {
+					product.productImages = this.productsImages.create(productInputDt.productImages)
+				}
+
+				try {
+					items = [...items, await this.productsModel.save(product)]
+				} catch (e) {
+					//console.log(e)
+				}
+			}
+		}
+
+		return items
+	}
+
+	/**
 	 * @param productInputDto ProductInputDto --> Payload send to create object
 	 * Create one product
 	 * @return Promise<ProductsModel | undefined>
 	 */
 	async createItem(productInputDto: ProductInputDto): Promise<ProductsModel | undefined> {
-		const exist = await this.productsModel.findOne({ label: productInputDto.label })
+		const exist = await this.productsModel.findOne({ slug: productInputDto.slug })
 
 		if (!exist) {
 			let product = this.productsModel.create(productInputDto)

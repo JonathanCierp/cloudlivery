@@ -36,7 +36,7 @@ export class ProductsModel {
 	label: string
 
 	@Field()
-	@Column({ length: 255, unique: true })
+	@Column({ length: 255 })
 	ean: string
 
 	@Field()
