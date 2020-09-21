@@ -44,8 +44,7 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<div class="header__container__menu flex-1 px-16 font-bold text-sm">
-				<ui-desktop :breakpoint="1000">
+			<ui-desktop class="header__container__menu flex-1 px-16 font-bold text-sm" :breakpoint="900">
 					<ui-tabs v-model="tab">
 						<ui-tab>Comparateur</ui-tab>
 						<ui-tab>Tous les produits</ui-tab>
@@ -53,27 +52,6 @@
 						<ui-tab>Auchan</ui-tab>
 					</ui-tabs>
 				</ui-desktop>
-				<!--<ul class="header__container__items flex items-center">
-					<li class="header__container__item header__container__item&#45;&#45;active mr-5 flex items-center relative">
-						<nuxt-link class="flex items-center h-full" to="#all">
-							Tous les produits
-						</nuxt-link>
-						<span></span>
-					</li>
-					<li class="header__container__item mr-5 flex items-center relative">
-						<nuxt-link class="flex items-center h-full" to="#carrefour">
-							Carrefour
-						</nuxt-link>
-						<span></span>
-					</li>
-					<li class="header__container__item flex items-center relative">
-						<nuxt-link class="flex items-center h-full" to="#auchan">
-							Auchan
-						</nuxt-link>
-						<span></span>
-					</li>
-				</ul>-->
-			</div>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
 				<li class="mx-5 cursor-pointer hover:opacity-75">
 					<icon-cart/>
@@ -213,6 +191,7 @@
 
 	header.header .header__container .header__container__menu, header.header .header__container .header__container__menu .header__container__items, header.header .header__container .header__container__menu .header__container__items .header__container__item {
 		height: 100%;
+		font-size: .9rem;
 	}
 
 	header.header .header__container .header__container__menu .header__container__items .header__container__item span {
