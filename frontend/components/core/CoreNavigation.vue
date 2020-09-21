@@ -1,5 +1,5 @@
 <template>
-	<ui-mobile class="core-navigation flex-1 font-bold text-sm" :breakpoint="899.5">
+	<ui-mobile class="core-navigation flex-1 font-bold text-sm" :breakpoint="900">
 		<ui-tabs v-model="tab" slider-position="top">
 			<ui-tab full-width center>Comparateur</ui-tab>
 			<ui-tab full-width center>Tous les produits</ui-tab>
