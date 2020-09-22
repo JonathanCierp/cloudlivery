@@ -15,7 +15,8 @@
 				<img :src="item.productImages[0].largest" class="mx-auto w-32 h-32">
 			</div>
 			<div class="produit-item__card__price mb-5">
-				<p class="font-bold text-xl">{{ item.price }}</p>
+				<p class="font-bold text-xl">{{ item.price }} *</p>
+				<p class="text-xs text-right">* Prix moyen</p>
 			</div>
 			<div class="produit-item__card__action text-center">
 				<ui-button style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full>Ajouter au panier</ui-button>
