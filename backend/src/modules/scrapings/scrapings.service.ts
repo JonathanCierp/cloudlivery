@@ -919,9 +919,34 @@ export class ScrapingsService extends AppService {
 				for(let item of this.items) {
 					if(this.items.filter(itemF => itemF.ean === item.ean).length > 1) {
 						let exist = array1.find(product => product.ean === item.ean)
+
 						if(!exist) {
 							array1 = [...array1, item]
 						}else {
+							if(item.provider.label === "CARREFOUR" && exist.provider.label === "AUCHAN") {
+								//@ts-ignore
+								item.price_carrefour = item.price
+								//@ts-ignore
+								item.price_auchan = exist.price
+								//@ts-ignore
+								item.url_carrefour = item.uri
+								//@ts-ignore
+								item.url_auchan = exist.uri
+								//@ts-ignore
+								item.price = ((parseFloat(item.price.split("€")[0].replace(",", ".")) + parseFloat(exist.price.split("€")[0].replace(",", "."))) / 2).toFixed(2) + "€"
+							}else {
+								//@ts-ignore
+								item.price_carrefour = exist.price
+								//@ts-ignore
+								item.price_auchan = item.price
+								//@ts-ignore
+								item.url_carrefour = exist.uri
+								//@ts-ignore
+								item.url_auchan = item.uri
+								//@ts-ignore
+								item.price = ((parseFloat(item.price.split("€")[0].replace(",", ".")) + parseFloat(exist.price.split("€")[0].replace(",", "."))) / 2).toFixed(2) + "€"
+							}
+
 							if(item.price.split("€")[0].replace(",", ".") < exist.price.split("€")[0].replace(",", ".")) {
 								products = [...products, item]
 							}else {
