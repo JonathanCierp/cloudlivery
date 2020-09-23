@@ -54,7 +54,7 @@
 				</ui-desktop>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
 				<li class="mx-5 cursor-pointer hover:opacity-75">
-					<ui-badge content="6">
+					<ui-badge type="info" content="6">
 						<icon-cart/>
 					</ui-badge>
 				</li>
