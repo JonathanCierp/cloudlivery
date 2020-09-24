@@ -30,6 +30,7 @@
 		},
 		mounted() {
 			this.show = true
+			this.$store.commit("SYNCHRONIZE_CART")
 		}
 	}
 </script>

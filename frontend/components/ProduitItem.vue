@@ -18,8 +18,8 @@
 				<p class="font-bold text-xl">{{ item.price }} *</p>
 				<p class="text-xs text-right">* Prix moyen</p>
 			</div>
-			<div class="produit-item__card__action" :class="`${isAddToCard ? 'text-right' : 'text-center'}`">
-				<ui-form-numeric v-if="isAddToCard" v-model="productToCartNumber" type="info" max-width="60" min="0" max="100" />
+			<div class="produit-item__card__action" :class="`${isAddToCard || isCartExist ? 'text-right' : 'text-center'}`">
+				<ui-form-numeric v-if="isAddToCard || isCartExist" v-model="productToCartNumber" type="info" max-width="60" min="1" max="100" @input="editCart" />
 				<ui-button v-else style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full @click="isAddToCard = true">Ajouter au panier</ui-button>
 			</div>
 		</ui-card>
@@ -40,6 +40,10 @@
 				isAddToCard: false,
 				productToCartNumber: 0
 			}
+		},
+		beforeMount() {
+			const cartItem = this.$store.state.cartItems.find(cartItem => cartItem.id === this.item.id)
+			this.productToCartNumber = cartItem ? cartItem.count : 0
 		},
 		computed: {
 			itemTagColor: {
@@ -70,6 +74,14 @@
 				get() {
 					return this.item.packaging || "&nbsp;"
 				}
+			},
+			isCartExist() {
+				return this.$store.state.cartItems.find(cartItem => cartItem.id === this.item.id)
+			}
+		},
+		methods: {
+			editCart(count) {
+				this.$emit("editCart", this.item, count)
 			}
 		}
 	}

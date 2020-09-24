@@ -53,8 +53,8 @@
 					</ui-tabs>
 				</ui-desktop>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
-				<li class="mx-5 cursor-pointer hover:opacity-75">
-					<ui-badge type="info" content="6">
+				<li class="mx-5 cursor-pointer hover:opacity-75" @click="$store.commit('DISPLAY_CART_DIALOG', true)">
+					<ui-badge type="info" :content="$store.state.countCartItems">
 						<icon-cart/>
 					</ui-badge>
 				</li>

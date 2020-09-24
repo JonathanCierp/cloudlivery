@@ -10,18 +10,23 @@
 			</div>
 		</ais-search-box>
 		<ais-stats/>-->
-
-		<!--<ui-desktop :breakpoint="900">
-			zaezaeeza
-		</ui-desktop>
-		<ui-mobile :breakpoint="899.5">
-			15158
-		</ui-mobile>-->
-
 		<ui-tab-items v-model="tab" @change="changeTab">
-			<produit-items v-for="item in items" :key="item.indexTab" :item="item" :loading="loading"/>
+			<produit-items v-for="item in items" :key="item.indexTab" :item="item" :loading="loading" @editCart="editCart" />
 		</ui-tab-items>
 		<ui-progress-circular class="absolute absolute-center" color="#745bdd" indeterminate size="40" v-if="loading"/>
+		<!-- https://designmodo.com/shopping-cart-ui/ -->
+		<ui-dialog class="cart-dialog" v-model="displayCartDialog" transition="slide-left" max-width="50%" no-margin max-height="100%" height="100%" placement="left">
+			<ui-card>
+				<ui-card-title>Mon panier</ui-card-title>
+				<ui-card-text>
+					azaeeezaeazzae
+				</ui-card-text>
+				<ui-card-action>
+					<ui-spacer />
+					<p @click="displayCartDialog = false">close</p>
+				</ui-card-action>
+			</ui-card>
+		</ui-dialog>
 	</div>
 </template>
 
@@ -81,6 +86,14 @@
 				get() {
 					return this.$store.state.tab
 				}
+			},
+			displayCartDialog: {
+				get() {
+					return this.$store.state.displayCartDialog
+				},
+				set(v) {
+					this.$store.commit("DISPLAY_CART_DIALOG", v)
+				}
 			}
 		},
 		methods: {
@@ -90,6 +103,11 @@
 				setTimeout(() => {
 					this.loading = false
 				}, 300)
+			},
+			editCart(item, count) {
+				item.count = count
+				
+				this.$store.commit("EDIT_CART", item)
 			}
 		}
 	}
