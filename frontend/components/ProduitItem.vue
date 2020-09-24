@@ -18,8 +18,9 @@
 				<p class="font-bold text-xl">{{ item.price }} *</p>
 				<p class="text-xs text-right">* Prix moyen</p>
 			</div>
-			<div class="produit-item__card__action text-center">
-				<ui-button style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full>Ajouter au panier</ui-button>
+			<div class="produit-item__card__action" :class="`${isAddToCard ? 'text-right' : 'text-center'}`">
+				<ui-form-numeric v-if="isAddToCard" v-model="productToCartNumber" type="info" max-width="60" min="0" max="100" />
+				<ui-button v-else style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full @click="isAddToCard = true">Ajouter au panier</ui-button>
 			</div>
 		</ui-card>
 	</div>
@@ -32,6 +33,12 @@
 			item: {
 				type: Object,
 				default: {}
+			}
+		},
+		data() {
+			return {
+				isAddToCard: false,
+				productToCartNumber: 0
 			}
 		},
 		computed: {

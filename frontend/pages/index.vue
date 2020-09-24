@@ -50,7 +50,7 @@
 						indexTab: 0,
 						indexName: "COMPARATEUR"
 					},
-					{
+					/*{
 						indexTab: 1,
 						indexName: "ALL"
 					},
@@ -61,7 +61,7 @@
 					{
 						indexTab: 3,
 						indexName: "AUCHAN"
-					}
+					}*/
 				]
 			}
 		},
