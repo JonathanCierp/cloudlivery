@@ -11,6 +11,7 @@ import {
 import { ProductsImagesModel } from "./products-images.model";
 import { ProvidersModel } from "../../providers/providers.model";
 import { BrandsModel } from "../../brands/brands.model";
+import { GroupsModel } from "../../groups/groups.model";
 
 @ObjectType()
 @Entity("products")
@@ -26,6 +27,10 @@ export class ProductsModel {
 	@Field(type => BrandsModel)
 	@ManyToOne(type => BrandsModel, brand => brand.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
 	brand: BrandsModel;
+
+	@Field(type => GroupsModel)
+	@ManyToOne(type => GroupsModel, group => group.products, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+	group: GroupsModel;
 
 	@Field(type => [ProductsImagesModel], { nullable: true })
 	@OneToMany(type => ProductsImagesModel, productImage => productImage.product, { cascade: true })

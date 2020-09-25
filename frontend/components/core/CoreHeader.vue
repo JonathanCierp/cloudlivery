@@ -45,12 +45,12 @@
 				</nuxt-link>
 			</div>
 			<ui-desktop class="header__container__menu flex-1 px-16 font-bold text-sm" :breakpoint="900">
-					<ui-tabs v-model="tab">
-						<ui-tab>Comparateur</ui-tab>
-						<!--<ui-tab>Tous les produits</ui-tab>
-						<ui-tab>Carrefour</ui-tab>
-						<ui-tab>Auchan</ui-tab>-->
-					</ui-tabs>
+				<!--<ui-tabs v-model="tab">
+					<ui-tab>Comparateur</ui-tab>
+					<ui-tab>Tous les produits</ui-tab>
+					<ui-tab>Carrefour</ui-tab>
+					<ui-tab>Auchan</ui-tab>
+					</ui-tabs>-->
 				</ui-desktop>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
 				<li class="mx-5 cursor-pointer hover:opacity-75" @click="$store.commit('DISPLAY_CART_DIALOG', true)">

@@ -1,5 +1,6 @@
 import { InputType, Field } from "@nestjs/graphql"
 import { RayonRelationDto } from "../../rayons/dto/rayon-relation.dto"
+import { GroupRelationDto } from "./group-relation.dto";
 
 @InputType()
 export class GroupInputDto {
@@ -23,4 +24,7 @@ export class GroupInputDto {
 
 	@Field(type => [RayonRelationDto], { nullable: true })
 	rayons?: RayonRelationDto[]
+
+	@Field(type => [GroupRelationDto], { nullable: true })
+	products?: GroupRelationDto[]
 }

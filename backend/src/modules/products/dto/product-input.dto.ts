@@ -2,6 +2,7 @@ import { InputType, Field } from "@nestjs/graphql"
 import { ProviderInputDto } from "../../providers/dto/provider-input.dto"
 import { BrandInputDto } from "../../brands/dto/brand-input.dto"
 import { ProductImageInputDto } from "./product-image-input.dto"
+import { GroupInputDto } from "../../groups/dto/group-input.dto"
 
 @InputType()
 export class ProductInputDto {
@@ -9,13 +10,16 @@ export class ProductInputDto {
 	id?: number
 
 	@Field(type => ProviderInputDto)
-	provider: ProviderInputDto;
+	provider: ProviderInputDto
 
 	@Field(type => BrandInputDto)
-	brand: BrandInputDto;
+	brand: BrandInputDto
+
+	@Field(type => GroupInputDto)
+	group: GroupInputDto
 
 	@Field(type => [ProductImageInputDto], { nullable: true })
-	productImages?: ProductImageInputDto[];
+	productImages?: ProductImageInputDto[]
 
 	@Field()
 	label: string

@@ -9,6 +9,7 @@ import { ProductInputDto } from "./dto/product-input.dto"
 import { ProvidersModel } from "../providers/providers.model"
 import { BrandsModel } from "../brands/brands.model"
 import { ProductsImagesModel } from "./models/products-images.model"
+import { GroupsModel } from "../groups/groups.model";
 
 @Injectable()
 export class ProductsService extends AppService implements ProductsInterface {
@@ -19,7 +20,8 @@ export class ProductsService extends AppService implements ProductsInterface {
 	constructor(@InjectRepository(ProductsModel) private productsModel: Repository<ProductsModel>,
 							@InjectRepository(ProductsImagesModel) private productsImages: Repository<ProductsImagesModel>,
 							@InjectRepository(ProvidersModel) private providersModel: Repository<ProvidersModel>,
-							@InjectRepository(BrandsModel) private brandsModel: Repository<BrandsModel>) {
+							@InjectRepository(BrandsModel) private brandsModel: Repository<BrandsModel>,
+							@InjectRepository(GroupsModel) private groupModel: Repository<GroupsModel>) {
 		super()
 	}
 
@@ -236,6 +238,11 @@ export class ProductsService extends AppService implements ProductsInterface {
 
 				if (productInputDt.productImages) {
 					product.productImages = this.productsImages.create(productInputDt.productImages)
+				}
+
+				if (productInputDt.group) {
+					//@s-ignore
+					product.group = this.groupModel.create(productInputDt.group)
 				}
 
 				try {

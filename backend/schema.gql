@@ -30,10 +30,35 @@ type BrandsModel {
   createdAt: DateTime
 }
 
+type RayonsModel {
+  id: Float
+  label: String!
+  slug: String!
+  uri: String!
+  code: String!
+  level: Int!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type GroupsModel {
+  id: Float
+  rayons: [RayonsModel!]
+  products: [ProductsModel!]
+  label: String!
+  slug: String!
+  type: String!
+  urlCarrefour: String!
+  urlAuchan: String!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
 type ProductsModel {
   id: Float
   provider: ProvidersModel!
   brand: BrandsModel!
+  group: GroupsModel!
   productImages: [ProductsImagesModel!]
   label: String!
   ean: String!
@@ -68,17 +93,6 @@ type ProviderResponseDto {
   items: [ProvidersModel!]
 }
 
-type RayonsModel {
-  id: Float
-  label: String!
-  slug: String!
-  uri: String!
-  code: String!
-  level: Int!
-  updatedAt: DateTime
-  createdAt: DateTime
-}
-
 type RayonResponseDto {
   token: String
   code: Float
@@ -86,18 +100,6 @@ type RayonResponseDto {
   message: String
   item: RayonsModel
   items: [RayonsModel!]
-}
-
-type GroupsModel {
-  id: Float
-  rayons: [RayonsModel!]
-  label: String!
-  slug: String!
-  type: String!
-  urlCarrefour: String!
-  urlAuchan: String!
-  updatedAt: DateTime
-  createdAt: DateTime
 }
 
 type GroupResponseDto {
@@ -229,11 +231,21 @@ input GroupInputDto {
   urlCarrefour: String!
   urlAuchan: String!
   rayons: [RayonRelationDto!]
+  products: [GroupRelationDto!]
 }
 
 input RayonRelationDto {
   id: Float
   label: String
+}
+
+input GroupRelationDto {
+  id: Float
+  label: String!
+  slug: String!
+  type: String!
+  urlCarrefour: String!
+  urlAuchan: String!
 }
 
 input UserInputDto {
@@ -255,6 +267,7 @@ input ProductInputDto {
   id: Float
   provider: ProviderInputDto!
   brand: BrandInputDto!
+  group: GroupInputDto!
   productImages: [ProductImageInputDto!]
   label: String!
   ean: String!

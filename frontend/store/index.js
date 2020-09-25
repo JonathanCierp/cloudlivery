@@ -8,10 +8,10 @@ export const state = () => ({
 
 export const mutations = {
 	SET_AUTH(state, user) {
-		if(user.id) {
+		if (user.id) {
 			state.auth.user = user
 			state.auth.isLogged = true
-		}else {
+		} else {
 			state.auth.user = {},
 				state.auth.isLogged = false
 		}
@@ -21,11 +21,17 @@ export const mutations = {
 	},
 	EDIT_CART(state, item) {
 		const existItem = state.cartItems.find(cartItem => cartItem.id === item.id)
-		if(existItem) {
+		if (existItem) {
 			const existItemIndex = state.cartItems.indexOf(existItem)
-			state.cartItems[existItemIndex] = {...item}
-		}else {
-			state.cartItems = [...state.cartItems, item]
+			if(item.count) {
+				state.cartItems[existItemIndex] = {...item}
+			}else {
+				state.cartItems.splice(existItemIndex, 1)
+			}
+		} else {
+			if(item.count) {
+				state.cartItems = [...state.cartItems, item]
+			}
 		}
 
 		state.countCartItems = 0
@@ -35,8 +41,8 @@ export const mutations = {
 		localStorage.setItem("countCartItems", state.countCartItems)
 	},
 	SYNCHRONIZE_CART(state) {
-		state.cartItems = JSON.parse(localStorage.getItem("cartItems"))
-		state.countCartItems = localStorage.getItem("countCartItems")
+		state.cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : []
+		state.countCartItems = localStorage.getItem("countCartItems") >= 0 ? localStorage.getItem("countCartItems") : 0
 	},
 	DISPLAY_CART_DIALOG(state, v) {
 		state.displayCartDialog = v

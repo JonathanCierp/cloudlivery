@@ -9,6 +9,7 @@ import {
 	JoinTable
 } from "typeorm"
 import { RayonsModel } from "../rayons/rayons.model"
+import { ProductsModel } from "../products/models/products.model";
 
 @ObjectType()
 @Entity("groups")
@@ -21,6 +22,11 @@ export class GroupsModel {
 	@ManyToMany(type => RayonsModel, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
 	@JoinTable()
 	rayons?: RayonsModel[]
+
+	@Field(type => [ProductsModel], { nullable: true })
+	@ManyToMany(type => ProductsModel, { nullable: true, cascade: true, onDelete: "CASCADE", onUpdate: "CASCADE" })
+	@JoinTable()
+	products?: ProductsModel[]
 
 	@Field()
 	@Column({ length: 255, unique: true })

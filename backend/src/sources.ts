@@ -1038,6 +1038,7 @@ export const products: ProductInputDto[] = [
 		brand: {
 			label: "SANS MARQUE"
 		},
+		group: groups[0],
 		label: "TEST_LABEL_0",
 		ean: "TEST_EAN_0",
 		slug: "TEST_SLUG_0"
@@ -1049,6 +1050,7 @@ export const products: ProductInputDto[] = [
 		brand: {
 			label: "AGRILAIT"
 		},
+		group: groups[0],
 		label: "TEST_LABEL_1",
 		ean: "TEST_EAN_1",
 		slug: "TEST_SLUG_1"
@@ -1060,6 +1062,7 @@ export const products: ProductInputDto[] = [
 		brand: {
 			label: "SANS MARQUE"
 		},
+		group: groups[0],
 		label: "TEST_LABEL_2",
 		ean: "TEST_EAN_2",
 		slug: "TEST_SLUG_2"
@@ -1071,6 +1074,7 @@ export const products: ProductInputDto[] = [
 		brand: {
 			label: "SANS MARQUE"
 		},
+		group: groups[0],
 		label: "TEST_LABEL_3",
 		ean: "TEST_EAN_3",
 		slug: "TEST_SLUG_3"
@@ -1082,6 +1086,7 @@ export const products: ProductInputDto[] = [
 		brand: {
 			label: "BASKALIA"
 		},
+		group: groups[0],
 		label: "TEST_LABEL_4",
 		ean: "TEST_EAN_4",
 		slug: "TEST_SLUG_4",
