@@ -34,7 +34,7 @@
 						<span class="align-middle font-bold underline">M'inscrire</span>
 					</nuxt-link>
 				</div>
-				<div class="signin__card__body__or my-3 text-center">
+				<!--<div class="signin__card__body__or my-3 text-center">
 					<span></span>
 					<span class="text-black-lighter">
 						Ou
@@ -43,7 +43,7 @@
 				</div>
 				<div class="signin__card__socials flex w-full justify-center my-3">
 					<custom-button-google ref="googleButton" @click="onGoogleSignin" class="signin__card__socials__google flex items-center justify-center" type="button" />
-				</div>
+				</div>-->
 			</custom-form>
 		</div>
 	</div>
@@ -92,32 +92,49 @@
 			async onSignin() {
 				if(this.$refs.form.validate()) {
 					this.$refs.loginButton.setState("loading")
-					this.$refs.googleButton.setState("loading")
+					//this.$refs.googleButton.setState("loading")
 					try {
+						console.log(this.form)
 						const res = await this.$apollo.mutate({
 							mutation: GqlSignin,
-							variables: this.form
+							variables: {
+								input: {
+									email: this.form.email,
+									password: this.form.password
+								}
+							}
 						})
+						if(res.data.signin.code !== 200) {
+							this.$notify({
+								title: res.data.signin.message,
+								type: "error",
+								duration: 0
+							})
+						}
+
 						await this.$apolloHelpers.onLogin(res.data.signin.token)
-						this.$store.commit("SET_AUTH", res.data.signin.user)
+						this.$store.commit("SET_AUTH", res.data.signin.item)
 						this.$refs.loginButton.setState("initial")
-						this.$refs.googleButton.setState("initial")
+						//this.$refs.googleButton.setState("initial")
+						this.$notify({
+							title: res.data.signin.message,
+							type: "success"
+						})
 						this.$router.push("/")
 					}catch (e) {
-						//console.log(e.graphQLErrors[0].message)
 						this.$refs.loginButton.setState("initial")
-						this.$refs.googleButton.setState("initial")
+						//this.$refs.googleButton.setState("initial")
 					}
 				}
 			},
 			async onGoogleSignin() {
-				this.$refs.googleButton.setState("loading")
+				//this.$refs.googleButton.setState("loading")
 				this.$refs.loginButton.setState("loading")
 				this.$gAuth
 					.signIn()
 					.then(async GoogleUser => {
 						let googleUser = {
-							google_id: GoogleUser.getBasicProfile().getId(),
+							googleId: GoogleUser.getBasicProfile().getId(),
 							email: GoogleUser.getBasicProfile().getEmail(),
 							firstname: GoogleUser.getBasicProfile().getGivenName(),
 							lastname: GoogleUser.getBasicProfile().getFamilyName(),
@@ -134,13 +151,13 @@
 							this.$store.commit("SET_AUTH", res.data.googleSignin.user)
 							this.$router.push("/")
 						}
-						this.$refs.googleButton.setState("initial")
+						//this.$refs.googleButton.setState("initial")
 						this.$refs.loginButton.setState("initial")
 					})
 					.catch(error => {
 						console.log(error)
 						console.error("Connexion google interrompu");
-						this.$refs.googleButton.setState("initial")
+						//this.$refs.googleButton.setState("initial")
 						this.$refs.loginButton.setState("initial")
 					});
 			}

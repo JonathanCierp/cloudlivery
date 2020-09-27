@@ -1,10 +1,18 @@
-query me($provider: String!) {
-  me(provider: $provider) {
-      id
-      firstname
-      lastname
-      email
-      updatedAt
-      createdAt
+query me {
+  me {
+    code
+     details
+     message
+     token
+     item {
+       id
+       googleId
+       email
+       civilite
+       firstname
+       lastname
+       updatedAt
+       createdAt
+     }
   }
 }

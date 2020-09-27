@@ -12,8 +12,8 @@ export const mutations = {
 			state.auth.user = user
 			state.auth.isLogged = true
 		} else {
-			state.auth.user = {},
-				state.auth.isLogged = false
+			state.auth.user = {}
+			state.auth.isLogged = false
 		}
 	},
 	CHANGE_TAB(state, v) {

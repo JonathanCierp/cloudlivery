@@ -1,11 +1,12 @@
-mutation signin($input: UserInputDto!){
+mutation signin($input: UserSigninInputDto!){
   signin(input: $input) {
+    token
     code
     details
     message
     item {
       id
-      google_id
+      googleId
       firstname
       lastname
       email

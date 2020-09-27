@@ -2,13 +2,11 @@
 	<ais-instant-search v-if="show" :search-client="searchClient" index-name="ALL">
 		<core-header />
 		<nuxt />
-		<core-navigation />
 	</ais-instant-search>
 </template>
 
 <script>
 	import CoreHeader from "~/components/core/CoreHeader.vue"
-	import CoreNavigation from "~/components/core/CoreNavigation.vue"
 	import { AisInstantSearch } from "vue-instantsearch"
 
 	import algoliasearch from "algoliasearch/lite"
@@ -16,7 +14,6 @@
 	export default {
 		components: {
 			CoreHeader,
-			CoreNavigation,
 			AisInstantSearch
 		},
 		data() {

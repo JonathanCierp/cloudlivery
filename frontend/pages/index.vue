@@ -1,5 +1,5 @@
 <template>
-	<div class="px-8 py-8">
+	<div class="">
 		<ui-tab-items v-model="tab" @change="changeTab">
 			<produit-items v-for="item in items" :key="item.indexTab" :item="item" :loading="loading" @editCart="editCart"/>
 		</ui-tab-items>

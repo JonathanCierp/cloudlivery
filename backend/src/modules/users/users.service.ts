@@ -129,7 +129,7 @@ export class UsersService extends AppService implements UsersInterface {
 		try {
 			this.code = HttpStatus.OK
 			this.details = null
-
+			
 			if (userSigninInputDto.email === "") {
 				this.message = `Erreur l'email ne peut pas être vide.`
 				throw new Error(`Erreur lors de la connexion: ${userSigninInputDto.email}`)
@@ -146,7 +146,7 @@ export class UsersService extends AppService implements UsersInterface {
 			}
 
 			this.item = await this.usersModel.findOne( { email: userSigninInputDto.email })
-			
+
 			if (!await compare(userSigninInputDto.password, this.item.password)) {
 				this.message = `Erreur mauvais identifiant / mot de passe.`
 				throw new Error(`Erreur lors de la connexion: ${userSigninInputDto.email}`)
@@ -196,11 +196,11 @@ export class UsersService extends AppService implements UsersInterface {
 			const isDeleteInRedis = await redis.delete(`signin_${id}`)
 			redis.close()
 
-			if(isDeleteInRedis) {
+			/*if(isDeleteInRedis) {
 				this.message = `Erreur lors de la déconnexion.`
 				throw new Error(`Erreur le jwt n'est plus dans le redis.`)
 			}
-
+*/
 			if(redisToken !== token) {
 				this.message = `Erreur vous n'êtes plus connectés.`
 				throw new Error(`Erreur le jwt est invalide.`)

@@ -1,5 +1,7 @@
 mutation signout {
   signout {
+    code
+    details
     message
   }
 }

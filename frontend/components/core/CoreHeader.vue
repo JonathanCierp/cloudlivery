@@ -7,18 +7,6 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<ui-desktop class="header__container__menu flex items-center justify-center flex-1 px-16 font-bold text-sm" :breakpoint="900">
-				<ais-index class="w-full" index-name="COMPARATEUR">
-					<ais-search-box class="flex-1 mx-3 w-full relative header__container__middle hidden md:inline-block">
-						<template slot-scope="{ currentRefinement, isSearchStalled, refine }">
-							<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center"/>
-							<input type="search" v-model="currentRefinement" @input="refine($event.currentTarget.value)"
-										 class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline"
-										 placeholder="Boissons, viandes etc...">
-						</template>
-					</ais-search-box>
-				</ais-index>
-			</ui-desktop>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
 				<li class="mx-5 cursor-pointer hover:opacity-75" @click="$store.commit('DISPLAY_CART_DIALOG', true)">
 					<ui-badge type="info" :content="$store.state.countCartItems ? $store.state.countCartItems : 0">
@@ -28,6 +16,11 @@
 				<li v-if="$store.state.auth.isLogged">
 					<ul>
 						<li>Bonjour, {{ username }}</li>
+					</ul>
+				</li>
+				<li v-if="$store.state.auth.isLogged" class="mx-5 cursor-pointer" @click="onSignout">
+					<ul>
+						<icon-logout/>
 					</ul>
 				</li>
 				<li v-else>
@@ -55,6 +48,7 @@
 	import IconCart from "@/components/icons/IconCart"
 	import IconUser from "@/components/icons/IconUser"
 	import IconSearch from "@/components/icons/IconSearch"
+	import IconLogout from "@/components/icons/IconLogout"
 
 	import GqlSignout from "@/utils/apollo/mutation/signout"
 
@@ -66,6 +60,7 @@
 			IconCart,
 			IconUser,
 			IconSearch,
+			IconLogout,
 			AisIndex
 		},
 		data() {
@@ -92,11 +87,15 @@
 		methods: {
 			async onSignout() {
 				try {
-					await this.$apollo.mutate({
+					const res = await this.$apollo.mutate({
 						mutation: GqlSignout
 					})
 					this.$store.commit("SET_AUTH", {})
 					await this.$apolloHelpers.onLogout()
+					this.$notify({
+						title: res.data.signout.message,
+						type: "success"
+					})
 					this.$router.push("/")
 				} catch (e) {
 					console.log(e)
@@ -174,10 +173,5 @@
 
 	header.header .header__container .header__container__menu .header__container__items .header__container__item.header__container__item--active span {
 		opacity: 1;
-	}
-
-	header.header .header__container .header__container__menu .header__container__middle > svg{
-		color: #718096;
-		margin: 5px 20px;
 	}
 </style>
