@@ -1,14 +1,15 @@
 <template>
 	<div class="custom-form-input">
-		<div v-if="type === 'password'" class="flex items-center justify-end">
+	<!--	<div v-if="type === 'password'" class="flex items-center justify-end">
 			<span @click="togglePasswordVisibility('text')">
 				<icon-eye v-if="typeEdited === 'password'" />
 			</span>
 			<span @click="togglePasswordVisibility('password')">
 				<icon-eye-off v-if="typeEdited === 'text'" />
 			</span>
-		</div>
-		<div class="custom-form-input flex items-center relative justify-center my-4" :class="`${classes} ${type === 'password' ? 'mt-1' : ''}`">
+		</div>-->
+		<!--<div class="custom-form-input flex items-center relative justify-center my-4" :class="`${classes} ${type === 'password' ? 'mt-1' : ''}`">-->
+		<div class="custom-form-input flex items-center relative justify-center my-4" :class="`${classes}`">
 			<component v-if="iconLeft" class="pointer-events-none absolute inset-y-0 left-0 flex items-center" :is="iconLeftComponent" />
 			<input :type="typeEdited" @input="oninput" @blur="onBlur" class="input--error transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-4 px-4 text-gray-700 leading-tight focus:shadow-outline" :placeholder="placeholder" autocomplete="off">
 			<span class="custom-form-input-text--error absolute left-0 font-semibold">{{ errorMessage }}</span>

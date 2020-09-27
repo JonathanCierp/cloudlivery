@@ -1,5 +1,7 @@
-mutation signup($civilite: String!, $firstname: String!, $lastname: String!, $email: String!, $password: String!){
-  signup(civilite: $civilite, firstname: $firstname, lastname: $lastname, email: $email, password: $password) {
+mutation signup($input: UserInputDto!){
+  signup(input: $input) {
+    code
+    details
     message
   }
 }

@@ -1,41 +1,4 @@
 <template>
-	<!--<header class="header bg-white py-3 shadow">
-		<div class="header__container container mx-auto flex items-center justify-between">
-			<div class="header__container__left flex items-center justify-center">
-				<nuxt-link class="inline-block" to="/">
-					<img class="inline px-1" src="@/assets/img/icons/logo.svg" alt="Logo du site">
-					<span class="text-logo font-bold align-middle">Cloudlivery</span>
-				</nuxt-link>
-			</div>
-			<ais-search-box class="flex-1 mx-10 relative header__container__middle hidden md:inline-block">
-				<template slot-scope="{ currentRefinement, isSearchStalled, refine }">
-					<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center"/>
-					<input type="search" v-model="currentRefinement" @input="refine($event.currentTarget.value)"
-								 class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-11/12 py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline"
-								 placeholder="Oeuf, poisson etc...">
-				</template>
-			</ais-search-box>
-			<div class="flex items-center justify-center header__container__right">
-				<nuxt-link v-if="$store.state.auth.isLogged" class="inline-block px-4 hover:opacity-75" to="/">
-					<img class="rounded-full w-10 inline mr-2" src="@/assets/img/user-default.jpg" alt="Image d'utilisateur défaut">
-					<span class="align-middle">{{ username }}</span>
-				</nuxt-link>
-				<nuxt-link v-else class="inline-block px-4 hover:opacity-75" to="/auth/signin">
-					<icon-user class="inline" />
-					<span class="align-middle hidden lg:inline text-md">Mon compte</span>
-				</nuxt-link>
-				<nuxt-link @click.native="onSignout" class="inline-block px-4 hover:opacity-75" to="#">
-					<icon-cart class="inline" />
-				</nuxt-link>
-			</div>
-		</div>
-		<div class="header__container container mx-auto flex items-center justify-between block md:hidden my-5">
-			<div class="flex-1 mx-10 relative header__container__middle">
-				<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center" />
-				<input class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline" placeholder="Oeuf, poisson etc...">
-			</div>
-		</div>
-	</header>-->
 	<header class="header bg-white px-8 shadow flex items-center w-full">
 		<div class="header__container flex items-center justify-between w-full h-full">
 			<div class="header__container__brand">
@@ -44,17 +7,21 @@
 					<span class="text-logo font-bold align-middle">Cloudlivery</span>
 				</nuxt-link>
 			</div>
-			<ui-desktop class="header__container__menu flex-1 px-16 font-bold text-sm" :breakpoint="900">
-				<!--<ui-tabs v-model="tab">
-					<ui-tab>Comparateur</ui-tab>
-					<ui-tab>Tous les produits</ui-tab>
-					<ui-tab>Carrefour</ui-tab>
-					<ui-tab>Auchan</ui-tab>
-					</ui-tabs>-->
-				</ui-desktop>
+			<ui-desktop class="header__container__menu flex items-center justify-center flex-1 px-16 font-bold text-sm" :breakpoint="900">
+				<ais-index class="w-full" index-name="COMPARATEUR">
+					<ais-search-box class="flex-1 mx-3 w-full relative header__container__middle hidden md:inline-block">
+						<template slot-scope="{ currentRefinement, isSearchStalled, refine }">
+							<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center"/>
+							<input type="search" v-model="currentRefinement" @input="refine($event.currentTarget.value)"
+										 class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline"
+										 placeholder="Boissons, viandes etc...">
+						</template>
+					</ais-search-box>
+				</ais-index>
+			</ui-desktop>
 			<ul class="header__container__actions flex items-center font-bold text-sm">
 				<li class="mx-5 cursor-pointer hover:opacity-75" @click="$store.commit('DISPLAY_CART_DIALOG', true)">
-					<ui-badge type="info" :content="$store.state.countCartItems">
+					<ui-badge type="info" :content="$store.state.countCartItems ? $store.state.countCartItems : 0">
 						<icon-cart/>
 					</ui-badge>
 				</li>
@@ -66,7 +33,7 @@
 				<li v-else>
 					<ul class="flex items-center">
 						<li class="mx-2 hover:opacity-75">
-							<nuxt-link to="/">
+							<nuxt-link to="/auth/signin">
 								<icon-user class="inline"/>
 								<span class="align-middle pt-1">Compte</span>
 							</nuxt-link>
@@ -81,7 +48,8 @@
 <script>
 	import {
 		AisInstantSearchSsr,
-		AisSearchBox
+		AisSearchBox,
+		AisIndex
 	} from "vue-instantsearch"
 
 	import IconCart from "@/components/icons/IconCart"
@@ -97,12 +65,11 @@
 			AisSearchBox,
 			IconCart,
 			IconUser,
-			IconSearch
+			IconSearch,
+			AisIndex
 		},
 		data() {
-			return {
-
-			}
+			return {}
 		},
 		computed: {
 			username: {
@@ -207,5 +174,10 @@
 
 	header.header .header__container .header__container__menu .header__container__items .header__container__item.header__container__item--active span {
 		opacity: 1;
+	}
+
+	header.header .header__container .header__container__menu .header__container__middle > svg{
+		color: #718096;
+		margin: 5px 20px;
 	}
 </style>

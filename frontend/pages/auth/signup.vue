@@ -19,7 +19,7 @@
 				</custom-form-group-row>
 				<custom-form-group-row class="signup__card__body__row flex-col sm:flex-row">
 					<custom-form-input v-model="form.email" icon-left="icon-arobase" placeholder="Email" :rules="['required', 'email']" lazy class="sm:mr-2" />
-					<custom-form-input v-model="form.password" icon-left="icon-lock" placeholder="Mot de passe" :rules="['required']" lazy class="sm:ml-2" />
+					<custom-form-input v-model="form.password" type="password" icon-left="icon-lock" placeholder="Mot de passe" :rules="['required']" lazy class="sm:ml-2" />
 				</custom-form-group-row>
 				<custom-form-group class="signup__card__body__row flex items-center justify-start mt-8 mb-4 ml-2 w-full">
 					<custom-form-checkbox v-model="policy" :rules="['required']" lazy>
@@ -84,14 +84,19 @@
 				if(this.$refs.form.validate() && this.policy) {
 					this.$refs.signupButton.setState("loading")
 					try {
-						const res = await this.$apollo.mutate({
+						await this.$apollo.mutate({
 							mutation: GqlSignup,
-							variables: this.form
+							variables: {
+								input: this.form
+							}
+						})
+						this.$notify({
+							title: "Compte crée avec succès",
+							type: "success"
 						})
 						this.$refs.signupButton.setState("initial")
 						this.$router.push("/")
 					}catch (e) {
-						console.log(e.graphQLErrors[0].message)
 						this.$refs.signupButton.setState("initial")
 					}
 				}

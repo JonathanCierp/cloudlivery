@@ -102,8 +102,6 @@ export class ScrapingsService extends AppService {
 
 				for (let group of groups) {
 					const pageGroup = await browser.newPage()
-					let i: number = 1
-					let url: string = ""
 
 					await pageGroup.goto(group.urlAuchan)
 					console.log(`Scrap auchan url : ${group.urlAuchan}`)
@@ -142,8 +140,9 @@ export class ScrapingsService extends AppService {
 						return products
 					})
 					for (let v of p) {
-						p.group = group
+						v.group = group
 					}
+
 					products = products.concat(p)
 
 					await pageGroup.close()
@@ -847,7 +846,7 @@ export class ScrapingsService extends AppService {
 						return products
 					})
 					for (let v of p) {
-						p.group = group
+						v.group = group
 					}
 					products = products.concat(p)
 					await this.sleep(20000)

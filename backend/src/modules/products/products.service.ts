@@ -241,8 +241,7 @@ export class ProductsService extends AppService implements ProductsInterface {
 				}
 
 				if (productInputDt.group) {
-					//@s-ignore
-					product.group = this.groupModel.create(productInputDt.group)
+					product.group = await this.groupModel.findOne({ label: productInputDt.group.label })
 				}
 
 				try {

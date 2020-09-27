@@ -1,17 +1,6 @@
 <template>
 	<ui-tab-item>
 		<ais-index v-if="$store.state.tab === item.indexTab" :index-name="item.indexName">
-			<div>
-				<ais-search-box>
-					<div slot-scope="{ currentRefinement, isSearchStalled, refine }"
-							 class="flex-1 mx-10 relative header__container__middle hidden md:inline-block">
-						<icon-search class="pointer-events-none absolute inset-y-0 left-0 flex items-center"/>
-						<input type="search" v-model="currentRefinement" @input="refine($event.currentTarget.value)"
-									 class="transition-colors duration-400 ease-in-out bg-gray-200 shadow appearance-none rounded w-full py-2 px-4 pl-16 text-gray-700 leading-tight focus:shadow-outline"
-									 placeholder="Oeuf, poisson etc...">
-					</div>
-				</ais-search-box>
-			</div>
 			<transition name="produit-item-fade">
 				<ais-infinite-hits v-if="!loading">
 					<div slot-scope="{ items, refinePrevious, refineNext, isLastPage }">
@@ -33,6 +22,7 @@
 	import ProduitItem from "~/components/ProduitItem"
 	import { AisIndex, AisInfiniteHits,
 		AisSearchBox } from "vue-instantsearch"
+	import IconSearch from "~/components/icons/IconSearch"
 
 	export default {
 		name: "ProduitItems",
@@ -40,7 +30,8 @@
 			ProduitItem,
 			AisIndex,
 			AisInfiniteHits,
-			AisSearchBox
+			AisSearchBox,
+			IconSearch
 		},
 		props: {
 			item: {
