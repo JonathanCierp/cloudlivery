@@ -5,19 +5,35 @@
 		</ui-tab-items>
 		<ui-progress-circular class="absolute absolute-center" color="#745bdd" indeterminate size="40" v-if="loading"/>
 		<!-- https://designmodo.com/shopping-cart-ui/ -->
-		<ui-dialog class="cart-dialog" v-model="displayCartDialog" transition="slide-left" max-width="40%" no-margin
+		<ui-dialog class="cart-dialog" v-model="displayCartDialog" transition="slide-left" :max-width="maxWidthDialogCart" no-margin
 							 max-height="100%" height="100%" placement="left">
-			<ui-card>
+			<ui-card style="overflow-y: scroll">
 				<ui-card-title class="text-center">Mon panier</ui-card-title>
 				<ui-card-text>
-					azaeeezaeazzae
+					<div class="cart-dialog__separator my-4" />
+					<div class="cart-dialog__item" v-for="item in $store.state.cartItems">
+						<div class="flex">
+							<div class="cart-dialog__item__image">
+								<img :src="item.productImages[0].largest">
+							</div>
+							<div class="ml-4 cart-dialog__item__middle">
+								<p class="font-bold">{{ item.label }}</p>
+								<p class="my-1">Prix auchan &nbsp;&nbsp;&nbsp;: <span class="font-bold">{{ item.price_auchan }}</span></p>
+								<p>Prix carrefour : <span class="font-bold">{{ item.price_carrefour }}</span></p>
+							</div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</div>
+						<div class="cart-dialog__separator my-4" />
+					</div>
 				</ui-card-text>
 				<ui-card-action>
-					<ui-spacer/>
-					<p @click="displayCartDialog = false">close</p>
+					<ui-button w-full type="default" @click="displayCartDialog = false">Fermer</ui-button>
 				</ui-card-action>
 			</ui-card>
 		</ui-dialog>
+		<resize-observer @notify="handleResize" />
 	</div>
 </template>
 
@@ -31,6 +47,8 @@
 		AisSearchBox,
 		AisStats
 	} from "vue-instantsearch"
+	import { ResizeObserver } from "vue-resize"
+	import "vue-resize/dist/vue-resize.css"
 
 	export default {
 		components: {
@@ -40,7 +58,8 @@
 			AisRefinementList,
 			AisIndex,
 			AisSearchBox,
-			AisStats
+			AisStats,
+			ResizeObserver
 		},
 		data() {
 			return {
@@ -62,11 +81,13 @@
 						indexTab: 3,
 						indexName: "AUCHAN"
 					}*/
-				]
+				],
+				maxWidthDialogCart: 0
 			}
 		},
 		mounted() {
 			this.loading = false
+			this.guessMaxWidthDialogCart(window.innerWidth)
 		},
 		computed: {
 			tab: {
@@ -92,6 +113,20 @@
 			}
 		},
 		methods: {
+			guessMaxWidthDialogCart(width) {
+				if(width >= 1400) {
+					this.maxWidthDialogCart = "45%"
+				}else if(width >= 1100) {
+					this.maxWidthDialogCart = "55%"
+				}else if(width >= 800) {
+					this.maxWidthDialogCart = "65%"
+				}else {
+					this.maxWidthDialogCart = "100%"
+				}
+			},
+			handleResize({width, height}) {
+				this.guessMaxWidthDialogCart(width)
+			},
 			changeTab() {
 				this.loading = true
 
@@ -112,5 +147,19 @@
 	.absolute-center {
 		left: 50%;
 		top: 50%;
+	}
+
+	.cart-dialog .cart-dialog__separator {
+		width: 100%;
+		background-color: #ddd;
+		height: 2px;
+	}
+
+	.cart-dialog .cart-dialog__item__image {
+		width: 100px;
+	}
+
+	.cart-dialog .cart-dialog__item__middle p:first-child {
+		font-size: 1.1rem;
 	}
 </style>

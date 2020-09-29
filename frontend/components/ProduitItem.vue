@@ -20,7 +20,7 @@
 			</div>
 			<div class="produit-item__card__action" :class="`${isAddToCard || isCartExist ? 'text-right' : 'text-center'}`">
 				<ui-form-numeric v-if="isAddToCard || isCartExist" v-model="productToCartNumber" type="info" max-width="60" min="0" max="100" @input="editCart" />
-				<ui-button v-else style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full @click="isAddToCard = true">Ajouter au panier</ui-button>
+				<ui-button v-else style="background: linear-gradient(to right, #10A3CC, #B32EE8);" type="success" rounded-full w-full @click="onAddCart">Ajouter au panier</ui-button>
 			</div>
 		</ui-card>
 	</div>
@@ -81,7 +81,15 @@
 			}
 		},
 		methods: {
+			onAddCart() {
+				this.isAddToCard = true
+				this.productToCartNumber = 1
+				this.$emit("editCart", this.item, 1)
+			},
 			editCart(count) {
+				if(count === 0) {
+					this.isAddToCard = false
+				}
 				this.$emit("editCart", this.item, count)
 			}
 		}
