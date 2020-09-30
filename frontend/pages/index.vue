@@ -1,7 +1,7 @@
 <template>
 	<div class="">
 		<ui-tab-items v-model="tab" @change="changeTab">
-			<produit-items v-for="item in items" :key="item.indexTab" :item="item" :loading="loading" @editCart="editCart"/>
+			<produit-items v-for="item in items" :key="item.indexTab" :item="item" :loading="loading" @editCart="editCart" :change="change" />
 		</ui-tab-items>
 		<ui-progress-circular class="absolute absolute-center" color="#745bdd" indeterminate size="40" v-if="loading"/>
 		<!-- https://designmodo.com/shopping-cart-ui/ -->
@@ -19,8 +19,8 @@
 				</ui-card-title>
 				<ui-card-text>
 					<div class="cart-dialog__separator my-4" />
-					<cart-dialog-item v-if="desktop" v-for="item in $store.state.cartItems" :key="item.id" :item="item" @recalcTotal="recalcTotal" />
-					<cart-dialog-item-mobile v-else v-for="item in $store.state.cartItems" :key="item.id" :item="item" @recalcTotal="recalcTotal" />
+					<cart-dialog-item v-if="desktop" v-for="item in $store.state.cartItems" :key="'dektop_' + item.id" :item="item" @recalcTotal="recalcTotal" />
+					<cart-dialog-item-mobile v-else v-for="item in $store.state.cartItems" :key="'mobile_' + item.id" :item="item" @recalcTotal="recalcTotal" />
 					<div v-if="$store.state.cartItems.length">
 						<div class="flex">
 							<div class="flex" style="width: 100%">
@@ -104,7 +104,8 @@
 				totalAuchanData: 0,
 				totalCarrefourData: 0,
 				moinsChere: null,
-				desktop: null
+				desktop: null,
+				change: false
 			}
 		},
 		mounted() {
@@ -176,6 +177,8 @@
 				}else {
 					this.moinsChere = "Auchan"
 				}
+
+				this.change = !this.change
 			},
 			totalAuchan() {
 				this.totalAuchanData = 0
@@ -211,25 +214,25 @@
 	}
 
 	@media only screen and (min-width: 700px) {
-		.cart-dialog .cart-dialog__item__image {
-			width: 13%;
+		.cart-dialog .cart-dialog__item__image img {
+			width: 100px !important;
 		}
 
 		.cart-dialog .cart-dialog__item__middle {
-			width: 37%;
+			width: 37% !important;
 		}
 
 		.cart-dialog .cart-dialog__item__auchan {
-			width: 17%;
+			width: 17% !important;
 		}
 
 		.cart-dialog .cart-dialog__item__carrefour {
-			width: 17%;
+			width: 17% !important;
 		}
 	}
 
-	.cart-dialog .cart-dialog__item__image {
-		width: 20%;
+	.cart-dialog .cart-dialog__item__image img {
+		width: 80px;
 	}
 
 	.cart-dialog .cart-dialog__item__middle {

@@ -15,7 +15,7 @@
 				<ais-infinite-hits v-if="!loading" class="mx-8 my-4">
 					<div slot-scope="{ items, refinePrevious, refineNext, isLastPage }">
 						<div class="produit-items flex flex-wrap justify-center sm:justify-start">
-							<produit-item v-for="item in items" :key="item.objectID" :item="item" @editCart="editCart" />
+							<produit-item v-for="item in items" :key="item.objectID" :item="item" @editCart="editCart" :change="change" />
 						</div>
 
 						<ui-button v-if="!isLastPage" class="mx-auto my-6" type="info" @click="nextPage(refineNext)" rounded-full size="lg" :loading="loadingNext">
@@ -54,6 +54,14 @@
 			loading: {
 				type: Boolean,
 				default: true
+			},
+			change: {
+				type: Boolean
+			}
+		},
+		watch: {
+			change: function (v) {
+				this.change = v
 			}
 		},
 		data() {

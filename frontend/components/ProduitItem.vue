@@ -1,21 +1,21 @@
 <template>
 	<div class="produit-item w-4/5 sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-1/5">
-		<ui-card :id="item.ean" class="produit-item__card m-3 p-5">
+		<ui-card :id="produit.ean" class="produit-item__card m-3 p-5">
 			<div v-if="$store.state.tab !== 0" class="produit-item__card__badge mb-3">
-				<ui-tag :type="itemTagColor">{{ item.provider.label }}</ui-tag>
+				<ui-tag :type="itemTagColor">{{ produit.provider.label }}</ui-tag>
 			</div>
 			<div class="produit-item__card__label mb-2">
-				<p class="font-bold text-sm leading-tight test">{{ item.label }}<br></p>
+				<p class="font-bold text-sm leading-tight test">{{ produit.label }}<br></p>
 			</div>
 			<div class="produit-item__card__metadata mb-8 text-xs text-gray-600">
 				<p class="mb-1" v-html="itemPackaging" />
 				<p v-html="itemPerUnitLabel" />
 			</div>
 			<div class="produit-item__card__image mb-8">
-				<img :src="item.productImages[0].largest" class="mx-auto w-32 h-32">
+				<img :src="produit.productImages[0].largest" class="mx-auto w-32 h-32">
 			</div>
 			<div class="produit-item__card__price mb-5">
-				<p class="font-bold text-xl">{{ item.price }} *</p>
+				<p class="font-bold text-xl">{{ produit.price }} *</p>
 				<p class="text-xs text-right">* Prix moyen</p>
 			</div>
 			<div class="produit-item__card__action" :class="`${isAddToCard || isCartExist ? 'text-right' : 'text-center'}`">
@@ -33,16 +33,28 @@
 			item: {
 				type: Object,
 				default: {}
+			},
+			change: {
+				type: Boolean
+			}
+		},
+		watch: {
+			change: function (v) {
+				this.change = v
+				const cartItem = this.$store.state.cartItems?.find(cartItem => cartItem.id === this.produit.id)
+				this.productToCartNumber = cartItem ? cartItem.count : 0
+				this.isAddToCard = cartItem && cartItem.count >= 0
 			}
 		},
 		data() {
 			return {
 				isAddToCard: false,
-				productToCartNumber: 0
+				productToCartNumber: 0,
+				produit: {...this.item}
 			}
 		},
 		beforeMount() {
-			const cartItem = this.$store.state.cartItems?.find(cartItem => cartItem.id === this.item.id)
+			const cartItem = this.$store.state.cartItems?.find(cartItem => cartItem.id === this.produit.id)
 			this.productToCartNumber = cartItem ? cartItem.count : 0
 			this.isAddToCard = cartItem && cartItem.count >= 0
 		},
@@ -51,7 +63,7 @@
 				get() {
 					let color
 
-					switch (this.item.provider.label) {
+					switch (this.produit.provider.label) {
 						case "AUCHAN":
 							color = "error"
 							break
@@ -68,16 +80,16 @@
 			},
 			itemPerUnitLabel: {
 				get() {
-					return this.item.perUnitLabel || "&nbsp;"
+					return this.produit.perUnitLabel || "&nbsp;"
 				}
 			},
 			itemPackaging: {
 				get() {
-					return this.item.packaging || "&nbsp;"
+					return this.produit.packaging || "&nbsp;"
 				}
 			},
 			isCartExist() {
-				return this.$store.state.cartItems?.find(cartItem => cartItem.id === this.item.id)
+				return this.$store.state.cartItems?.find(cartItem => cartItem.id === this.produit.id)
 			}
 		},
 		methods: {

@@ -15,11 +15,11 @@
 				<custom-form-group>
 				<custom-form-input v-model="form.password" icon-left="icon-lock" type="password" placeholder="Mot de passe" :rules="['required']" lazy />
 				</custom-form-group>
-				<div class="signin__card__body__forget flex items-center relative justify-end my-1">
+				<!--<div class="signin__card__body__forget flex items-center relative justify-end my-1">
 					<nuxt-link class="text-sm underline hover:opacity-75" to="/auth/password/reset">
 						Mot de passe oublié ?
 					</nuxt-link>
-				</div>
+				</div>-->
 				<custom-form-group class="signin__card__body__remember flex items-center relative justify-start my-4 text-sm">
 					<custom-form-checkbox v-model="form.rememberMe" label="Se souvenir de moi" />
 				</custom-form-group>
