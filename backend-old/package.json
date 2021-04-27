@@ -29,7 +29,7 @@
 		"puppeteer": "3.1.0",
 		"puppeteer-extra": "^3.1.9",
 		"puppeteer-extra-plugin-stealth": "^2.4.9",
-		"redis": "^3.0.2"
+		"redis": "^3.1.1"
 	},
 	"devDependencies": {
 		"@babel/register": "^7.10.4",
