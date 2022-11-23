@@ -24,7 +24,7 @@
     "cross-env": "^5.2.0",
     "graphql-tag": "^2.10.3",
     "jsonwebtoken": "^8.5.1",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "vue-google-oauth2": "^1.5.4",
     "vue-instantsearch": "^3.2.0",
     "vue-resize": "^0.5.0"
